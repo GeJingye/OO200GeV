@@ -1,0 +1,10 @@
+# 忽略整个目录
+StPicoMixedEvent/StRoot_kaif&zih/
+roots/
+
+# 忽略某个目录下的所有 .tmp 文件
+# temp/*.tmp
+
+# 忽略所有 .bak 文件，但保留 important.bak（取反规则）
+# *.bak
+# !important.bak
