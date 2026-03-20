@@ -1,0 +1,8 @@
+Universe            = vanilla
+Notification        = never
+Initialdir          = /gpfs01/star/pwg/jge/OO200GeV2021/corrEff/TPCTrackEff/
+GetEnv              = True
+Accounting_group    = group_star.cas
+Priority            = +10
+
+

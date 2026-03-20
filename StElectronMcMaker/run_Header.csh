@@ -1,7 +1,6 @@
 #!/bin/csh 
 date
-
 echo $SHELL
-starver SL19b
+starver SL24a
 echo $STAR
 
