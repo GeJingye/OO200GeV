@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 //16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root", Int_t number = 30)//
+void DrawNSigmaEPiKP(TString inFilename = "roots/32_20260317_iTPCrmSome3LowEtaSidePtEta_P24iy.root", Int_t number = 32)//
 {
    // 从root文件中导入待拟合的直方图
    TFile *inFile = new TFile(inFilename); if (!inFile)
@@ -86,7 +86,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root
    TH1F* h_eta_ratio_EperP = (TH1F*)h_eta__electrons->Clone("h_eta_ratio_EperP");	h_eta_ratio_EperP->SetTitle("e^{-}/e^{+} #eta ratio;#eta [GeV/c];Ratio");	h_eta_ratio_EperP->Divide(h_eta__positrons);
    TH1F* h_phi_ratio_EperP = (TH1F*)h_phi__electrons->Clone("h_phi_ratio_EperP");	h_phi_ratio_EperP->SetTitle("e^{-}/e^{+} #phi ratio;#phi [GeV/c];Ratio");	h_phi_ratio_EperP->Divide(h_phi__positrons);
   
-   if (0)//nsigmaElectron__EID, h_pP_ppT, h_passEvtcut, h_passTrkcut
+   if (1)//nsigmaElectron__EID, h_pP_ppT, h_passEvtcut, h_passTrkcut
    {
 	   //误差条，设置Marker形状颜色，设置线条颜色，设置图例，设置坐标轴标题，设置对数Y坐标）
 	   h_Vx_Vy->SetTitle("V_{z} vs V_{x};V_{x} (cm);V_{z} (cm)");
@@ -217,7 +217,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root
 
 	   c_temp->SaveAs(Form("roots/%d_Track_and_Event_Check.png", number));
    }
-   if (0) //EID cut
+   if (1) //EID cut
    {
 	   TCanvas *c_sum = new TCanvas("c_sum", "c_sum", 200, 100, 1000, 900);
 	   c_sum->Divide(2, 2);
@@ -240,7 +240,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root
 	   c_sum->SaveAs(Form("roots/%d_EIDsum.png", number));
 	   //delete c_sum;
    }
-   if (0)//track QA and TOF track check
+   if (1)//track QA and TOF track check
    {
 	   TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
 	   c1->Divide(3, 2);
@@ -407,7 +407,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root
    }
 
    TString Tag = "P24iy";
-   if (0)//EID in group1(pT>0.2, |eta|<1)
+   if (1)//EID in group1(pT>0.2, |eta|<1)
    {
 		// 设置直方图格式
 		// 去除误差条，设置Marker形状颜色，设置线条颜色，设置图例，设置坐标轴标题，设置对数Y坐标）
@@ -452,7 +452,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root
 
 		c4->SaveAs(Form("roots/%d_group1.png", number));
 	}
-   if (0)//EID in group2(pT>0.2, 1.0<|eta|<1.8)
+   if (1)//EID in group2(pT>0.2, 1.0<|eta|<1.8)
    {
 	   // 设置直方图格式
 	   h_nSigmaElectron_P__2->SetTitle("n#sigma_{e} in p_{T}>0.2&0.9<|#eta|<1.8;p (GeV/c);n#sigma_{e}");
@@ -541,7 +541,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260306_iTPCrmSome3_P24iy.root
 
 	   c5->SaveAs(Form("roots/%d_group2.png", number));
    }
-   if (0)//EID in group3(pT>0.2, 1.0<|eta|<1.8)
+   if (1)//EID in group3(pT>0.2, 1.0<|eta|<1.8)
    {
 	   // 设置直方图格式
 

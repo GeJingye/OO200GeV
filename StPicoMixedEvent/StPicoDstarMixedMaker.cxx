@@ -236,7 +236,7 @@ void StPicoDstarMixedMaker::initHists()
 	h_Phi__TOFMatch = new TH1F("h_Phi__TOFMatch", "#phi of TOF matched tracks;#phi;counts", 64, -3.2, 3.2);
 	h_nSigmaEcorr_P__TOFMatch = new TH2F("h_nSigmaEcorr_P__TOFMatch", "n#sigma_{e} vs p (TOF acceptance);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	// 经TPC和TOF判选后的电子信息
-	h_eNumber_Cen = new TH2F("h_eNumber_Cen", ";Num.;Cen", 10, 0., 10., 16, 0., 16.);
+	h_eNumber_Cen = new TH2F("h_eNumber_Cen", ";Num.;Cen", 50, 0., 50., 16, 0., 16.);
 	h_pT__electrons = new TH1F("h_pT__electrons", "p_{T} of electrons;p_{T} (GeV/c)", 100, 0., 5.);
 	h_eta__electrons = new TH1F("h_eta__electrons", "#eta of electrons;#eta", 50, -2.5, 2.5);
 	h_phi__electrons = new TH1F("h_phi__electrons", "#phi of electrons;#phi", 64,-3.2,3.2);
@@ -592,7 +592,7 @@ Int_t StPicoDstarMixedMaker::Make()
 		  }
 
 		  //if (isElectronRegion1)//
-		  if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
+		  if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && !isLowPElectron__3))// && !isLowPElectron__3;isLowEtaElectron__3
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 			h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -673,7 +673,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			  particle2_4V.SetPz(electroninfo[y].p3);
 			  particle2_4V.SetE(electroninfo[y].energy);
 			  eepair = particle1_4V + particle2_4V;
-			  //pure e sample
+			  //pure electron sample
 			  if (eepair.M() < 0.015)
 			  {
 				  positroninfo[x].isPureE = kTRUE;

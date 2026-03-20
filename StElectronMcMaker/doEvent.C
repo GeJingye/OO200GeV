@@ -15,7 +15,6 @@ StAssociationMaker ¸ø MC - Reco Åä¶Ô£»
 */
 
 #include "iostream.h"
-
 class     StChain;
 class StRefMultCorr;
 
