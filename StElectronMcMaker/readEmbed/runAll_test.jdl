@@ -1,0 +1,18 @@
+Universe            = vanilla
+Notification        = never
+Initialdir          = /gpfs01/star/pwg/jge/OO200GeV2021/corrEff/readEmbedding/
+GetEnv              = True
+Accounting_group    = group_star.cas
+Priority            = +10
+
+Executable       = script/script_Electron_100/st_physics_adc_22130029_raw_6500003.MuDst.root.csh
+Output           = out/out_Electron_100/st_physics_adc_22130029_raw_6500003.MuDst.root.out
+Error            = err/err_Electron_100/st_physics_adc_22130029_raw_6500003.MuDst.root.err
+Log              = log/log_Electron_100/st_physics_adc_22130029_raw_6500003.MuDst.root.log
+Queue
+     
+Executable       = script/script_Electron_100/st_physics_adc_22130029_raw_7500032.MuDst.root.csh
+Output           = out/out_Electron_100/st_physics_adc_22130029_raw_7500032.MuDst.root.out
+Error            = err/err_Electron_100/st_physics_adc_22130029_raw_7500032.MuDst.root.err
+Log              = log/log_Electron_100/st_physics_adc_22130029_raw_7500032.MuDst.root.log
+Queue
