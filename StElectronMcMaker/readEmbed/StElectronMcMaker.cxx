@@ -232,7 +232,7 @@ Int_t StElectronMcMaker::Make()
 	mElectron.rcEvtId = mRcEvent->info()->id();
 
 	StPrimaryVertex  *pVertex = mRcEvent->primaryVertex();
-	StThreeVectorF rcVertex(-999.,-999.,-999.);//为什么要用-999初始化
+	StThreeVectorF rcVertex(-999.,-999.,-999.);
 	if(pVertex)
 	{
 		mElectron.Ranking = pVertex->ranking();
