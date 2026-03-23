@@ -1,6 +1,6 @@
 #!/bin/csh 
 date
-echo $SHELL
+echo $shell
 starver SL24a
 echo $STAR
 

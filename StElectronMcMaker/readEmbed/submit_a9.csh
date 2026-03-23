@@ -8,7 +8,7 @@ if($#argv != 3) then
    exit 0
 endif
 
-set myPath = /gpfs01/star/pwg/jge/OO200GeV2021/corrEff/readEmbedding/
+set myPath = /gpfs01/star/pwg/jge/OO200GeV2021/corrEff/readEmbedding
 set infileDir = /star/data105/embedding/production_OO_200GeV_2021/$1_$2_$3/P23ic.SL23c/2021
 
 set outfileDir = production/production_$1_$2
@@ -18,9 +18,9 @@ set errDir = err/err_$1_$2
 set outDir = out/out_$1_$2
 set jobDir = job_a9/
 
-rm -rf $outfileDir $scriptDir $logDir $errDir $outDir $jobDir/runAll_$1_$2.jdl
+rm -rf $outfileDir $scriptDir $logDir $errDir $outDir $jobDir/runAll_$1_$2_a9.jdl
 mkdir -p $myPath/$outfileDir $myPath/$scriptDir $myPath/$logDir $myPath/$errDir $myPath/$outDir $myPath/$jobDir
-cp run_Header.jdl $jobDir/runAll_$1_$2.jdl
+cp -p run_Header.jdl $jobDir/runAll_$1_$2_a9.jdl
 
 @ nfile=0
 foreach file (`find $infileDir/*/* -name 'st_physics_adc*.MuDst.root'`)
@@ -37,7 +37,7 @@ foreach file (`find $infileDir/*/* -name 'st_physics_adc*.MuDst.root'`)
   # .x doEvent.C(1e9,"$file","$outfileDir")
   # .q
   # EOF 
-  cp run_Header.csh run_tmp.csh
+  cp -p run_Header.csh run_tmp.csh
   echo "root4star -b <<EOF">>run_tmp.csh
   echo ".O2">>run_tmp.csh
   echo -n '.x doEvent.C(1e9,"'>>run_tmp.csh
@@ -49,13 +49,15 @@ foreach file (`find $infileDir/*/* -name 'st_physics_adc*.MuDst.root'`)
   echo "EOF">>run_tmp.csh
   mv run_tmp.csh $scriptDir/$baseName.csh
 
-  echo "Executable       = /usr/bin/singularity"    >>$jobDir/runAll_$1_$2.jdl
-  echo "Arguments        = \"exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif myPath/$scriptDir/$baseName.csh\"">>$jobDir/runAll_$1_$2.jdl
-  echo "Output           = $outDir/$baseName.out"   >>$jobDir/runAll_$1_$2.jdl
-  echo "Error            = $errDir/$baseName.err"   >>$jobDir/runAll_$1_$2.jdl
-  echo "Log              = $logDir/$baseName.log"   >>$jobDir/runAll_$1_$2.jdl
-  echo "Queue"                                      >>$jobDir/runAll_$1_$2.jdl
-  echo "     "                                      >>$jobDir/runAll_$1_$2.jdl
+  cat >> $jobDir/runAll_$1_$2_a9.jdl << EOF
+Executable       = /usr/bin/singularity
+Arguments        = "exec -e -B /direct -B /star -B /afs -B /gpfs -B /sdcc/lustre02 /cvmfs/star.sdcc.bnl.gov/containers/rhic_sl7.sif $myPath/$scriptDir/$baseName.csh"
+Output           = $outDir/$baseName.out
+Error            = $errDir/$baseName.err
+Log              = $logDir/$baseName.log
+Queue
+            
+EOF
 
   #condor_submit $jobDir/runAll_$1_$2_$nfile.jdl
 
@@ -63,4 +65,4 @@ foreach file (`find $infileDir/*/* -name 'st_physics_adc*.MuDst.root'`)
 
 end
 echo "*** Finish $1_$2 ***"
-#condor_submit $jobDir/runAll_$1_$2.jdl
+#condor_submit $jobDir/runAll_$1_$2_a9.jdl

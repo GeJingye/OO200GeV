@@ -10,7 +10,7 @@ Int_t iEvt=0,istat=0,nEvents=0;
 // ------------------ Here is the actual method -----------------------------------------
 void doEvent(const Int_t nEvents = 100000, 
 		const char *fMcFile = "/star/data105/embedding/production_OO_200GeV_2021/Electron_100_20250302/P23ic.SL23c/2021/131/22131020/st_physics_adc_22131020_raw_6000013.MuDst.root",
-		const char *outDir="./test")
+		const char *outDir="test")
 {
 	// First load some shared libraries we need
 	if (gClassTable->GetID("TTable") < 0)

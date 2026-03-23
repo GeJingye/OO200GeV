@@ -592,14 +592,14 @@ Int_t StPicoDstarMixedMaker::Make()
 		  }
 
 		  //if (isElectronRegion1)//
-		  if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && !isLowPElectron__3))// && !isLowPElectron__3;isLowEtaElectron__3
+		  if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 			h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
 			h_Phi_Cen_nSigmaE->Fill(mom.Phi(), mCen16, nSigmaE, reWeight);
-			h_Pt_Cen_nSigmaEcorr->Fill(mom.Perp(), mCen16, nSigmaE_corr, reWeight);
-			h_Eta_Cen_nSigmaEcorr->Fill(mom.Eta(), mCen16, nSigmaE_corr, reWeight);
-			h_Phi_Cen_nSigmaEcorr->Fill(mom.Phi(), mCen16, nSigmaE_corr, reWeight);
+			// h_Pt_Cen_nSigmaEcorr->Fill(mom.Perp(), mCen16, nSigmaE_corr, reWeight);
+			// h_Eta_Cen_nSigmaEcorr->Fill(mom.Eta(), mCen16, nSigmaE_corr, reWeight);
+			// h_Phi_Cen_nSigmaEcorr->Fill(mom.Phi(), mCen16, nSigmaE_corr, reWeight);
 			h_nSigmaElectron_P__EIDcut_total->Fill(mom.Mag(), nSigmaE);
 			if (trk->charge() < 0)// electron
 			{
@@ -694,9 +694,9 @@ Int_t StPicoDstarMixedMaker::Make()
 	  {
 		  if (positroninfo[x].isPureE)
 		  {
-			  h_Pt_Cen_nSigmaE__PureE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
-			  h_Eta_Cen_nSigmaE__PureE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
-			  h_Phi_Cen_nSigmaE__PureE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
+			  //h_Pt_Cen_nSigmaE__PureE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
+			  //h_Eta_Cen_nSigmaE__PureE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
+			  //h_Phi_Cen_nSigmaE__PureE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
 		  }
 		  if (!positroninfo[x].isPhotonicE)
 		  {
@@ -711,9 +711,9 @@ Int_t StPicoDstarMixedMaker::Make()
 	  {
 		  if (electroninfo[x].isPureE)
 		  {
-			  h_Pt_Cen_nSigmaE__PureE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
-			  h_Eta_Cen_nSigmaE__PureE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
-			  h_Phi_Cen_nSigmaE__PureE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
+			  //h_Pt_Cen_nSigmaE__PureE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
+			  //h_Eta_Cen_nSigmaE__PureE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
+			  //h_Phi_Cen_nSigmaE__PureE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
 		  }
 		  if (!electroninfo[x].isPhotonicE)
 		  {
@@ -735,24 +735,25 @@ Int_t StPicoDstarMixedMaker::Make()
 		  particle1_4V.SetE(positroninfo[x].energy);
 		  for (y = 0; y < num_electron; y++)
 		  {
-			  particle2_4V.SetPx(electroninfo[y].p1);
-			  particle2_4V.SetPy(electroninfo[y].p2);
-			  particle2_4V.SetPz(electroninfo[y].p3);
-			  particle2_4V.SetE(electroninfo[y].energy);
-			  eepair = particle1_4V + particle2_4V;
-			  //Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
-			  //Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
-			  //if (fabs(eepair.Rapidity()) <= 1) h_Mee__unlikeSame->Fill(eepair.M());
-			  //if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
-			  if (!positroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
-			  {
+			if (!positroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
+			{
+				particle2_4V.SetPx(electroninfo[y].p1);
+				particle2_4V.SetPy(electroninfo[y].p2);
+				particle2_4V.SetPz(electroninfo[y].p3);
+				particle2_4V.SetE(electroninfo[y].energy);
+				eepair = particle1_4V + particle2_4V;
+				//Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
+				//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
+				//if (fabs(eepair.Rapidity()) <= 1) h_Mee__unlikeSame->Fill(eepair.M());
+				//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
+
 				  h_Rapidity__unlikeSame->Fill(eepair.Rapidity());
 				  if (fabs(eepair.Rapidity()) <= 1)// 为什么需要在中心快度区？
 				  {
 					  h_Mee__unlikeSame__w_PhiV_Cut->Fill(eepair.M());
 					  h_Mee_Pt_Cen__unlikeSame->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 				  }
-			  }
+			}
 		  }
 	  }// end: +-
 
@@ -765,6 +766,8 @@ Int_t StPicoDstarMixedMaker::Make()
 		particle1_4V.SetE(electroninfo[x].energy);
 		for (y = x + 1; y < num_electron; y++)//从x+1开始，避免自组合和重复组合
 		{
+			if (!electroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
+			{
 			particle2_4V.SetPx(electroninfo[y].p1);
 			particle2_4V.SetPy(electroninfo[y].p2);
 			particle2_4V.SetPz(electroninfo[y].p3);
@@ -773,8 +776,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			//Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
 			//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 			//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
-			if (!electroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
-			{
+
 				if (fabs(eepair.Rapidity()) <= 1)// 判断重建的粒子是否在中心快度区，为什么需要在中心快度区？
 				{
 					h_Mee_Pt_Cen__likemm->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
@@ -791,6 +793,8 @@ Int_t StPicoDstarMixedMaker::Make()
         particle1_4V.SetE(positroninfo[x].energy);
         for(y=x+1;y<num_positron;y++)
         {
+			if (!positroninfo[x].isPhotonicE && !positroninfo[y].isPhotonicE)
+			{
 			particle2_4V.SetPx(positroninfo[y].p1);
 			particle2_4V.SetPy(positroninfo[y].p2);
 			particle2_4V.SetPz(positroninfo[y].p3);
@@ -799,8 +803,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			//Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
 			//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 			//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
-			if (!positroninfo[x].isPhotonicE && !positroninfo[y].isPhotonicE)
-			{
+
 				if (fabs(eepair.Rapidity()) <= 1)
 				{
 					h_Mee_Pt_Cen__likepp->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
@@ -890,7 +893,7 @@ Int_t StPicoDstarMixedMaker::Make()
         {
 			for (y = 0; y < buffer_nEMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent]; y++)
 			{
-				//eepair = current_electron[x] + buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
+				eepair = current_electron[x] + buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
 				//Double_t angleV = getPhiVAngle(current_electron[x], buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, -1);// 注意参数1、-1的选取要求
 				//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 				//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
