@@ -797,5 +797,108 @@ void CalMee(TString inFileName = "roots/20260323_iTPCrmLowPin3_rmPotonicEbyPairc
 		c4->SaveAs(Form("roots/%d_SBRatio.png", number));
 	}
 	}
+
+	if (0)// 寻找normalized region
+	{
+		const int nPt = 3;
+		TH1F* h_Mee__likemm_Rebin[nPt] = { nullptr };
+		TH1F* h_Mee__likepp_Rebin[nPt] = { nullptr };
+		TH1F* h_Mee__likemmMixed_Rebin[nPt] = { nullptr };
+		TH1F* h_Mee__likeppMixed_Rebin[nPt] = { nullptr };
+
+		for (int iPt = 0; iPt < nPt; iPt++) {
+			// 投影 mm 和 pp（same-event）
+			h_Mee_Pt_Cen__likemm_Rebin->GetYaxis()->SetRange(iPt + 1, iPt + 1);
+			h_Mee__likemm_Rebin[iPt] = (TH1F*)h_Mee_Pt_Cen__likemm_Rebin->Project3D("x")->Clone(TString::Format("h_Mee__likemm_Rebin_pt%d", iPt));
+			h_Mee__likemm_Rebin[iPt]->SetDirectory(nullptr);
+
+			h_Mee_Pt_Cen__likepp_Rebin->GetYaxis()->SetRange(iPt + 1, iPt + 1);
+			h_Mee__likepp_Rebin[iPt] = (TH1F*)h_Mee_Pt_Cen__likepp_Rebin->Project3D("x")->Clone(TString::Format("h_Mee__likepp_Rebin_pt%d", iPt));
+			h_Mee__likepp_Rebin[iPt]->SetDirectory(nullptr);
+
+			// 投影 mmMixed 和 ppMixed（Mixed-event）
+			h_Mee_Pt_Cen__likemmMixed_Rebin->GetYaxis()->SetRange(iPt + 1, iPt + 1);
+			h_Mee__likemmMixed_Rebin[iPt] = (TH1F*)h_Mee_Pt_Cen__likemmMixed_Rebin->Project3D("x")->Clone(TString::Format("h_Mee__likemmMixed_Rebin_pt%d", iPt));
+			h_Mee__likemmMixed_Rebin[iPt]->SetDirectory(nullptr);
+
+			h_Mee_Pt_Cen__likeppMixed_Rebin->GetYaxis()->SetRange(iPt + 1, iPt + 1);
+			h_Mee__likeppMixed_Rebin[iPt] = (TH1F*)h_Mee_Pt_Cen__likeppMixed_Rebin->Project3D("x")->Clone(TString::Format("h_Mee__likeppMixed_Rebin_pt%d", iPt));
+			h_Mee__likeppMixed_Rebin[iPt]->SetDirectory(nullptr);
+		}
+
+		// 恢复轴的 range（可选）
+		h_Mee_Pt_Cen__likemm_Rebin->GetYaxis()->SetRange(1, -1);
+		h_Mee_Pt_Cen__likepp_Rebin->GetYaxis()->SetRange(1, -1);
+		h_Mee_Pt_Cen__likemmMixed_Rebin->GetYaxis()->SetRange(1, -1);
+		h_Mee_Pt_Cen__likeppMixed_Rebin->GetYaxis()->SetRange(1, -1);
+
+		TH1F* h_Mee__SamePMix_mm_Rebin[nPt] = { nullptr };
+		TH1F* h_Mee__SamePMix_pp_Rebin[nPt] = { nullptr };
+
+		for (int iPt = 0; iPt < nPt; ++iPt) {
+			h_Mee__SamePMix_mm_Rebin[iPt] = (TH1F*)h_Mee__likemm_Rebin[iPt]->Clone(TString::Format("h_Mee__SamePMix_mm_Rebin_pt%d", iPt));
+			h_Mee__SamePMix_mm_Rebin[iPt]->Divide(h_Mee__likemm_Rebin[iPt], h_Mee__likemmMixed_Rebin[iPt], 1.0, 1.0, "B");
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetDirectory(nullptr);
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetTitle(TString::Format("SamePMix mm, pT [%.1f,%.1f]", Pt__newEdges[iPt], Pt__newEdges[iPt + 1]));
+			h_Mee__SamePMix_mm_Rebin[iPt]->GetXaxis()->SetTitle("M_{ee} (GeV/c^{2})");
+			h_Mee__SamePMix_mm_Rebin[iPt]->GetYaxis()->SetTitle("Same/PMix");
+
+			h_Mee__SamePMix_pp_Rebin[iPt] = (TH1F*)h_Mee__likepp_Rebin[iPt]->Clone(TString::Format("h_Mee__SamePMix_pp_Rebin_pt%d", iPt));
+			h_Mee__SamePMix_pp_Rebin[iPt]->Divide(h_Mee__likepp_Rebin[iPt], h_Mee__likeppMixed_Rebin[iPt], 1.0, 1.0, "B");
+			h_Mee__SamePMix_pp_Rebin[iPt]->SetDirectory(nullptr);
+			h_Mee__SamePMix_pp_Rebin[iPt]->SetTitle(TString::Format("SamePMix pp, pT [%.1f,%.1f]", Pt__newEdges[iPt], Pt__newEdges[iPt + 1]));
+			h_Mee__SamePMix_pp_Rebin[iPt]->GetXaxis()->SetTitle("M_{ee} (GeV/c^{2})");
+			h_Mee__SamePMix_pp_Rebin[iPt]->GetYaxis()->SetTitle("Same/PMix");
+		}
+
+		TCanvas* c = new TCanvas("c", "Same/PMix per pT bin", 1200, 400);
+		c->Divide(3, 1);
+		// 设置全局图形样式（可选）
+		gStyle->SetOptStat(0);
+		gStyle->SetOptTitle(0);
+
+		// 循环 pt bins
+		for (int iPt = 0; iPt < nPt; ++iPt) {
+			if (!h_Mee__SamePMix_mm_Rebin[iPt] || !h_Mee__SamePMix_pp_Rebin[iPt]) {
+				printf("Warning: missing histogram for pT bin %d\n", iPt);
+				continue;
+			}
+
+			c->cd(iPt + 1);
+			TPad* pad = (TPad*)gPad;
+			pad->SetGrid();  // 显示网格，便于观察比值
+
+			// 绘制 mm（红色）
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetLineColor(kRed);
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetMarkerColor(kRed);
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetMarkerStyle(20);
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetMarkerSize(0.8);
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetMaximum(0.0014);
+			h_Mee__SamePMix_mm_Rebin[iPt]->SetMinimum(0.0010);
+			h_Mee__SamePMix_mm_Rebin[iPt]->Draw("E1");
+
+			// 绘制 pp（蓝色）
+			h_Mee__SamePMix_pp_Rebin[iPt]->SetLineColor(kBlue);
+			h_Mee__SamePMix_pp_Rebin[iPt]->SetMarkerColor(kBlue);
+			h_Mee__SamePMix_pp_Rebin[iPt]->SetMarkerStyle(21);
+			h_Mee__SamePMix_pp_Rebin[iPt]->SetMarkerSize(0.8);
+			h_Mee__SamePMix_pp_Rebin[iPt]->Draw("E1 SAME");
+
+			// 添加 pt 信息文本
+			TLatex tex;
+			tex.SetNDC();
+			tex.SetTextSize(0.06);
+			tex.DrawLatex(0.2, 0.85, TString::Format("p_{T} = [%.1f, %.1f] GeV/c", Pt__newEdges[iPt], Pt__newEdges[iPt + 1]));
+
+			// 添加图例
+			TLegend* leg = new TLegend(0.6, 0.75, 0.88, 0.88);
+			leg->SetBorderSize(0);
+			leg->SetTextSize(0.05);
+			leg->AddEntry(h_Mee__SamePMix_mm_Rebin[iPt], "mm (like-sign)", "lp");
+			leg->AddEntry(h_Mee__SamePMix_pp_Rebin[iPt], "pp (like-sign)", "lp");
+			leg->Draw();
+		}
+		c->SaveAs(Form("roots/%d_SamePMix_per_pt.png", number));
+	}
 }
 
