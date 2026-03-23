@@ -744,7 +744,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				eepair = particle1_4V + particle2_4V;
 				//Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
 				//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
-				//if (fabs(eepair.Rapidity()) <= 1) h_Mee__unlikeSame->Fill(eepair.M());
+				if (fabs(eepair.Rapidity()) <= 1) h_Mee__unlikeSame->Fill(eepair.M());
 				//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 
 				  h_Rapidity__unlikeSame->Fill(eepair.Rapidity());

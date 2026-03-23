@@ -73,7 +73,13 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/32_20260317_iTPCrmSome3LowEtaSi
    TH1F* h_pT_ratio_EperP_3 = (TH1F*)h_pT__3_lowP_e->Clone("h_pT_ratio_EperP_3");	h_pT_ratio_EperP_3->SetTitle("e^{-}/e^{+} p_{T} ratio;p_{T} [GeV/c];Ratio");	h_pT_ratio_EperP_3->Divide(h_pT__3_lowP_p);
    TH1F* h_eta_ratio_EperP_3 = (TH1F*)h_eta__3_lowP_e->Clone("h_eta_ratio_EperP_3");	h_eta_ratio_EperP_3->SetTitle("e^{-}/e^{+} #eta ratio;#eta [GeV/c];Ratio");	h_eta_ratio_EperP_3->Divide(h_eta__3_lowP_p);
    TH1F* h_phi_ratio_EperP_3 = (TH1F*)h_phi__3_lowP_e->Clone("h_phi_ratio_EperP_3");	h_phi_ratio_EperP_3->SetTitle("e^{-}/e^{+} #phi ratio;#phi [GeV/c];Ratio");	h_phi_ratio_EperP_3->Divide(h_phi__3_lowP_p);
-
+   //phiV cut
+   TH2F* h_Mee_PhiV__ranComb = (TH2F*)inFile->Get("h_Mee_PhiV__unlikeSame");//h_Mee_PhiV__ranComb
+   TH1F* h_Mee__ranComb = (TH1F*)inFile->Get("h_Mee__unlikeSame");//h_Mee__ranComb
+   TH1F* h_Mee__ranComb__w_PhiV_Cut = (TH1F*)inFile->Get("h_Mee__unlikeSame__w_PhiV_Cut");//h_Mee__ranComb__w_PhiV_Cut
+   auto fphiVcut = new TF1("fphiVcut", "0.84326*exp(-49.4819*x)-0.996609*x+0.19801", 0, 1.0);
+   fphiVcut->SetMaximum(1.0);
+   fphiVcut->SetNpx(1000);
    //sum
    TH2F* h_eNumber_Cen = (TH2F*)inFile->Get("h_eNumber_Cen");
    TH1F* h_pT__electrons = (TH1F*)inFile->Get("h_pT__electrons");
@@ -632,6 +638,60 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/32_20260317_iTPCrmSome3LowEtaSi
 	   h_nSigmaElectron_P__EIDcut_3->Draw("col z");
 
 	   c6->SaveAs(Form("roots/%d_group3.png", number));
+   }
+
+   if (1)//check PhiV cut
+   {
+	   h_Mee__ranComb->SetLineColor(kBlack);
+	   h_Mee__ranComb->GetYaxis()->SetTitleOffset(1.5);
+	   h_Mee__ranComb__w_PhiV_Cut->SetLineColor(kBlue);
+	   h_Mee__ranComb->SetTitle("M_{ee} w/wo #phi_{V} cut;M_{ee} (GeV/c^{2});Counts");
+
+	   TCanvas* c_temp = new TCanvas("c_temp", "c_temp", 800, 800);
+	   c_temp->Divide(2, 2);
+	   c_temp->cd(1);
+	   gPad->SetLogz(1);
+	   gPad->SetLeftMargin(0.12);
+	   gPad->SetRightMargin(0.12);
+	   gStyle->SetOptStat(0);
+	   h_Mee_PhiV__ranComb->GetXaxis()->SetRangeUser(0.0, 0.4);
+	   h_Mee_PhiV__ranComb->GetYaxis()->SetRangeUser(0.0, 1.0);
+	   fphiVcut->GetXaxis()->SetRangeUser(0, 0.2);
+	   h_Mee_PhiV__ranComb->DrawClone("col z");
+	   fphiVcut->DrawClone("same");
+
+	   c_temp->cd(2);
+	   gPad->SetLogz(1);
+	   gPad->SetLeftMargin(0.12);
+	   gPad->SetRightMargin(0.12);
+	   gStyle->SetOptStat(0);
+	   h_Mee__ranComb->GetXaxis()->SetRangeUser(0, 0.2);
+	   h_Mee__ranComb__w_PhiV_Cut->GetXaxis()->SetRangeUser(0, 0.2);
+	   h_Mee__ranComb->DrawClone("");
+	   h_Mee__ranComb__w_PhiV_Cut->DrawClone("same");
+	   auto legend = new TLegend(0.53, 0.58, 0.78, 0.68);
+	   legend->SetFillColor(0); legend->SetBorderSize(0);
+	   legend->AddEntry(h_Mee__ranComb, "\t without #phi_{V} cut", "lp");
+	   legend->AddEntry(h_Mee__ranComb__w_PhiV_Cut, "\t with #phi_{V} cut", "lp");
+	   legend->SetMargin(0.20);
+	   gStyle->SetLegendTextSize(0.04);
+	   legend->DrawClone("same");
+
+	   c_temp->cd(3);
+	   gPad->SetLogz(1);
+	   gPad->SetLeftMargin(0.12);
+	   gPad->SetRightMargin(0.12);
+	   gStyle->SetOptStat(0);
+	   h_Mee__ranComb->GetXaxis()->SetRangeUser(0, 1);
+	   h_Mee__ranComb->DrawClone("");
+
+	   c_temp->cd(4);
+	   gPad->SetLogz(1);
+	   gPad->SetLeftMargin(0.12);
+	   gPad->SetRightMargin(0.12);
+	   gStyle->SetOptStat(0);
+
+	   c_temp->SaveAs(Form("roots/%d_PhiV_Check.png", number));
    }
 }
 
