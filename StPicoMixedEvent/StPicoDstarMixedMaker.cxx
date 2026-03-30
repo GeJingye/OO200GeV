@@ -735,18 +735,18 @@ Int_t StPicoDstarMixedMaker::Make()
 		  particle1_4V.SetE(positroninfo[x].energy);
 		  for (y = 0; y < num_electron; y++)
 		  {
+			particle2_4V.SetPx(electroninfo[y].p1);
+			particle2_4V.SetPy(electroninfo[y].p2);
+			particle2_4V.SetPz(electroninfo[y].p3);
+			particle2_4V.SetE(electroninfo[y].energy);
+			eepair = particle1_4V + particle2_4V;
+			if (fabs(eepair.Rapidity()) <= 1) h_Mee__unlikeSame->Fill(eepair.M());
+			//Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
+			//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
+
+			//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 			if (!positroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
 			{
-				particle2_4V.SetPx(electroninfo[y].p1);
-				particle2_4V.SetPy(electroninfo[y].p2);
-				particle2_4V.SetPz(electroninfo[y].p3);
-				particle2_4V.SetE(electroninfo[y].energy);
-				eepair = particle1_4V + particle2_4V;
-				//Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
-				//Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
-				if (fabs(eepair.Rapidity()) <= 1) h_Mee__unlikeSame->Fill(eepair.M());
-				//if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
-
 				  h_Rapidity__unlikeSame->Fill(eepair.Rapidity());
 				  if (fabs(eepair.Rapidity()) <= 1)// 为什么需要在中心快度区？
 				  {
