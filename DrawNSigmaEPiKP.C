@@ -31,6 +31,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSidepte
    TH1F* h_pPhi = (TH1F*)inFile->Get("h_pPhi");
    TH2F* h_pP_ppT = (TH2F*)inFile->Get("h_pP_ppT");
    TH2F* h_ppTc_pEta = (TH2F*)inFile->Get("h_ppTc_pEta");
+   TH2F* h_ppTc_pPhi = (TH2F*)inFile->Get("h_ppTc_pPhi");
 
    TH2F* h_nSigmaElectron_P = (TH2F*)inFile->Get("h_nSigmaElectron_P");
    TH2F* h_nSigmaEcorr_P = (TH2F*)inFile->Get("h_nSigmaEcorr_P");
@@ -91,7 +92,27 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSidepte
    TH1F* h_pT_ratio_EperP = (TH1F*)h_pT__electrons->Clone("h_pT_ratio_EperP");	h_pT_ratio_EperP->SetTitle("e^{-}/e^{+} p_{T} ratio;p_{T} [GeV/c];Ratio");	h_pT_ratio_EperP->Divide(h_pT__positrons);
    TH1F* h_eta_ratio_EperP = (TH1F*)h_eta__electrons->Clone("h_eta_ratio_EperP");	h_eta_ratio_EperP->SetTitle("e^{-}/e^{+} #eta ratio;#eta [GeV/c];Ratio");	h_eta_ratio_EperP->Divide(h_eta__positrons);
    TH1F* h_phi_ratio_EperP = (TH1F*)h_phi__electrons->Clone("h_phi_ratio_EperP");	h_phi_ratio_EperP->SetTitle("e^{-}/e^{+} #phi ratio;#phi [GeV/c];Ratio");	h_phi_ratio_EperP->Divide(h_phi__positrons);
-  
+   if (1)
+  {
+   	   TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 1200, 600);
+	   c_temp->Divide(2, 1);
+
+	   c_temp->cd(1);
+	   gPad->SetLogz(1);
+	   gPad->SetLeftMargin(0.12);
+	   gPad->SetRightMargin(0.12);
+	   gStyle->SetOptStat(0);
+	   h_ppTc_pPhi->GetXaxis()->SetRangeUser(0.0, 5.0);
+	   h_ppTc_pPhi->DrawClone("col z");
+
+	   c_temp->cd(2);
+	   gPad->SetLogz(1);
+	   gPad->SetLeftMargin(0.12);
+	   gPad->SetRightMargin(0.12);
+	   gStyle->SetOptStat(0);
+	   h_ppTc_pPhi->GetXaxis()->SetRangeUser(-5.0, 0.0);
+	   h_ppTc_pPhi->DrawClone("col z");
+  }
    if (0)//nsigmaElectron__EID, h_pP_ppT, h_passEvtcut, h_passTrkcut
    {
 	   //误差条，设置Marker形状颜色，设置线条颜色，设置图例，设置坐标轴标题，设置对数Y坐标）
@@ -105,12 +126,16 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSidepte
 	   gPad->SetLeftMargin(0.12);
 	   gPad->SetRightMargin(0.12);
 	   gStyle->SetOptStat(0);
+	   h_ppTc_pPhi->GetXaxis()->SetRangeUser(0.0, 5.0);
+	   h_ppTc_pPhi->DrawClone("col z");
 
 	   c_temp->cd(2);
 	   gPad->SetLogz(1);
 	   gPad->SetLeftMargin(0.12);
 	   gPad->SetRightMargin(0.12);
 	   gStyle->SetOptStat(0);
+	   h_ppTc_pPhi->GetXaxis()->SetRangeUser(-5.0, 0.0);
+	   h_ppTc_pPhi->DrawClone("col z");
 
 
 	   c_temp->cd(3);
@@ -639,7 +664,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSidepte
 
 	   c6->SaveAs(Form("roots/%d_group3.png", number));
    }
-   if (1)//check PhiV cut
+   if (0)//check PhiV cut
    {
 	   h_Mee__unlikeSame->SetLineColor(kBlack);
 	   h_Mee__unlikeSame->GetYaxis()->SetTitleOffset(1.5);
