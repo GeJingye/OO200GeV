@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 //16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSideptetaphi_rmPotonicEbyTagSingle_P24iy.root", Int_t number = 33)//
+void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimitin3group_P24iy.root", Int_t number = 34)//
 {
    // 从root文件中导入待拟合的直方图
    TFile *inFile = new TFile(inFilename); if (!inFile)
@@ -92,7 +92,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSidepte
    TH1F* h_pT_ratio_EperP = (TH1F*)h_pT__electrons->Clone("h_pT_ratio_EperP");	h_pT_ratio_EperP->SetTitle("e^{-}/e^{+} p_{T} ratio;p_{T} [GeV/c];Ratio");	h_pT_ratio_EperP->Divide(h_pT__positrons);
    TH1F* h_eta_ratio_EperP = (TH1F*)h_eta__electrons->Clone("h_eta_ratio_EperP");	h_eta_ratio_EperP->SetTitle("e^{-}/e^{+} #eta ratio;#eta [GeV/c];Ratio");	h_eta_ratio_EperP->Divide(h_eta__positrons);
    TH1F* h_phi_ratio_EperP = (TH1F*)h_phi__electrons->Clone("h_phi_ratio_EperP");	h_phi_ratio_EperP->SetTitle("e^{-}/e^{+} #phi ratio;#phi [GeV/c];Ratio");	h_phi_ratio_EperP->Divide(h_phi__positrons);
-   if (1)
+   if (0) // clear plot
   {
    	   TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 1200, 600);
 	   c_temp->Divide(2, 1);
@@ -248,7 +248,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/33_20260323_iTPCrmLowEtaSidepte
 
 	   c_temp->SaveAs(Form("roots/%d_Track_and_Event_Check.png", number));
    }
-   if (0) //EID cut
+   if (1) //EID cut
    {
 	   TCanvas *c_sum = new TCanvas("c_sum", "c_sum", 1000, 900);
 	   c_sum->Divide(2, 2);

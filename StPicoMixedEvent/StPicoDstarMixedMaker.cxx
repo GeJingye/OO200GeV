@@ -234,7 +234,6 @@ void StPicoDstarMixedMaker::initHists()
 	h_pT__TOFMatch  = new TH1F("h_pT__TOFMatch", "p_{T} of TOF matched tracks;p_{T} (GeV/c);counts", 1000, 0., 10.);
 	h_Eta__TOFMatch = new TH1F("h_Eta__TOFMatch", "#eta of TOF matched tracks;#eta;counts", 500, -2.5, 2.5);
 	h_Phi__TOFMatch = new TH1F("h_Phi__TOFMatch", "#phi of TOF matched tracks;#phi;counts", 64, -3.2, 3.2);
-	h_nSigmaEcorr_P__TOFMatch = new TH2F("h_nSigmaEcorr_P__TOFMatch", "n#sigma_{e} vs p (TOF acceptance);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	// 经TPC和TOF判选后的电子信息
 	h_eNumber_Cen = new TH2F("h_eNumber_Cen", ";Num.;Cen", 50, 0., 50., 16, 0., 16.);
 	h_pT__electrons = new TH1F("h_pT__electrons", "p_{T} of electrons;p_{T} (GeV/c)", 100, 0., 5.);
@@ -489,11 +488,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				  h_Eta__TOFMatch->Fill(mom.Eta());
 				  h_Phi__TOFMatch->Fill(mom.Phi());
 				  if (mom.Perp() > 0.2 && fabs(mom.Eta()) < anaCuts::Eta) h_invBeta_P__TOFMatch->Fill(mom.Mag(), 1. / beta);
-				  if (fabs(1.0 / beta - 1) < 0.025)
-				  {
-					  isTOFElectron__1 = kTRUE;
-					  h_nSigmaEcorr_P__TOFMatch->Fill(mom.Mag(), nSigmaE_corr);
-				  }
+				  isTOFElectron__1 = fabs(1.0 / beta - 1) < 0.025;
 			  }
 		  }
 		  ////not corrected nSigmaE
@@ -575,7 +570,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					  if (isLowPElectron__3)
 					  {
 						  h_nSigmaElectron_Eta__EIDcut_3_lowP->Fill(mom.Eta(), nSigmaE);
-						  isValidElectron__lowP_3 = (mom.Phi() < 3.2) && (fabs(mom.Eta()) < 0.8 && fabs(mom.Eta()) > 0.2) && (mom.Perp() > 0.07 && mom.Perp() < 0.14);
+						  isValidElectron__lowP_3 = (mom.Phi() < 3.2) && (fabs(mom.Eta()) < 0.8 && fabs(mom.Eta()) > 0.1) && (mom.Perp() > 0.07 && mom.Perp() < 0.14);
 						  if (trk->charge() > 0)
 						  {
 							  h_pT_Eta_Phi__EIDcut_3_lowP_p->Fill(mom.Perp(), mom.Eta(), mom.Phi());
@@ -591,8 +586,8 @@ Int_t StPicoDstarMixedMaker::Make()
 			  }
 		  }
 
-		  //if (isElectronRegion1)//
-		  if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
+		  if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)
+		  //if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 			h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -1005,7 +1000,6 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_nSigmaPion_P__3->Write();
 	h_nSigmaKaon_P__3->Write();
 	h_nSigmaProton_P__2->Write();
-	h_nSigmaEcorr_P__TOFMatch->Write();
 	h_pT_Eta_Phi__EIDcut_3_lowP_e->Write();
 	h_pT_Eta_Phi__EIDcut_3_lowP_p->Write();
 

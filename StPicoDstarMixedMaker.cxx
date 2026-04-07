@@ -214,29 +214,39 @@ void StPicoDstarMixedMaker::initHists()
 	h_nSigmaElectron_P__1 = new TH2F("h_nSigmaElectron_P__1", "n#sigma_{e} vs p (p_{T}>0.2,|#eta|<0.9);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__2 = new TH2F("h_nSigmaElectron_P__2", "n#sigma_{e} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__3 = new TH2F("h_nSigmaElectron_P__3", "n#sigma_{e} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+	h_nSigmaElectron_P__4 = new TH2F("h_nSigmaElectron_P__4", "n#sigma_{e} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__TOFMatch = new TH2F("h_nSigmaElectron_P__TOFMatch", "n#sigma_{e} vs p (p_{T}>0.2,|#eta|<0.9);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+	h_nSigmaElectron_P__eTOFMatch = new TH2F("h_nSigmaElectron_P__eTOFMatch", "n#sigma_{e} vs p (p_{T}>0.2,|#eta|<0.9);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+
 	h_nSigmaElectron_P__PID_2 = new TH2F("h_nSigmaElectron_P__PID_2", "n#sigma_{e} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__PID_3 = new TH2F("h_nSigmaElectron_P__PID_3", "n#sigma_{e} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+
 	h_nSigmaElectron_P__EIDcut_1 = new TH2F("h_nSigmaElectron_P__EIDcut_1", "n#sigma_{e} vs p (p_{T}>0.2,|#eta|<0.9);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__EIDcut_2 = new TH2F("h_nSigmaElectron_P__EIDcut_2", "n#sigma_{e} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_Eta__EIDcut_2 = new TH2F("h_nSigmaElectron_Eta__EIDcut_2", "n#sigma_{e} vs #eta (p_{T}>0.2,0.9<|#eta|<1.8);#eta;n#sigma_{e}", 400, -2, 2, 2000, -10, 10);
 	h_nSigmaElectron_P__EIDcut_3 = new TH2F("h_nSigmaElectron_P__EIDcut_3", "n#sigma_{e} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_Eta__EIDcut_3_lowP = new TH2F("h_nSigmaElectron_Eta__EIDcut_3_lowP", "n#sigma_{e} vs #eta (p_{T}<0.2,low p,|#eta|<1.8);#eta;n#sigma_{e}", 400, -2.0, 2.0, 2000, -10, 10);
 	h_nSigmaElectron_Eta__EIDcut_3_highP = new TH2F("h_nSigmaElectron_Eta__EIDcut_3_highP", "n#sigma_{e} vs #eta (p_{T}<0.2,high p,|#eta|<1.8);#eta;n#sigma_{e}", 400, -2.0, 2.0, 2000, -10, 10);
-	h_nSigmaElectron_P__EIDcut_total = new TH2F("h_nSigmaElectron_P__EIDcut_total", "n#sigma_{e} vs p (p_{T}>0.06,0.0<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+	h_nSigmaElectron_P__EIDcut_4 = new TH2F("h_nSigmaElectron_P__EIDcut_4", "n#sigma_{e} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+	
 	h_nSigmaKaon_P__2 = new TH2F("h_nSigmaKaon_P__2", "n#sigma_{K} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{K}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaProton_P__2 = new TH2F("h_nSigmaProton_P__2", "n#sigma_{P} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{P}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaPion_P__3 = new TH2F("h_nSigmaPion_P__3", "n#sigma_{pi} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{pi}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaKaon_P__3 = new TH2F("h_nSigmaKaon_P__3", "n#sigma_{K} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{K}", 500, 0, 5, 2000, -10, 10);
+
+	h_nSigmaElectron_P__EIDcut_total = new TH2F("h_nSigmaElectron_P__EIDcut_total", "n#sigma_{e} vs p (p_{T}>0.06,0.0<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_pT_Eta_Phi__EIDcut_3_lowP_e = new TH3F("h_pT_Eta_Phi__EIDcut_3_lowP_e", "p_{T} vs #eta vs #phi;p_{T} (GeV/c);#eta;#phi", 50, 0., 0.5, 50, -2.5, 2.5, 64, -3.2, 3.2);
 	h_pT_Eta_Phi__EIDcut_3_lowP_p = new TH3F("h_pT_Eta_Phi__EIDcut_3_lowP_p", "p_{T} vs #eta vs #phi;p_{T} (GeV/c);#eta;#phi", 50, 0., 0.5, 50, -2.5, 2.5, 64, -3.2, 3.2);
 
 	// TOF匹配的径迹信息
 	h_invBeta_P__TOFMatch = new TH2F("h_invBeta_P__TOFMatch", "1/#beta vs p;p (GeV/c);1/#beta", 500, 0, 5, 5000, 0, 5);
+	h_invBeta_P__eTOFMatch = new TH2F("h_invBeta_P__eTOFMatch", "1/#beta vs p;p (GeV/c);1/#beta", 500, 0, 5, 5000, 0, 5);
 	h_pT__TOFMatch = new TH1F("h_pT__TOFMatch", "p_{T} of TOF matched tracks;p_{T} (GeV/c);counts", 1000, 0., 10.);
 	h_Eta__TOFMatch = new TH1F("h_Eta__TOFMatch", "#eta of TOF matched tracks;#eta;counts", 500, -2.5, 2.5);
 	h_Phi__TOFMatch = new TH1F("h_Phi__TOFMatch", "#phi of TOF matched tracks;#phi;counts", 64, -3.2, 3.2);
-	h_nSigmaEcorr_P__TOFMatch = new TH2F("h_nSigmaEcorr_P__TOFMatch", "n#sigma_{e} vs p (TOF acceptance);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+	h_pT__eTOFMatch = new TH1F("h_pT__eTOFMatch", "p_{T} of TOF matched tracks;p_{T} (GeV/c);counts", 1000, 0., 10.);
+	h_Eta__eTOFMatch = new TH1F("h_Eta__eTOFMatch", "#eta of TOF matched tracks;#eta;counts", 500, -2.5, 2.5);
+	h_Phi__eTOFMatch = new TH1F("h_Phi__eTOFMatch", "#phi of TOF matched tracks;#phi;counts", 64, -3.2, 3.2);
 	// 经TPC和TOF判选后的电子信息
 	h_eNumber_Cen = new TH2F("h_eNumber_Cen", ";Num.;Cen", 50, 0., 50., 16, 0., 16.);
 	h_pT__electrons = new TH1F("h_pT__electrons", "p_{T} of electrons;p_{T} (GeV/c)", 100, 0., 5.);
@@ -409,8 +419,10 @@ Int_t StPicoDstarMixedMaker::Make()
 				Double_t nSigmaK = trk->nSigmaKaon();
 				Double_t nSigmaP = trk->nSigmaProton();
 				Double_t beta = getTofBeta(trk);
+				Double_t beta_E = getETofBeta(trk);
 				Double_t m2 = pow(mom.Mag() * 1.0 / beta, 2) * (1 - beta * beta);
 				Bool_t isTOFMatch = (beta != std::numeric_limits<Float_t>::quiet_NaN()) && beta > 0;
+				Bool_t isETOFMatch = (beta_E != std::numeric_limits<Float_t>::quiet_NaN()) && beta_E > 0;
 
 				// 填充直方图
 				if (fabs(mgDCAs + 999.0) > 1e-2)
@@ -490,9 +502,12 @@ Int_t StPicoDstarMixedMaker::Make()
 				Bool_t isLowEtaElectron__3 = kFALSE;
 				Bool_t isValidElectron__lowP_3 = kTRUE;
 
+				Bool_t isTPCElectron__4 = kFALSE;
+
 				Bool_t isElectronRegion1 = kFALSE;
 				Bool_t isElectronRegion2 = kFALSE;
 				Bool_t isElectronRegion3 = kFALSE;
+				Bool_t isElectronRegion4 = kFALSE;
 
 				// TPC cut + TOF cut
 				// groupn 1
@@ -512,15 +527,11 @@ Int_t StPicoDstarMixedMaker::Make()
 						if (fabs(1.0 / beta - 1) < 0.025)
 						{
 							isTOFElectron__1 = kTRUE;
-							h_nSigmaEcorr_P__TOFMatch->Fill(mom.Mag(), nSigmaE_corr);
 						}
 					}
 				}
 				////not corrected nSigmaE
-				if (mom.Mag() <= 1.0)
-					isTPCElectron__1 = nSigmaE < 3.0 && nSigmaE > (2.8 * mom.Mag() - 4.0);
-				if (mom.Mag() > 1.0)
-					isTPCElectron__1 = nSigmaE < 3.0 && nSigmaE > -1.2;
+				isTPCElectron__1 = (mom.Mag() <= 1.0) ? (nSigmaE < 3.0 && nSigmaE > (2.8 * mom.Mag() - 4.0)) : (nSigmaE < 3.0 && nSigmaE > -1.2);
 				// corrected nSigmaE
 				// if (mom.Mag() <= 1.0) isTPCElectron__1 = nSigmaE<3.5 && nSigmaE>(2.8*mom.Mag()-3.5);
 				// if (mom.Mag() > 1.0)  isTPCElectron__1 = nSigmaE<3.5 && nSigmaE>-0.7;
@@ -568,7 +579,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					}
 				}
 				// group 2
-				if (mom.Perp() > 0.2 && fabs(mom.Eta()) > anaCuts::Eta && fabs(mom.Eta()) < 1.8)
+				if (mom.Perp() > 0.2 && mom.Eta() > anaCuts::Eta && fabs(mom.Eta()) < 1.8)
 				{
 					h_nSigmaElectron_P__2->Fill(mom.Mag(), nSigmaE);
 					h_nSigmaKaon_P__2->Fill(mom.Mag(), nSigmaK);
@@ -583,6 +594,34 @@ Int_t StPicoDstarMixedMaker::Make()
 							isElectronRegion2 = kTRUE;
 						}
 					}
+				}
+				// group 4
+				isTPCElectron__4 = (mom.Mag() <= 1.0) ? (nSigmaE < 3.0 && nSigmaE > (2.8 * mom.Mag() - 4.0)) : (nSigmaE < 3.0 && nSigmaE > -1.2);
+				if (isETOFMatch)
+				{
+					//StPicoETofPidTraits const *const etofPid = mPicoDstMaker->picoDst()->etofPidTraits(trk->eTofPidTraitsIndex());
+					//Int_t etofid = etofPid->etofCellId();//error: 'const class StPicoETofPidTraits' has no member named 'etofCellId'
+
+					// if (isGoodETofCell(etofid)) // && fabs(etofPid->etofYLocal()) < 1.8)//详见note_2013_JieZhao
+					// {
+						h_pT__eTOFMatch->Fill(mom.Perp());
+						h_Eta__eTOFMatch->Fill(mom.Eta());
+						h_Phi__eTOFMatch->Fill(mom.Phi());
+
+						h_invBeta_P__eTOFMatch->Fill(mom.Mag(), 1. / beta_E);
+						h_nSigmaElectron_P__4->Fill(mom.Mag(), nSigmaE);
+
+						if (fabs(1.0 / beta_E - 1.0) < 0.025)
+						{
+							h_nSigmaElectron_P__eTOFMatch->Fill(mom.Mag(), nSigmaE);
+							if(isTPCElectron__4)
+							{
+								isElectronRegion4 = kTRUE;
+								h_nSigmaElectron_P__EIDcut_4->Fill(mom.Mag(), nSigmaE);
+							}
+						}
+						
+					//}
 				}
 				// group 3
 				if (mom.Perp() < 0.2 && fabs(mom.Eta()) < 1.8)
@@ -909,6 +948,7 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_nHitsDEdx_Pt_Eta->Write();
 
 	h_invBeta_P__TOFMatch->Write();
+	h_invBeta_P__eTOFMatch->Write();
 	h_dEdx_Pc->Write();
 	h_m2->Write();
 	h_m2_Pc->Write();
@@ -925,6 +965,10 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_pT__TOFMatch->Write();
 	h_Eta__TOFMatch->Write();
 	h_Phi__TOFMatch->Write();
+	
+	h_pT__eTOFMatch->Write();
+	h_Eta__eTOFMatch->Write();
+	h_Phi__eTOFMatch->Write();
 
 	h_nSigmaElectron_P->Write();
 	h_nSigmaEcorr_P->Write();
@@ -954,7 +998,9 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_nSigmaElectron_P__1->Write();
 	h_nSigmaElectron_P__2->Write();
 	h_nSigmaElectron_P__3->Write();
+	h_nSigmaElectron_P__4->Write();
 	h_nSigmaElectron_P__TOFMatch->Write();
+	h_nSigmaElectron_P__eTOFMatch->Write();
 	h_nSigmaElectron_P__PID_2->Write();
 	h_nSigmaElectron_P__PID_3->Write();
 	h_nSigmaElectron_P__EIDcut_1->Write();
@@ -964,11 +1010,11 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_nSigmaElectron_Eta__EIDcut_3_lowP->Write();
 	h_nSigmaElectron_Eta__EIDcut_3_highP->Write();
 	h_nSigmaElectron_P__EIDcut_total->Write();
+	h_nSigmaElectron_P__EIDcut_4->Write();
 	h_nSigmaKaon_P__2->Write();
 	h_nSigmaPion_P__3->Write();
 	h_nSigmaKaon_P__3->Write();
 	h_nSigmaProton_P__2->Write();
-	h_nSigmaEcorr_P__TOFMatch->Write();
 	h_pT_Eta_Phi__EIDcut_3_lowP_e->Write();
 	h_pT_Eta_Phi__EIDcut_3_lowP_p->Write();
 
@@ -1067,6 +1113,35 @@ Float_t StPicoDstarMixedMaker::getTofBeta(StPicoTrack const *const trk) const
 				else
 					beta = std::numeric_limits<Float_t>::quiet_NaN();
 			}
+		}
+	}
+	return beta;
+}
+
+Float_t StPicoDstarMixedMaker::getETofBeta(StPicoTrack const *const trk) const
+{
+	Int_t index2tof = trk->eTofPidTraitsIndex();
+	Float_t beta = std::numeric_limits<Float_t>::quiet_NaN();
+	if (index2tof >= 0)
+	{
+		StPicoETofPidTraits const *const tofPid = mPicoDstMaker->picoDst()->etofPidTraits(index2tof);
+		if (tofPid)
+		{
+			beta = tofPid->beta();
+			// if (beta < 1e-4)
+			// {
+			// 	TVector3 const vtx3 = mPicoDstMaker->picoDst()->event()->primaryVertex();
+			// 	StThreeVectorF vtx(vtx3.x(), vtx3.y(), vtx3.z());
+			// 	TVector3 const etofHitPos3 = tofPid->crossingPos();
+			// 	StThreeVectorF etofHitPos(etofHitPos3.x(), etofHitPos3.y(), etofHitPos3.z());
+			// 	StPicoPhysicalHelix helix = trk->helix(mPicoDstMaker->picoDst()->event()->bField());
+			// 	Float_t L = tofPathLength(&vtx, &etofHitPos, helix.curvature());
+			// 	Float_t tof = tofPid->tof();
+			// 	if (tof > 0)
+			// 		beta = L / (tof * (C_C_LIGHT / 1.e9));
+			// 	else
+			// 		beta = std::numeric_limits<Float_t>::quiet_NaN();
+			// }
 		}
 	}
 	return beta;
