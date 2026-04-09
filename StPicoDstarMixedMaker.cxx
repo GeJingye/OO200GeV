@@ -590,10 +590,16 @@ Int_t StPicoDstarMixedMaker::Make()
 			  }
 		  }
 
-		  //if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
-		  //if (isElectronRegion3 && !isLowPElectron__3)//model 3
+		  //if (isElectronRegion1)//model 1
 		  //if (isElectronRegion2)//model 2
-		  if (isElectronRegion3 && !isLowPElectron__3)//model 3
+		  //if (isElectronRegion3 && !isLowPElectron__3)//model 3
+		  //if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
+		//   	1	2	3	4
+		// 1 |  X			i
+		// 2 |		X
+		// 3 |			X   √
+		// 4 |	i		√	X
+		  if (isElectronRegion1)//model 1
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 			h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -631,7 +637,8 @@ Int_t StPicoDstarMixedMaker::Make()
 				current_positron_A[current_nPositron_A].SetE(sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0)));
 				current_nPositron_A++;
 			}
-          }// 填充单径迹的正/负电子信息
+          }
+
 		  if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
@@ -670,8 +677,8 @@ Int_t StPicoDstarMixedMaker::Make()
 				current_positron_B[current_nPositron_B].SetE(sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0)));
 				current_nPositron_B++;
 			}
-          }// 填充单径迹的正/负电子信息
-      }// 填充单事例所有径迹的正负电子信息
+          }
+      }
 
       Int_t x=0;
       Int_t y=0;
@@ -684,7 +691,7 @@ Int_t StPicoDstarMixedMaker::Make()
       TLorentzVector particle1_4V(0,0,0,0);
       TLorentzVector particle2_4V(0,0,0,0);
 	  // 通过随机组合++, --, +-电子对重建信号
-	  // +-
+	  // A+ B-
 	  for (x = 0; x < num_positron_A; x++)
 	  {
 		  particle1_4V.SetPx(positroninfo_A[x].p1);
@@ -707,7 +714,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			}
 		  }
 	  }// end: +-
-	  // -+
+	  // A- B+
 	  for (x = 0; x < num_positron_B; x++)
 	  {
 		  particle1_4V.SetPx(positroninfo_B[x].p1);
@@ -737,7 +744,7 @@ Int_t StPicoDstarMixedMaker::Make()
 		particle1_4V.SetPy(electroninfo_A[x].p2);
 		particle1_4V.SetPz(electroninfo_A[x].p3);
 		particle1_4V.SetE(electroninfo_A[x].energy);
-		for (y = x + 1; y < num_electron_B; y++)//从x+1开始，避免自组合和重复组合
+		for (y = 0; y < num_electron_B; y++)//从x+1开始，避免自组合和重复组合
 		{
 			particle2_4V.SetPx(electroninfo_B[y].p1);
 			particle2_4V.SetPy(electroninfo_B[y].p2);
@@ -757,7 +764,7 @@ Int_t StPicoDstarMixedMaker::Make()
         particle1_4V.SetPy(positroninfo_A[x].p2);
         particle1_4V.SetPz(positroninfo_A[x].p3);
         particle1_4V.SetE(positroninfo_A[x].energy);
-        for(y=x+1;y<num_positron_B;y++)
+        for(y = 0; y < num_positron_B; y++)
         {
 			particle2_4V.SetPx(positroninfo_B[y].p1);
 			particle2_4V.SetPy(positroninfo_B[y].p2);

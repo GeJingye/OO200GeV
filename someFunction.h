@@ -273,6 +273,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
 	pt->SetFillColorAlpha(0, 0);   // ͸����
+	pt->SetFillStyle(0);
 	pt->SetBorderSize(0);
 	pt->SetTextFont(42);
 	pt->SetTextSize(0.09);
