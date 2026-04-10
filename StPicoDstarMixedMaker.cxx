@@ -595,11 +595,11 @@ Int_t StPicoDstarMixedMaker::Make()
 		  //if (isElectronRegion3 && !isLowPElectron__3)//model 3
 		  //if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 		//   	1	2	3	4
-		// 1 |  X			i
-		// 2 |		X
-		// 3 |			X   √
-		// 4 |	i		√	X
-		  if (isElectronRegion1)//model 1
+		// 1 |  X			√
+		// 2 |		X	i	√
+		// 3 |		i	X   √
+		// 4 |	√	√	√	X
+		  if (isElectronRegion2)//model 2
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 			h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -639,7 +639,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			}
           }
 
-		  if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
+		  if (isElectronRegion1)//model 3
 		  {
 			h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 			h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);

@@ -585,10 +585,10 @@ Int_t StPicoDstarMixedMaker::Make()
 				  }
 			  }
 		  }
-		  if (isElectronRegion1)//model 1
+		  //if (isElectronRegion1)//model 1
 		  //if (isElectronRegion2)//model 2
 		  //if (isElectronRegion3 && !isLowPElectron__3)//model 3
-		  //if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
+		  if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 
 
 		  //if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
