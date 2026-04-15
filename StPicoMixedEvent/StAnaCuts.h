@@ -237,13 +237,13 @@ namespace anaCuts
 	Float_t const Vr = 2; // cm
 	Float_t const vzVpdVz = 3; // cm
 	// tracks cuts
-	Int_t   const NHitsFit_highPt = 20;//40
-	Int_t   const NHitsDedx_highPt =14;//30
-	Int_t   const NHitsFit_lowPt = 20;//13
-	Int_t   const NHitsDedx_lowPt = 14;//10
+	Int_t   const NHitsFit_highPt = 40;//40
+	Int_t   const NHitsDedx_highPt =30;//30
+	Int_t   const NHitsFit_lowPt = 20;//20
+	Int_t   const NHitsDedx_lowPt = 14;//14
 	Float_t const NHitsFitRatio = 0.52;
-	Float_t const Dca_highPt = 3;//1
-	Float_t const Dca_lowPt = 3;//1
+	Float_t const Dca_highPt = 1;//1
+	Float_t const Dca_lowPt = 3;//3
 	Float_t const Pt = 0.2;
 	Float_t const Eta = 0.9;
     Float_t const PhiVCutMRange = 0.2;

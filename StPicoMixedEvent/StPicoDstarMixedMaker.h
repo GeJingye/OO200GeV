@@ -223,7 +223,8 @@ class StPicoDstarMixedMaker : public StMaker
 	TH3F* h_pT_Eta_Phi__EIDcut_3_lowP_e;
 	TH3F* h_pT_Eta_Phi__EIDcut_3_lowP_p;
 	// phiV cut
-	TH2F* h_eNumber_Cen;
+	TH2F* h_e_p__Number_Same;
+	TH2F* h_e_p__Number_Mix;
 	TH1F* h_pT__positrons;
 	TH1F* h_eta__positrons;
 	TH1F* h_phi__positrons;

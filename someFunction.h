@@ -269,7 +269,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	h_Mee_Pt020p1__LikeSame_Rebin->DrawClone("same");
 	//h_Mee_Pt020p1__unlikeMixed_Rebin->DrawClone("same");
 	h_Mee_Pt020p1__rmLS_Rebin->DrawClone("same");
-	//h_Mee_Pt020p1__rmUM_Rebin->DrawClone("same");
+	h_Mee_Pt020p1__rmUM_Rebin->DrawClone("same");
 
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
 	pt->SetFillColorAlpha(0, 0);   // ͸����
