@@ -518,7 +518,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				if (mom.Mag() <= 1.0)
 					isTPCElectron__1 = nSigmaE < 3.0 && nSigmaE > (2.8 * mom.Mag() - 4.0);
 				if (mom.Mag() > 1.0)
-					isTPCElectron__1 = nSigmaE < 3.0 && nSigmaE > -1.0;
+					isTPCElectron__1 = nSigmaE < 3.0 && nSigmaE > -1.2;
 				// corrected nSigmaE
 				// if (mom.Mag() <= 1.0) isTPCElectron__1 = nSigmaE<3.5 && nSigmaE>(2.8*mom.Mag()-3.5);
 				// if (mom.Mag() > 1.0)  isTPCElectron__1 = nSigmaE<3.5 && nSigmaE>-0.7;
@@ -535,7 +535,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				//  group 2 P24iy
 				isTPCKaon__2 = nSigmaK > -2.5 && nSigmaK < 4.0;
 				isTPCProton__2 = nSigmaP > -2.2 && nSigmaP < 4.2;
-				isTPCElectron__2 = nSigmaE > -1.0 && nSigmaE < 3.0;
+				isTPCElectron__2 = nSigmaE > -1.5 && nSigmaE < 3.0;
 				// group 3 P24iy
 				if (mom.Mag() > 0.0 && mom.Mag() <= 0.2)
 					isTPCPion__3 = nSigmaPi > -20.0 * mom.Mag() - 1.0 && nSigmaPi < -5.71 * mom.Mag() + 5.0;
@@ -546,9 +546,9 @@ Int_t StPicoDstarMixedMaker::Make()
 				if (mom.Mag() > 0.0 && mom.Mag() < 0.14)
 					isTPCElectron__3 = nSigmaE > -4.0 && nSigmaE < 1.0;
 				if (mom.Mag() > 0.14 && mom.Mag() < 0.18)
-					isTPCElectron__3 = nSigmaE > -1.0 && nSigmaE < 1.0;
+					isTPCElectron__3 = nSigmaE > -2.0 && nSigmaE < 1.0;
 				if (mom.Mag() > 0.18 && mom.Mag() < 0.7)
-					isTPCElectron__3 = nSigmaE > -1.0 && nSigmaE < 3.0;
+					isTPCElectron__3 = nSigmaE > -2.0 && nSigmaE < 3.0;
 
 				// Fill Histogram
 				// group 1
