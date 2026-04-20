@@ -615,8 +615,9 @@ Int_t StPicoDstarMixedMaker::Make()
 				// if (isElectronRegion1)//model 1
 				// if (isElectronRegion2)//model 2
 				// if (isElectronRegion3 && !isLowPElectron__3)//model 3
+				// if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				// if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
-				if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3)) // && !isLowPElectron__3;isLowEtaElectron__3
+				if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				{
 					// h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 					// h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -1306,20 +1307,18 @@ void StPicoDstarMixedMaker::copyCurrentToBuffer()
 	// 判断是否已满
 	if (nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex] >= kMaxEventsInBuffer)
 		bufferFullFlag[magBufferIndex][cenBufferIndex][vzBufferIndex] = kTRUE;
+	else nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex]++;
 
 	Int_t eventIndex = -1;
 	if (bufferFullFlag[magBufferIndex][cenBufferIndex][vzBufferIndex])
 		eventIndex = gRandom->Integer(kMaxEventsInBuffer);
 	else
-		eventIndex = nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex];
+		eventIndex = nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex]-1;
 
 	buffer_nEPlus[magBufferIndex][cenBufferIndex][vzBufferIndex][eventIndex] = current_nPositron;
 	for (Int_t i = 0; i < current_nPositron; i++)
 		buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][eventIndex][i] = current_positron[i];
 	buffer_nEMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][eventIndex] = current_nElectron;
 	for (Int_t i = 0; i < current_nElectron; i++)
-		buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][eventIndex][i] = current_electron[i];
-
-	if (nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex] < kMaxEventsInBuffer)
-		nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex]++;
+		buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][eventIndex][i] = current_electron[i];		
 }

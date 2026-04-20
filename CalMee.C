@@ -328,7 +328,7 @@ void CalMee(TString inFileName = "roots/20260416_iTPCmodel11_TypicalTrackCut_P24
 		}
 		c->SaveAs(Form("roots/%d_SamePMix_per_pt.png", number));
 	}
-	if (0)//2D QA
+	if (1)//2D QA
 	{
 		//画图
 		TCanvas *c1 = new TCanvas("c1", "c1", 900, 900);
@@ -733,7 +733,7 @@ void CalMee(TString inFileName = "roots/20260416_iTPCmodel11_TypicalTrackCut_P24
 		c2->SaveAs(Form("roots/%d_Mee_pt_test.png", number));
 	}
 	
-	if (0)//画图
+	if (1)//画图
 	{
 		//设置直方图格式
 		h_Mee__unlikeSame_Rebin->SetLineColor(1);		h_Mee__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee__unlikeSame_Rebin->SetMarkerColor(1);

@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 //16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimitin3group_P24iy.root", Int_t number = 34)//
+void DrawNSigmaEPiKP(TString inFilename = "roots/20260416_iTPCmodel11_TypicalTrackCut_P24iy.root", Int_t number = 48)//
 {
    // 从root文件中导入待拟合的直方图
    TFile *inFile = new TFile(inFilename); if (!inFile)
@@ -248,7 +248,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimiti
 
 	   c_temp->SaveAs(Form("roots/%d_Track_and_Event_Check.png", number));
    }
-   if (1) //EID cut
+   if (0) //EID cut
    {
 	   TCanvas *c_sum = new TCanvas("c_sum", "c_sum", 1000, 900);
 	   c_sum->Divide(2, 2);
@@ -438,7 +438,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimiti
    }
 
    TString Tag = "P24iy";
-   if (0)//EID in group1(pT>0.2, |eta|<1)
+   if (1)//EID in group1(pT>0.2, |eta|<1)
    {
 		// 设置直方图格式
 		// 去除误差条，设置Marker形状颜色，设置线条颜色，设置图例，设置坐标轴标题，设置对数Y坐标）
@@ -483,7 +483,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimiti
 
 		c4->SaveAs(Form("roots/%d_group1.png", number));
 	}
-   if (0)//EID in group2(pT>0.2, 1.0<|eta|<1.8)
+   if (1)//EID in group2(pT>0.2, 1.0<|eta|<1.8)
    {
 	   // 设置直方图格式
 	   h_nSigmaElectron_P__2->SetTitle("n#sigma_{e} in p_{T}>0.2&0.9<|#eta|<1.8;p (GeV/c);n#sigma_{e}");
@@ -572,7 +572,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimiti
 
 	   c5->SaveAs(Form("roots/%d_group2.png", number));
    }
-   if (0)//EID in group3(pT>0.2, 1.0<|eta|<1.8)
+   if (1)//EID in group3(pT>0.2, 1.0<|eta|<1.8)
    {
 	   // 设置直方图格式
 
@@ -664,7 +664,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260403_iTPCValidE_sanmeLimiti
 
 	   c6->SaveAs(Form("roots/%d_group3.png", number));
    }
-   if (0)//check PhiV cut
+   if (1)//check PhiV cut
    {
 	   h_Mee__unlikeSame->SetLineColor(kBlack);
 	   h_Mee__unlikeSame->GetYaxis()->SetTitleOffset(1.5);
