@@ -270,6 +270,9 @@ void StPicoDstarMixedMaker::initHists()
 	h_Mee_Pt_Cen__unlikeSame = new TH3F("h_Mee_Pt_Cen__unlikeSame", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likemm = new TH3F("h_Mee_Pt_Cen__likemm", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likepp = new TH3F("h_Mee_Pt_Cen__likepp", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__unlikeSame_Ro = new TH3F("h_Mee_Pt_Cen__unlikeSame_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likemm_Ro = new TH3F("h_Mee_Pt_Cen__likemm_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likepp_Ro = new TH3F("h_Mee_Pt_Cen__likepp_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__unlikeMixed = new TH3F("h_Mee_Pt_Cen__unlikeMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likemmMixed = new TH3F("h_Mee_Pt_Cen__likemmMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likeppMixed = new TH3F("h_Mee_Pt_Cen__likeppMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
@@ -716,6 +719,8 @@ Int_t StPicoDstarMixedMaker::Make()
 			TLorentzVector eepair(0, 0, 0, 0);
 			TLorentzVector particle1_4V(0, 0, 0, 0);
 			TLorentzVector particle2_4V(0, 0, 0, 0);
+			TLorentzVector particle1_4V_Ro(0, 0, 0, 0);
+			TLorentzVector particle2_4V_Ro(0, 0, 0, 0);
 			// 通过随机组合++, --, +-电子对重建信号
 			// A+ B-
 			for (x = 0; x < num_positron_A; x++)
@@ -784,7 +789,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						h_Mee_Pt_Cen__likemm->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
 				}
-			} // end: for(x=0;x<num_electron;x++)
+			} // end: --
 			// ++
 			for (x = 0; x < num_positron_A; x++)
 			{
@@ -804,7 +809,91 @@ Int_t StPicoDstarMixedMaker::Make()
 						h_Mee_Pt_Cen__likepp->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
 				}
-			} // end: for(x=0;x<num_positron;x++)
+			} // end: ++
+
+
+			// A+ B- rotation technique
+			float rotation_angle = 3.14; // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
+			for (x = 0; x < num_positron_A; x++)
+			{
+				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPz(positroninfo_A[x].p3);
+				particle1_4V.SetE(positroninfo_A[x].energy);
+				for (y = 0; y < num_electron_B; y++)
+				{
+					particle2_4V.SetPx(electroninfo_B[y].pt * cos(electroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPy(electroninfo_B[y].pt * sin(electroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPz(electroninfo_B[y].p3);
+					particle2_4V.SetE(electroninfo_B[y].energy);
+					eepair = particle1_4V + particle2_4V;
+					if (fabs(eepair.Rapidity()) <= 1)
+					{
+						h_Mee_Pt_Cen__unlikeSame_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+					}
+				}
+			} // end: +-
+			// A- B+ rotation technique
+			for (x = 0; x < num_positron_B; x++)
+			{
+				particle1_4V.SetPx(positroninfo_B[x].pt * cos(positroninfo_B[x].phi + rotation_angle));
+				particle1_4V.SetPy(positroninfo_B[x].pt * sin(positroninfo_B[x].phi + rotation_angle));
+				particle1_4V.SetPz(positroninfo_B[x].p3);
+				particle1_4V.SetE(positroninfo_B[x].energy);
+				for (y = 0; y < num_electron_A; y++)
+				{
+					particle2_4V.SetPx(electroninfo_A[y].pt * cos(electroninfo_A[y].phi + rotation_angle));
+					particle2_4V.SetPy(electroninfo_A[y].pt * sin(electroninfo_A[y].phi + rotation_angle));
+					particle2_4V.SetPz(electroninfo_A[y].p3);
+					particle2_4V.SetE(electroninfo_A[y].energy);
+					eepair = particle1_4V + particle2_4V;
+					if (fabs(eepair.Rapidity()) <= 1)
+					{
+						h_Mee_Pt_Cen__unlikeSame_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+					}
+				}
+			} // end: -+
+			// A- B- rotation technique
+			for (x = 0; x < num_electron_A; x++)
+			{
+				particle1_4V.SetPx(electroninfo_A[x].pt * cos(electroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPy(electroninfo_A[x].pt * sin(electroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPz(electroninfo_A[x].p3);
+				particle1_4V.SetE(electroninfo_A[x].energy);
+				for (y = 0; y < num_electron_B; y++)
+				{
+					particle2_4V.SetPx(electroninfo_B[y].pt * cos(electroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPy(electroninfo_B[y].pt * sin(electroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPz(electroninfo_B[y].p3);
+					particle2_4V.SetE(electroninfo_B[y].energy);
+					eepair = particle1_4V + particle2_4V;
+					if (fabs(eepair.Rapidity()) <= 1)
+					{
+						h_Mee_Pt_Cen__likemm_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+					}
+				}
+			} // end: --
+			// A+ B+ rotation technique
+			for (x = 0; x < num_positron_A; x++)
+			{
+				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPz(positroninfo_A[x].p3);
+				particle1_4V.SetE(positroninfo_A[x].energy);
+				for (y = 0; y < num_positron_B; y++)
+				{
+					particle2_4V.SetPx(positroninfo_B[y].pt * cos(positroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPy(positroninfo_B[y].pt * sin(positroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPz(positroninfo_B[y].p3);
+					particle2_4V.SetE(positroninfo_B[y].energy);
+					eepair = particle1_4V + particle2_4V;
+					if (fabs(eepair.Rapidity()) <= 1)
+					{
+						h_Mee_Pt_Cen__likepp_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+					}
+				}
+			} // end: ++
+
 
 			int nEMinusInBuffer = 0;
 			int nEPlusInBuffer = 0;
@@ -1028,7 +1117,9 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_Mee_Pt_Cen__unlikeSame->Write();
 	h_Mee_Pt_Cen__likemm->Write();
 	h_Mee_Pt_Cen__likepp->Write();
-
+	h_Mee_Pt_Cen__unlikeSame_Ro->Write();
+	h_Mee_Pt_Cen__likemm_Ro->Write();
+	h_Mee_Pt_Cen__likepp_Ro->Write();
 	h_Mee_Pt_Cen__unlikeMixed->Write();
 	h_Mee_Pt_Cen__likemmMixed->Write();
 	h_Mee_Pt_Cen__likeppMixed->Write();

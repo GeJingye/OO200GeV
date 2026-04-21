@@ -247,6 +247,10 @@ class StPicoDstarMixedMaker : public StMaker
     TH3F* h_Mee_Pt_Cen__likemm;
     TH3F* h_Mee_Pt_Cen__likepp;
 
+    TH3F* h_Mee_Pt_Cen__unlikeSame_Ro;
+    TH3F* h_Mee_Pt_Cen__likemm_Ro;
+    TH3F* h_Mee_Pt_Cen__likepp_Ro;
+
     TH3F* h_Mee_Pt_Cen__unlikeMixed;
     TH3F* h_Mee_Pt_Cen__likemmMixed;
     TH3F* h_Mee_Pt_Cen__likeppMixed;

@@ -457,3 +457,53 @@ void NegateBinContents(TH1F* hist) {
 		hist->SetBinError(i, std::abs(error));
 	}
 }
+void printHist2DSci(TH2* h) {
+    if (!h) {
+        std::cerr << "Error: histogram is null!" << std::endl;
+        return;
+    }
+
+    Int_t nx = h->GetNbinsX();
+    Int_t ny = h->GetNbinsY();
+
+    // 1. 打印二维内容（科学计数法，保留一位小数）
+    // std::cout << "X bins: " << nx << ", Y bins: " << ny << std::endl;
+    // for (Int_t iy = 1; iy <= ny; ++iy) {
+    //     for (Int_t ix = 1; ix <= nx; ++ix) {
+    //         Double_t content = h->GetBinContent(ix, iy);
+    //         printf("%10.1e ", content);
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    // 2. 计算总 content、加权平均 X、加权平均 Y
+    Double_t total = 0.0;
+    Double_t sumX = 0.0;   // Σ (content * x_center)
+    Double_t sumY = 0.0;   // Σ (content * y_center)
+
+    for (Int_t ix = 1; ix <= nx; ++ix) {
+        Double_t xc = h->GetXaxis()->GetBinCenter(ix)-0.5;
+        for (Int_t iy = 1; iy <= ny; ++iy) {
+            Double_t yc = h->GetYaxis()->GetBinCenter(iy)-0.5;
+            Double_t c = h->GetBinContent(ix, iy);
+            total += c;
+            sumX += c * xc;
+            sumY += c * yc;
+        }
+    }
+
+    Double_t avgX = (total > 0) ? (sumX / total) : 0.0;
+    Double_t avgY = (total > 0) ? (sumY / total) : 0.0;
+	Double_t ratio1 = (total > 0) ? (avgX / avgY) : 0.0;
+    // 3. (1,1) bin 比例
+    Double_t bin11 = h->GetBinContent(1, 1);
+    Double_t ratio2 = (total > 0) ? (bin11 / total) : 0.0;
+
+    // 4. 输出结果
+    printf("Average X = %10.4e\n", avgX);
+    printf("Average Y = %10.4e\n", avgY);
+	printf("Proportion   : %6.4f \n", ratio1);
+    printf("Total content: %10.4e\n", total);
+    printf("(1,1) content: %10.4e\n", bin11);
+    printf("Proportion   : %6.4f \n", ratio2);
+}
