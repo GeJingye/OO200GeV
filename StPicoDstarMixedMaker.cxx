@@ -248,7 +248,7 @@ void StPicoDstarMixedMaker::initHists()
 	h_Phi__TOFMatch = new TH1F("h_Phi__TOFMatch", "#phi of TOF matched tracks;#phi;counts", 64, -3.2, 3.2);
 	// 经TPC和TOF判选后的电子信息
 	h_e_p__Number_Same = new TH2F("h_e_p__Number_Same", ";Num. of e-;Num. of e+", 10, 0., 10., 10, 0., 10.);
-	h_e_p__Number_Mix = new TH2F("h_e_p__Number_Mix", ";Num. of e-;Num. of e+", 500, 0., 500., 500, 0., 500.);
+	h_e_p__Number_Mix = new TH2F("h_e_p__Number_Mix", ";Num. of e-;Num. of e+", 50, 0., 50., 50, 0., 50.);
 	h_pT__electrons = new TH1F("h_pT__electrons", "p_{T} of electrons;p_{T} (GeV/c)", 100, 0., 5.);
 	h_eta__electrons = new TH1F("h_eta__electrons", "#eta of electrons;#eta", 50, -2.5, 2.5);
 	h_phi__electrons = new TH1F("h_phi__electrons", "#phi of electrons;#phi", 64, -3.2, 3.2);
@@ -813,7 +813,7 @@ Int_t StPicoDstarMixedMaker::Make()
 
 
 			// A+ B- rotation technique
-			float rotation_angle = 3.14; // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
+			float rotation_angle = 1.00; // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
 			for (x = 0; x < num_positron_A; x++)
 			{
 				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));

@@ -843,75 +843,83 @@ Int_t StPicoDstarMixedMaker::Make()
 			} // end: for(x=0;x<num_positron;x++)
 
 			// +- rotation technique
-			float rotation_angle = 3.14; // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
-			for (x = 0; x < num_positron; x++)
+			//float rotation_angle = 1.00; // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
+			int i = 0;
+			for(float rotation_angle = 0.; rotation_angle < 2*M_PI; rotation_angle += 2*M_PI/64)
 			{
-				particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
-				particle1_4V_Ro.SetPy(positroninfo[x].pt * sin(positroninfo[x].phi + rotation_angle));
-				particle1_4V_Ro.SetPz(positroninfo[x].p3);
-				particle1_4V_Ro.SetE(positroninfo[x].energy);
-				for (y = 0; y < num_electron; y++)
+				i += 1;
+				for (x = 0; x < num_positron; x++)
 				{
-					particle2_4V_Ro.SetPx(electroninfo[y].pt * cos(electroninfo[y].phi + rotation_angle));
-					particle2_4V_Ro.SetPy(electroninfo[y].pt * sin(electroninfo[y].phi + rotation_angle));
-					particle2_4V_Ro.SetPz(electroninfo[y].p3);
-					particle2_4V_Ro.SetE(electroninfo[y].energy);
-					eepair = particle1_4V_Ro + particle2_4V_Ro;
-					if (!positroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
-					{
-						if (fabs(eepair.Rapidity()) <= 1)
-							h_Mee_Pt_Cen__unlikeSame_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
-					}
-				}
-			} // end: +- rotation technique
-			// -- rotation technique
-			for (x = 0; x < num_electron; x++)
-			{
-				particle1_4V_Ro.SetPx(electroninfo[x].pt * cos(electroninfo[x].phi + rotation_angle));
-				particle1_4V_Ro.SetPy(electroninfo[x].pt * sin(electroninfo[x].phi + rotation_angle));
-				particle1_4V_Ro.SetPz(electroninfo[x].p3);
-				particle1_4V_Ro.SetE(electroninfo[x].energy);
-				for (y = x + 1; y < num_electron; y++)
-				{
-					if (!electroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
+					particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
+					particle1_4V_Ro.SetPy(positroninfo[x].pt * sin(positroninfo[x].phi + rotation_angle));
+					particle1_4V_Ro.SetPz(positroninfo[x].p3);
+					particle1_4V_Ro.SetE(positroninfo[x].energy);
+					for (y = 0; y < num_electron; y++)
 					{
 						particle2_4V_Ro.SetPx(electroninfo[y].pt * cos(electroninfo[y].phi + rotation_angle));
 						particle2_4V_Ro.SetPy(electroninfo[y].pt * sin(electroninfo[y].phi + rotation_angle));
 						particle2_4V_Ro.SetPz(electroninfo[y].p3);
 						particle2_4V_Ro.SetE(electroninfo[y].energy);
 						eepair = particle1_4V_Ro + particle2_4V_Ro;
-
-						if (fabs(eepair.Rapidity()) <= 1)
+						if (!positroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
 						{
-							h_Mee_Pt_Cen__likemm_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+							if (fabs(eepair.Rapidity()) <= 1)
+								h_Mee_Pt_Cen__unlikeSame_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 						}
 					}
-				}
-			} // end: -- rotation technique
-			// ++ rotation technique
-			for (x = 0; x < num_positron; x++)
-			{
-				particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
-				particle1_4V_Ro.SetPy(positroninfo[x].pt * sin(positroninfo[x].phi + rotation_angle));
-				particle1_4V_Ro.SetPz(positroninfo[x].p3);
-				particle1_4V_Ro.SetE(positroninfo[x].energy);
-				for (y = x + 1; y < num_positron; y++)
+				} // end: +- rotation technique
+				// -- rotation technique
+				for (x = 0; x < num_electron; x++)
 				{
-					if (!positroninfo[x].isPhotonicE && !positroninfo[y].isPhotonicE)
+					particle1_4V_Ro.SetPx(electroninfo[x].pt * cos(electroninfo[x].phi + rotation_angle));
+					particle1_4V_Ro.SetPy(electroninfo[x].pt * sin(electroninfo[x].phi + rotation_angle));
+					particle1_4V_Ro.SetPz(electroninfo[x].p3);
+					particle1_4V_Ro.SetE(electroninfo[x].energy);
+					for (y = x + 1; y < num_electron; y++)
 					{
-						particle2_4V_Ro.SetPx(positroninfo[y].pt * cos(positroninfo[y].phi + rotation_angle));
-						particle2_4V_Ro.SetPy(positroninfo[y].pt * sin(positroninfo[y].phi + rotation_angle));
-						particle2_4V_Ro.SetPz(positroninfo[y].p3);
-						particle2_4V_Ro.SetE(positroninfo[y].energy);
-						eepair = particle1_4V_Ro + particle2_4V_Ro;
-
-						if (fabs(eepair.Rapidity()) <= 1)
+						if (!electroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
 						{
-							h_Mee_Pt_Cen__likepp_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+							particle2_4V_Ro.SetPx(electroninfo[y].pt * cos(electroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPy(electroninfo[y].pt * sin(electroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPz(electroninfo[y].p3);
+							particle2_4V_Ro.SetE(electroninfo[y].energy);
+							eepair = particle1_4V_Ro + particle2_4V_Ro;
+
+							if (fabs(eepair.Rapidity()) <= 1)
+							{
+								h_Mee_Pt_Cen__likemm_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+							}
 						}
 					}
-				}
-			} // end: ++ rotation technique
+				} // end: -- rotation technique
+				// ++ rotation technique
+				for (x = 0; x < num_positron; x++)
+				{
+					particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
+					particle1_4V_Ro.SetPy(positroninfo[x].pt * sin(positroninfo[x].phi + rotation_angle));
+					particle1_4V_Ro.SetPz(positroninfo[x].p3);
+					particle1_4V_Ro.SetE(positroninfo[x].energy);
+					for (y = x + 1; y < num_positron; y++)
+					{
+						if (!positroninfo[x].isPhotonicE && !positroninfo[y].isPhotonicE)
+						{
+							particle2_4V_Ro.SetPx(positroninfo[y].pt * cos(positroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPy(positroninfo[y].pt * sin(positroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPz(positroninfo[y].p3);
+							particle2_4V_Ro.SetE(positroninfo[y].energy);
+							eepair = particle1_4V_Ro + particle2_4V_Ro;
+
+							if (fabs(eepair.Rapidity()) <= 1)
+							{
+								h_Mee_Pt_Cen__likepp_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+							}
+						}
+					}
+				} // end: ++ rotation technique
+			}
+			h_Mee_Pt_Cen__unlikeSame_Ro->Scale(1.0 / i);
+			h_Mee_Pt_Cen__likemm_Ro->Scale(1.0 / i);
+			h_Mee_Pt_Cen__likepp_Ro->Scale(1.0 / i);
 
 
 			// 读取经过\phi_v cut前、后的正、负电子的横动量，赝快度，方位角
