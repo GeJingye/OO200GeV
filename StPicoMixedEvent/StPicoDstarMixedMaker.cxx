@@ -619,7 +619,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				// if (isElectronRegion3 && !isLowPElectron__3)//model 3
 				// if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				// if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
-				if (isElectronRegion1)//model 1
+				if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				{
 					// h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 					// h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -843,13 +843,14 @@ Int_t StPicoDstarMixedMaker::Make()
 			} // end: for(x=0;x<num_positron;x++)
 
 			// +- rotation technique
-			float rotation_angle = 3.14159;//gRandom->Uniform(0.0, 2.0 * TMath::Pi()); // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
+			//float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());// 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
 			// int i = 0;
 			// for(float rotation_angle = 0.; rotation_angle < 2*M_PI; rotation_angle += 2*M_PI/64)
 			// {
 			// 	i += 1;
 				for (x = 0; x < num_positron; x++)
 				{
+					float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
 					particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
 					particle1_4V_Ro.SetPy(positroninfo[x].pt * sin(positroninfo[x].phi + rotation_angle));
 					particle1_4V_Ro.SetPz(positroninfo[x].p3);
@@ -871,6 +872,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				// -- rotation technique
 				for (x = 0; x < num_electron; x++)
 				{
+					float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
 					particle1_4V_Ro.SetPx(electroninfo[x].pt * cos(electroninfo[x].phi + rotation_angle));
 					particle1_4V_Ro.SetPy(electroninfo[x].pt * sin(electroninfo[x].phi + rotation_angle));
 					particle1_4V_Ro.SetPz(electroninfo[x].p3);
@@ -895,6 +897,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				// ++ rotation technique
 				for (x = 0; x < num_positron; x++)
 				{
+					float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
 					particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
 					particle1_4V_Ro.SetPy(positroninfo[x].pt * sin(positroninfo[x].phi + rotation_angle));
 					particle1_4V_Ro.SetPz(positroninfo[x].p3);
