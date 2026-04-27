@@ -843,11 +843,11 @@ Int_t StPicoDstarMixedMaker::Make()
 			} // end: for(x=0;x<num_positron;x++)
 
 			// +- rotation technique
-			//float rotation_angle = 1.00; // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
-			int i = 0;
-			for(float rotation_angle = 0.; rotation_angle < 2*M_PI; rotation_angle += 2*M_PI/64)
-			{
-				i += 1;
+			float rotation_angle = 3.14159;//gRandom->Uniform(0.0, 2.0 * TMath::Pi()); // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
+			// int i = 0;
+			// for(float rotation_angle = 0.; rotation_angle < 2*M_PI; rotation_angle += 2*M_PI/64)
+			// {
+			// 	i += 1;
 				for (x = 0; x < num_positron; x++)
 				{
 					particle1_4V_Ro.SetPx(positroninfo[x].pt * cos(positroninfo[x].phi + rotation_angle));
@@ -856,8 +856,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					particle1_4V_Ro.SetE(positroninfo[x].energy);
 					for (y = 0; y < num_electron; y++)
 					{
-						particle2_4V_Ro.SetPx(electroninfo[y].pt * cos(electroninfo[y].phi + rotation_angle));
-						particle2_4V_Ro.SetPy(electroninfo[y].pt * sin(electroninfo[y].phi + rotation_angle));
+						particle2_4V_Ro.SetPx(electroninfo[y].p1);//pt * cos(electroninfo[y].phi + rotation_angle));
+						particle2_4V_Ro.SetPy(electroninfo[y].p2);//t * sin(electroninfo[y].phi + rotation_angle));
 						particle2_4V_Ro.SetPz(electroninfo[y].p3);
 						particle2_4V_Ro.SetE(electroninfo[y].energy);
 						eepair = particle1_4V_Ro + particle2_4V_Ro;
@@ -879,8 +879,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					{
 						if (!electroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
 						{
-							particle2_4V_Ro.SetPx(electroninfo[y].pt * cos(electroninfo[y].phi + rotation_angle));
-							particle2_4V_Ro.SetPy(electroninfo[y].pt * sin(electroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPx(electroninfo[y].p1);//t * cos(electroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPy(electroninfo[y].p2);//t * sin(electroninfo[y].phi + rotation_angle));
 							particle2_4V_Ro.SetPz(electroninfo[y].p3);
 							particle2_4V_Ro.SetE(electroninfo[y].energy);
 							eepair = particle1_4V_Ro + particle2_4V_Ro;
@@ -903,8 +903,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					{
 						if (!positroninfo[x].isPhotonicE && !positroninfo[y].isPhotonicE)
 						{
-							particle2_4V_Ro.SetPx(positroninfo[y].pt * cos(positroninfo[y].phi + rotation_angle));
-							particle2_4V_Ro.SetPy(positroninfo[y].pt * sin(positroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPx(positroninfo[y].p1);//t * cos(positroninfo[y].phi + rotation_angle));
+							particle2_4V_Ro.SetPy(positroninfo[y].p2);//t * sin(positroninfo[y].phi + rotation_angle));
 							particle2_4V_Ro.SetPz(positroninfo[y].p3);
 							particle2_4V_Ro.SetE(positroninfo[y].energy);
 							eepair = particle1_4V_Ro + particle2_4V_Ro;
@@ -916,10 +916,10 @@ Int_t StPicoDstarMixedMaker::Make()
 						}
 					}
 				} // end: ++ rotation technique
-			}
-			h_Mee_Pt_Cen__unlikeSame_Ro->Scale(1.0 / i);
-			h_Mee_Pt_Cen__likemm_Ro->Scale(1.0 / i);
-			h_Mee_Pt_Cen__likepp_Ro->Scale(1.0 / i);
+			//}
+			//h_Mee_Pt_Cen__unlikeSame_Ro->Scale(1.0 / i);
+			//h_Mee_Pt_Cen__likemm_Ro->Scale(1.0 / i);
+			//h_Mee_Pt_Cen__likepp_Ro->Scale(1.0 / i);
 
 
 			// 读取经过\phi_v cut前、后的正、负电子的横动量，赝快度，方位角

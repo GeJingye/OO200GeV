@@ -719,8 +719,6 @@ Int_t StPicoDstarMixedMaker::Make()
 			TLorentzVector eepair(0, 0, 0, 0);
 			TLorentzVector particle1_4V(0, 0, 0, 0);
 			TLorentzVector particle2_4V(0, 0, 0, 0);
-			TLorentzVector particle1_4V_Ro(0, 0, 0, 0);
-			TLorentzVector particle2_4V_Ro(0, 0, 0, 0);
 			// 通过随机组合++, --, +-电子对重建信号
 			// A+ B-
 			for (x = 0; x < num_positron_A; x++)
@@ -777,14 +775,14 @@ Int_t StPicoDstarMixedMaker::Make()
 				particle1_4V.SetPy(electroninfo_A[x].p2);
 				particle1_4V.SetPz(electroninfo_A[x].p3);
 				particle1_4V.SetE(electroninfo_A[x].energy);
-				for (y = 0; y < num_electron_B; y++) // 从x+1开始，避免自组合和重复组合
+				for (y = 0; y < num_electron_B; y++)
 				{
 					particle2_4V.SetPx(electroninfo_B[y].p1);
 					particle2_4V.SetPy(electroninfo_B[y].p2);
 					particle2_4V.SetPz(electroninfo_B[y].p3);
 					particle2_4V.SetE(electroninfo_B[y].energy);
 					eepair = particle1_4V + particle2_4V;
-					if (fabs(eepair.Rapidity()) <= 1) // 判断重建的粒子是否在中心快度区，为什么需要在中心快度区？
+					if (fabs(eepair.Rapidity()) <= 1)
 					{
 						h_Mee_Pt_Cen__likemm->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
