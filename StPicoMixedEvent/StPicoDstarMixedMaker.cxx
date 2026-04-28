@@ -843,7 +843,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			} // end: for(x=0;x<num_positron;x++)
 
 			// +- rotation technique
-			//float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());// 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
+			// float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());// 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
 			// int i = 0;
 			// for(float rotation_angle = 0.; rotation_angle < 2*M_PI; rotation_angle += 2*M_PI/64)
 			// {
@@ -978,7 +978,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					for (y = 0; y < buffer_nEPlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent]; y++)
 					{
 						eepair = current_electron[x] + buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
-						// Double_t angleV = getPhiVAngle(current_electron[x], buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, -1);// 注意参数1、-1的选取要求
+						// Double_t angleV = getPhiVAngle(current_electron[x], buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], -1, 1);// 注意参数1、-1的选取要求
 						// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 						// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 						//{
@@ -994,7 +994,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					for (y = 0; y < buffer_nEPlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent]; y++)
 					{
 						eepair = current_positron[x] + buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
-						// Double_t angleV = getPhiVAngle(current_positron[x], buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, -1);// 注意参数1、-1的选取要求
+						// Double_t angleV = getPhiVAngle(current_positron[x], buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, 1);// 注意参数1、-1的选取要求
 						// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 						// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 						//{
@@ -1010,7 +1010,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					for (y = 0; y < buffer_nEMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent]; y++)
 					{
 						eepair = current_electron[x] + buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
-						// Double_t angleV = getPhiVAngle(current_electron[x], buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, -1);// 注意参数1、-1的选取要求
+						// Double_t angleV = getPhiVAngle(current_electron[x], buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], -1, -1);// 注意参数1、-1的选取要求
 						// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 						// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 						//{
