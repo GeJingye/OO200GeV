@@ -269,17 +269,33 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	h_Mee_Pt020p1__LikeSame_Rebin->DrawClone("same");
 	//h_Mee_Pt020p1__unlikeMixed_Rebin->DrawClone("same");
 	h_Mee_Pt020p1__rmLS_Rebin->DrawClone("same");
-	h_Mee_Pt020p1__rmUM_Rebin->DrawClone("same");
+	//h_Mee_Pt020p1__rmUM_Rebin->DrawClone("same");
+	Float_t x_low_LS = 0.4, x_up_LS = 2.8;
+	auto[signif_LS, N_LS, N_error2_LS, B_LS, B_error2_LS] = CalSignificance(h_Mee_Pt020p1__unlikeSame_Rebin, h_Mee_Pt020p1__LikeSame_Rebin, x_low_LS, x_up_LS);
 
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
 	pt->SetFillColorAlpha(0, 0);   // ͸����
 	pt->SetFillStyle(0);
 	pt->SetBorderSize(0);
 	pt->SetTextFont(42);
-	pt->SetTextSize(0.09);
+	pt->SetTextSize(0.07);
 	pt->SetTextAlign(12);
 	pt->AddText(Form("%.1f<p_{T}^{ee}<%.1f",y_low,y_up));
 	pt->DrawClone("same");
+
+	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
+	pt2->SetFillColorAlpha(0, 0);   // ͸����
+	pt2->SetFillStyle(0);
+	pt2->SetBorderSize(0);
+	pt2->SetTextFont(42);
+	pt2->SetTextSize(0.055);
+	pt2->SetTextAlign(12);
+	pt2->AddText("Au+Au@200GeV");
+	pt2->AddText("Cen:0~80%");
+	pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
+	pt2->AddText(Form("Focused region:%.1f<M_{ee}<%.1f", x_low_LS, x_up_LS));
+	pt2->AddText(Form("S/#sqrt{S+2B}=%.1f", signif_LS));
+	pt2->DrawClone("same");
 }
 
 // Recalibrate.C

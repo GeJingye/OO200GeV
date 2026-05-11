@@ -734,11 +734,11 @@ Int_t StPicoDstarMixedMaker::Make()
 					particle2_4V.SetE(electroninfo_B[y].energy);
 					eepair = particle1_4V + particle2_4V;
 					if (fabs(eepair.Rapidity()) <= 1)
-						h_Mee__unlikeSame->Fill(eepair.M());
+						h_Mee__unlikeSame->Fill(fabs(fabs(eepair.M())));
 					h_Rapidity__unlikeSame->Fill(eepair.Rapidity());
 					if (fabs(eepair.Rapidity()) <= 1) // 为什么需要在中心快度区？
 					{
-						h_Mee__unlikeSame__w_PhiV_Cut->Fill(eepair.M());
+						h_Mee__unlikeSame__w_PhiV_Cut->Fill(fabs(fabs(eepair.M())));
 						h_Mee_Pt_Cen__unlikeSame->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
 				}
@@ -758,11 +758,11 @@ Int_t StPicoDstarMixedMaker::Make()
 					particle2_4V.SetE(electroninfo_A[y].energy);
 					eepair = particle1_4V + particle2_4V;
 					if (fabs(eepair.Rapidity()) <= 1)
-						h_Mee__unlikeSame->Fill(eepair.M());
+						h_Mee__unlikeSame->Fill(fabs(fabs(eepair.M())));
 					h_Rapidity__unlikeSame->Fill(eepair.Rapidity());
 					if (fabs(eepair.Rapidity()) <= 1) // 为什么需要在中心快度区？
 					{
-						h_Mee__unlikeSame__w_PhiV_Cut->Fill(eepair.M());
+						h_Mee__unlikeSame__w_PhiV_Cut->Fill(fabs(fabs(eepair.M())));
 						h_Mee_Pt_Cen__unlikeSame->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
 				}
@@ -808,7 +808,48 @@ Int_t StPicoDstarMixedMaker::Make()
 				}
 			} // end: ++
 
-
+			// A- B- rotation technique
+			for (x = 0; x < num_electron_A; x++)
+			{
+				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
+				particle1_4V.SetPx(electroninfo_A[x].pt * cos(electroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPy(electroninfo_A[x].pt * sin(electroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPz(electroninfo_A[x].p3);
+				particle1_4V.SetE(electroninfo_A[x].energy);
+				for (y = 0; y < num_electron_B; y++)
+				{
+					particle2_4V.SetPx(electroninfo_B[y].p1);
+					particle2_4V.SetPy(electroninfo_B[y].p2);
+					particle2_4V.SetPz(electroninfo_B[y].p3);
+					particle2_4V.SetE(electroninfo_B[y].energy);
+					eepair = particle1_4V + particle2_4V;
+					if (fabs(eepair.Rapidity()) <= 1)
+					{
+						h_Mee_Pt_Cen__likemm_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+					}
+				}
+			} // end: --
+			// A+ B+ rotation technique
+			for (x = 0; x < num_positron_A; x++)
+			{
+				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
+				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
+				particle1_4V.SetPz(positroninfo_A[x].p3);
+				particle1_4V.SetE(positroninfo_A[x].energy);
+				for (y = 0; y < num_positron_B; y++)
+				{
+					particle2_4V.SetPx(positroninfo_B[y].p1);
+					particle2_4V.SetPy(positroninfo_B[y].p2);
+					particle2_4V.SetPz(positroninfo_B[y].p3);
+					particle2_4V.SetE(positroninfo_B[y].energy);
+					eepair = particle1_4V + particle2_4V;
+					if (fabs(eepair.Rapidity()) <= 1)
+					{
+						h_Mee_Pt_Cen__likepp_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+					}
+				}
+			} // end: ++
 			// A+ B- rotation technique
 			//float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi()); // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
 			for (x = 0; x < num_positron_A; x++)
@@ -852,49 +893,6 @@ Int_t StPicoDstarMixedMaker::Make()
 					}
 				}
 			} // end: -+
-			// A- B- rotation technique
-			for (x = 0; x < num_electron_A; x++)
-			{
-				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
-				particle1_4V.SetPx(electroninfo_A[x].pt * cos(electroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPy(electroninfo_A[x].pt * sin(electroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPz(electroninfo_A[x].p3);
-				particle1_4V.SetE(electroninfo_A[x].energy);
-				for (y = 0; y < num_electron_B; y++)
-				{
-					particle2_4V.SetPx(electroninfo_B[y].p1);
-					particle2_4V.SetPy(electroninfo_B[y].p2);
-					particle2_4V.SetPz(electroninfo_B[y].p3);
-					particle2_4V.SetE(electroninfo_B[y].energy);
-					eepair = particle1_4V + particle2_4V;
-					if (fabs(eepair.Rapidity()) <= 1)
-					{
-						h_Mee_Pt_Cen__likemm_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
-					}
-				}
-			} // end: --
-			// A+ B+ rotation technique
-			for (x = 0; x < num_positron_A; x++)
-			{
-				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
-				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPz(positroninfo_A[x].p3);
-				particle1_4V.SetE(positroninfo_A[x].energy);
-				for (y = 0; y < num_positron_B; y++)
-				{
-					particle2_4V.SetPx(positroninfo_B[y].p1);
-					particle2_4V.SetPy(positroninfo_B[y].p2);
-					particle2_4V.SetPz(positroninfo_B[y].p3);
-					particle2_4V.SetE(positroninfo_B[y].energy);
-					eepair = particle1_4V + particle2_4V;
-					if (fabs(eepair.Rapidity()) <= 1)
-					{
-						h_Mee_Pt_Cen__likepp_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
-					}
-				}
-			} // end: ++
-
 
 			int nEMinusInBuffer = 0;
 			int nEPlusInBuffer = 0;

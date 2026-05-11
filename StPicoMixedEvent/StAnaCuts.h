@@ -246,6 +246,7 @@ namespace anaCuts
 	Float_t const Dca_lowPt = 3;//3
 	Float_t const Pt = 0.2;
 	Float_t const Eta = 0.9;
+	Float_t const invBetaCut = 0.025;
     Float_t const PhiVCutMRange = 0.2;
 }
 #endif

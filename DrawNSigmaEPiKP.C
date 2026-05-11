@@ -264,7 +264,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260416_iTPCmodel44_TypicalTra
 
 		c_temp->SaveAs(Form("roots/%d_Track_and_Event_Check.png", number));
 	}
-	if (1) // ep number
+	if (0) // ep number
 	{
 		TCanvas *c_sum = new TCanvas("c_sum", "c_sum", 1000, 500);
 		c_sum->Divide(2, 1);

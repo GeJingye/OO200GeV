@@ -103,10 +103,8 @@ class StPicoDstarMixedMaker : public StMaker
 
   private: 
     TFile* mFile;
-	// std::map<Key, T> �� C++ ��׼���ṩ�������������������������ֵ����һһӳ�䣬֧�ֶ������Ӷȣ�O(log n)���Ĳ��롢���ҡ�ɾ�����Ұ����Զ�����
 	std::map<Int_t, Int_t> mrunnum;
 	string mRunNumList;
-	// std::vector<T> �� C++ ��׼���ṩ�Ķ�̬˳�����������ɱ䳤���顱����β����Ч O(1) �ز��� / ɾ����֧��������� O(1)���ڴ�������
     vector<Int_t> mBadRun;
     vector<Int_t> mBadTofCell;
     // Event level
@@ -118,7 +116,7 @@ class StPicoDstarMixedMaker : public StMaker
     Float_t mVz;
     Float_t mVpdVz;
 
-	Float_t mBfield;// �ų�ǿ��
+	Float_t mBfield;
     Int_t mRefmult6;
     Float_t mTotnMIP;
 	Int_t mCen16,mCen9;
@@ -127,7 +125,7 @@ class StPicoDstarMixedMaker : public StMaker
     
     TH1F* h_RunNum;
     TH1F* h_passEvtcut;
-	TH1F* h_passTrkcut;
+	TH1D* h_passTrkcut;//float最大能表示16777215，所以用TH1D
     TH1F* h_cen;
 	TH1F* h_cen__reWeight;
     TH1F* h_RefMult6;
@@ -238,7 +236,25 @@ class StPicoDstarMixedMaker : public StMaker
 	TH1F* h_eta__electrons_w_PhiV_Cut;
 	TH1F* h_phi__electrons_w_PhiV_Cut;
 
-	TH1F* h_Rapidity__unlikeSame;
+    // pair 信息
+    TH1F* h_Qinv__likemm;
+	TH1F* h_Qinv__likepp;
+	TH1F* h_Qinv__likemmMixed;
+	TH1F* h_Qinv__likeppMixed;
+	TH1F* h_DeltaPt__unlikeSame;
+	TH1F* h_DeltaEta__unlikeSame;
+	TH1F* h_DeltaPhi__unlikeSame;
+	TH1F* h_DeltaPt__likepp;
+	TH1F* h_DeltaEta__likepp;
+	TH1F* h_DeltaPhi__likepp;
+	TH1F* h_DeltaPt__likemm;
+	TH1F* h_DeltaEta__likemm;
+	TH1F* h_DeltaPhi__likemm;
+	TH1F* h_DeltaPt__unlikeMixed;
+	TH1F* h_DeltaEta__unlikeMixed;
+	TH1F* h_DeltaPhi__unlikeMixed;
+
+    TH1F* h_Rapidity__unlikeSame;
     TH2F* h_Mee_PhiV__unlikeSame;
     TH1F* h_Mee__unlikeSame;
     TH1F* h_Mee__unlikeSame__w_PhiV_Cut;
@@ -246,11 +262,9 @@ class StPicoDstarMixedMaker : public StMaker
     TH3F* h_Mee_Pt_Cen__unlikeSame;
     TH3F* h_Mee_Pt_Cen__likemm;
     TH3F* h_Mee_Pt_Cen__likepp;
-
     TH3F* h_Mee_Pt_Cen__unlikeSame_Ro;
     TH3F* h_Mee_Pt_Cen__likemm_Ro;
     TH3F* h_Mee_Pt_Cen__likepp_Ro;
-
     TH3F* h_Mee_Pt_Cen__unlikeMixed;
     TH3F* h_Mee_Pt_Cen__likemmMixed;
     TH3F* h_Mee_Pt_Cen__likeppMixed;
