@@ -159,10 +159,14 @@ void StPicoDstarMixedMaker::initHists()
 	h_passEvtcut->GetXaxis()->SetBinLabel(7, "0-80%");
 	h_passEvtcut->GetXaxis()->SetBinLabel(8, "pass VpdVz-Vz");
 
-	h_passTrkcut = new TH1F("h_passTrkcut", "tracks in different conditions", 3, -0.5, 2.5);
+	h_passTrkcut = new TH1D("h_passTrkcut", "tracks in different conditions", 7, -0.5, 6.5);
 	h_passTrkcut->GetXaxis()->SetBinLabel(1, "All");
-	h_passTrkcut->GetXaxis()->SetBinLabel(2, "Primary Tracks");
-	h_passTrkcut->GetXaxis()->SetBinLabel(3, "Good Tracks");
+	h_passTrkcut->GetXaxis()->SetBinLabel(2, "Primary");
+	h_passTrkcut->GetXaxis()->SetBinLabel(3, "nHitsFit");
+	h_passTrkcut->GetXaxis()->SetBinLabel(4, "nHitsDedx");
+	h_passTrkcut->GetXaxis()->SetBinLabel(5, "nHitsFitRatio");
+	h_passTrkcut->GetXaxis()->SetBinLabel(6, "gDCAcut");
+	h_passTrkcut->GetXaxis()->SetBinLabel(7, "GoodTrack");
 
 	// 顶点位置
 	h_Vx_Vy_Vz = new TH3F("h_Vx_Vy_Vz", "Vz vs Vy vs Vx;Vx(cm);Vy(cm);Vz(cm)", 250, -5, 5, 250, -5, 5, 400, -200, 200);
@@ -177,8 +181,8 @@ void StPicoDstarMixedMaker::initHists()
 	h_nHitsFit = new TH1F("h_nHitsFit", "nHitsFit;nHitsFit", 160, -80., 80.);
 	h_nHitsPoss = new TH1F("h_nHitsPoss", "nHitsPoss;nHitsPoss", 160, -80., 80.);
 	h_nHitsDEdx = new TH1F("h_nHitsDEdx", "nHitsDedx;nHitsDedx", 160, -80., 80.);
-	h_nHitsFit_Pt_Eta = new TH3F("h_nHitsFit_Pt_Eta", "nHitsFit vs p_{T} vs #eta;p_{T} (GeV/c);#eta;nHitsFit", 100, 0., 10., 40, -2., 2., 80, 0., 80.);
-	h_nHitsDEdx_Pt_Eta = new TH3F("h_nHitsDEdx_Pt_Eta", "nHitsDedx vs p_{T} vs #eta;p_{T} (GeV/c);#eta;nHitsDedx", 100, 0., 10., 40, -2., 2., 80, 0., 80.);
+	h_nHitsFit_Pt_Eta = new TH3F("h_nHitsFit_Pt_Eta", "nHitsFit vs p_{T} vs #eta;p_{T} (GeV/c);#eta;nHitsFit", 500, 0., 5., 40, -2., 2., 80, 0., 80.);
+	h_nHitsDEdx_Pt_Eta = new TH3F("h_nHitsDEdx_Pt_Eta", "nHitsDedx vs p_{T} vs #eta;p_{T} (GeV/c);#eta;nHitsDedx", 500, 0., 5., 40, -2., 2., 80, 0., 80.);
 
 	h_pDca = new TH1F("h_pDca", "pDca;DCA;counts", 50, 0., 5.); // p代表primary，pDCA指主径迹与重建顶点的最小距离
 	h_ppT = new TH1F("h_ppT", "primary p_{T};p_{T} (GeV/c);counts", 1000, 0., 10.);
@@ -271,6 +275,10 @@ void StPicoDstarMixedMaker::initHists()
 	h_Mee_Pt_Cen__likemm = new TH3F("h_Mee_Pt_Cen__likemm", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likepp = new TH3F("h_Mee_Pt_Cen__likepp", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__unlikeSame_Ro = new TH3F("h_Mee_Pt_Cen__unlikeSame_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__1m4p_RoB = new TH3F("h_Mee_Pt_Cen__1m4p_RoB", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__1p4m_RoB = new TH3F("h_Mee_Pt_Cen__1p4m_RoB", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__1m4p_RoA = new TH3F("h_Mee_Pt_Cen__1m4p_RoA", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__1p4m_RoA = new TH3F("h_Mee_Pt_Cen__1p4m_RoA", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likemm_Ro = new TH3F("h_Mee_Pt_Cen__likemm_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__likepp_Ro = new TH3F("h_Mee_Pt_Cen__likepp_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
 	h_Mee_Pt_Cen__unlikeMixed = new TH3F("h_Mee_Pt_Cen__unlikeMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
@@ -454,17 +462,22 @@ Int_t StPicoDstarMixedMaker::Make()
 				h_nSigmaKaon_P->Fill(mom.Mag(), nSigmaK);
 				h_nSigmaProton_P->Fill(mom.Mag(), nSigmaP);
 				// ******************以下分析均基于满足goodTrackCuts的主径迹**************************
-				/*    Track with conditions in StAnaCuts.h, such as:
-					  NHitsFit > 40;
-					  NHitsFitRatio > 0.52;
-					  NHitsDedx > 30;
-					  Dca < 1 cm;
-					  GPt > 0.2 GeV/c;
-					 |Eta| < 1.8;		  */
-				Bool_t goodtrack = isGoodTrack(trk, picoEvent);
-				if (!goodtrack)
-					continue;
+				Bool_t passNhitsFit = (mom.Perp() >= anaCuts::Pt &&	fabs(trk->nHitsFit()) >= anaCuts::NHitsFit_highPt) || (mom.Perp() < anaCuts::Pt && fabs(trk->nHitsFit()) >= anaCuts::NHitsFit_lowPt);
+				Bool_t passNhitsDedx = (mom.Perp() >= anaCuts::Pt && fabs(trk->nHitsDedx()) >= anaCuts::NHitsDedx_highPt) || (mom.Perp() < anaCuts::Pt && fabs(trk->nHitsDedx()) >= anaCuts::NHitsDedx_lowPt);
+				Bool_t passNhitsRatio = fabs(trk->nHitsFit() * 1.0 / trk->nHitsMax()) >= anaCuts::NHitsFitRatio;
+				Bool_t passDCA = (mom.Perp() >= anaCuts::Pt && trk->gDCA(picoEvent->primaryVertex()).Mag() <= anaCuts::Dca_highPt) || (mom.Perp() < anaCuts::Pt && trk->gDCA(picoEvent->primaryVertex()).Mag() <= anaCuts::Dca_lowPt);
+				Bool_t goodtrack = isGoodTrack(trk, picoEvent);//Bool_t goodtrack = passNhitsFit && passNhitsDedx && passNhitsRatio && passDCA;
+				if(!passNhitsFit) continue;
 				h_passTrkcut->Fill(2);
+				if(!passNhitsDedx) continue;
+				h_passTrkcut->Fill(3);
+				if(!passNhitsRatio) continue;
+				h_passTrkcut->Fill(4);
+				if(!passDCA) continue;
+				h_passTrkcut->Fill(5);
+				if (!goodtrack)	continue;
+				h_passTrkcut->Fill(6);
+
 				h_dEdx_Pc->Fill(mom.Mag() * trk->charge(), trk->dEdx()); // mom.Mag()指动量模
 				h_m2->Fill(m2);
 				h_m2_Pc->Fill(mom.Mag() * trk->charge(), m2);
@@ -619,16 +632,16 @@ Int_t StPicoDstarMixedMaker::Make()
 					}
 				}
 
-				// if (isElectronRegion1)//model 1
-				// if (isElectronRegion2)//model 2
-				// if (isElectronRegion3 && !isLowPElectron__3)//model 3
-				// if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
+				// if (isElectronRegion1)//group 1
+				// if (isElectronRegion2)//group 2
+				// if (isElectronRegion3 && !isLowPElectron__3)//group 3
+				// if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//group 4
 				//   	1	2	3	4
 				// 1 |  X	√	√	√
 				// 2 |	√	X	√	√
 				// 3 |	√	√	X   √
 				// 4 |	√	√	√	X
-				if (isElectronRegion1) // model 1
+				if (isElectronRegion1) // group 1
 				{
 					h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 					h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -638,6 +651,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					{
 						particleinfo.charge = trk->charge();
 						particleinfo.energy = sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0));
+						particleinfo.pt = mom.Perp();
+						particleinfo.phi = mom.Phi();
 						particleinfo.p1 = mom.X();
 						particleinfo.p2 = mom.Y();
 						particleinfo.p3 = mom.Z();
@@ -654,6 +669,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					{
 						particleinfo.charge = trk->charge();
 						particleinfo.energy = sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0));
+						particleinfo.pt = mom.Perp();
+						particleinfo.phi = mom.Phi();
 						particleinfo.p1 = mom.X();
 						particleinfo.p2 = mom.Y();
 						particleinfo.p3 = mom.Z();
@@ -667,7 +684,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						current_nPositron_A++;
 					}
 				}
-				if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3) // model 4
+				if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3) // group 4
 				{
 					h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
 					h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
@@ -677,6 +694,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					{
 						particleinfo.charge = trk->charge();
 						particleinfo.energy = sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0));
+						particleinfo.pt = mom.Perp();
+						particleinfo.phi = mom.Phi();
 						particleinfo.p1 = mom.X();
 						particleinfo.p2 = mom.Y();
 						particleinfo.p3 = mom.Z();
@@ -693,6 +712,8 @@ Int_t StPicoDstarMixedMaker::Make()
 					{
 						particleinfo.charge = trk->charge();
 						particleinfo.energy = sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0));
+						particleinfo.pt = mom.Perp();
+						particleinfo.phi = mom.Phi();
 						particleinfo.p1 = mom.X();
 						particleinfo.p2 = mom.Y();
 						particleinfo.p3 = mom.Z();
@@ -767,7 +788,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					}
 				}
 			} // end: -+
-			// --
+			// A- B-
 			for (x = 0; x < num_electron_A; x++)
 			{
 				particle1_4V.SetPx(electroninfo_A[x].p1);
@@ -787,7 +808,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					}
 				}
 			} // end: --
-			// ++
+			// A+ B+
 			for (x = 0; x < num_positron_A; x++)
 			{
 				particle1_4V.SetPx(positroninfo_A[x].p1);
@@ -808,18 +829,21 @@ Int_t StPicoDstarMixedMaker::Make()
 				}
 			} // end: ++
 
+			// 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
 			// A- B- rotation technique
 			for (x = 0; x < num_electron_A; x++)
 			{
-				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
-				particle1_4V.SetPx(electroninfo_A[x].pt * cos(electroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPy(electroninfo_A[x].pt * sin(electroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPz(electroninfo_A[x].p3);
-				particle1_4V.SetE(electroninfo_A[x].energy);
 				for (y = 0; y < num_electron_B; y++)
 				{
-					particle2_4V.SetPx(electroninfo_B[y].p1);
-					particle2_4V.SetPy(electroninfo_B[y].p2);
+					float rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle1_4V.SetPx(electroninfo_A[x].p1);//t * cos(electroninfo_A[x].phi));// + rotation_angle));
+					particle1_4V.SetPy(electroninfo_A[x].p2);//t * sin(electroninfo_A[x].phi));// + rotation_angle));
+					particle1_4V.SetPz(electroninfo_A[x].p3);
+					particle1_4V.SetE(electroninfo_A[x].energy);
+
+					//rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle2_4V.SetPx(electroninfo_B[y].pt * cos(electroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPy(electroninfo_B[y].pt * sin(electroninfo_B[y].phi + rotation_angle));
 					particle2_4V.SetPz(electroninfo_B[y].p3);
 					particle2_4V.SetE(electroninfo_B[y].energy);
 					eepair = particle1_4V + particle2_4V;
@@ -832,15 +856,17 @@ Int_t StPicoDstarMixedMaker::Make()
 			// A+ B+ rotation technique
 			for (x = 0; x < num_positron_A; x++)
 			{
-				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
-				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPz(positroninfo_A[x].p3);
-				particle1_4V.SetE(positroninfo_A[x].energy);
 				for (y = 0; y < num_positron_B; y++)
 				{
-					particle2_4V.SetPx(positroninfo_B[y].p1);
-					particle2_4V.SetPy(positroninfo_B[y].p2);
+					float rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
+					particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
+					particle1_4V.SetPz(positroninfo_A[x].p3);
+					particle1_4V.SetE(positroninfo_A[x].energy);
+
+					//rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle2_4V.SetPx(positroninfo_B[y].p1);//t * cos(positroninfo_B[y].phi + rotation_angle));//1);
+					particle2_4V.SetPy(positroninfo_B[y].p2);//t * sin(positroninfo_B[y].phi + rotation_angle));//2);
 					particle2_4V.SetPz(positroninfo_B[y].p3);
 					particle2_4V.SetE(positroninfo_B[y].energy);
 					eepair = particle1_4V + particle2_4V;
@@ -851,48 +877,54 @@ Int_t StPicoDstarMixedMaker::Make()
 				}
 			} // end: ++
 			// A+ B- rotation technique
-			//float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi()); // 旋转角度，单位为Rad。函数: std::remainder(phi,2*M_PI)，直接返回最接近的整数倍余数，范围 [-π, π]
 			for (x = 0; x < num_positron_A; x++)
 			{
-				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
-				particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
-				particle1_4V.SetPz(positroninfo_A[x].p3);
-				particle1_4V.SetE(positroninfo_A[x].energy);
 				for (y = 0; y < num_electron_B; y++)
 				{
-					particle2_4V.SetPx(electroninfo_B[y].p1);
-					particle2_4V.SetPy(electroninfo_B[y].p2);
+					float rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3	);
+					particle1_4V.SetPx(positroninfo_A[x].pt * cos(positroninfo_A[x].phi + rotation_angle));
+					particle1_4V.SetPy(positroninfo_A[x].pt * sin(positroninfo_A[x].phi + rotation_angle));
+					particle1_4V.SetPz(positroninfo_A[x].p3);
+					particle1_4V.SetE(positroninfo_A[x].energy);
+
+					rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle2_4V.SetPx(electroninfo_B[y].p1);//t * cos(electroninfo_B[y].phi + rotation_angle));
+					particle2_4V.SetPy(electroninfo_B[y].p2);//t * sin(electroninfo_B[y].phi + rotation_angle));
 					particle2_4V.SetPz(electroninfo_B[y].p3);
 					particle2_4V.SetE(electroninfo_B[y].energy);
 					eepair = particle1_4V + particle2_4V;
 					if (fabs(eepair.Rapidity()) <= 1)
 					{
 						h_Mee_Pt_Cen__unlikeSame_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+						h_Mee_Pt_Cen__1p4m_RoB->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
 				}
 			} // end: +-
-			// A- B+ rotation technique
+			// B+ A- rotation technique
 			for (x = 0; x < num_positron_B; x++)
 			{
-				float rotation_angle = gRandom->Uniform(0.0, 2.0 * TMath::Pi());
-				particle1_4V.SetPx(positroninfo_B[x].pt * cos(positroninfo_B[x].phi + rotation_angle));
-				particle1_4V.SetPy(positroninfo_B[x].pt * sin(positroninfo_B[x].phi + rotation_angle));
-				particle1_4V.SetPz(positroninfo_B[x].p3);
-				particle1_4V.SetE(positroninfo_B[x].energy);
 				for (y = 0; y < num_electron_A; y++)
 				{
-					particle2_4V.SetPx(electroninfo_A[y].p1);
-					particle2_4V.SetPy(electroninfo_A[y].p2);
+					float rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle1_4V.SetPx(positroninfo_B[x].pt * cos(positroninfo_B[x].phi + rotation_angle));
+					particle1_4V.SetPy(positroninfo_B[x].pt * sin(positroninfo_B[x].phi + rotation_angle));
+					particle1_4V.SetPz(positroninfo_B[x].p3);
+					particle1_4V.SetE(positroninfo_B[x].energy);
+
+					//rotation_angle = gRandom->Uniform(TMath::Pi()/3, 5*TMath::Pi()/3);
+					particle2_4V.SetPx(electroninfo_A[y].p1);//t * cos(electroninfo_A[y].phi + rotation_angle));
+					particle2_4V.SetPy(electroninfo_A[y].p2);//t * sin(electroninfo_A[y].phi + rotation_angle));
 					particle2_4V.SetPz(electroninfo_A[y].p3);
 					particle2_4V.SetE(electroninfo_A[y].energy);
 					eepair = particle1_4V + particle2_4V;
 					if (fabs(eepair.Rapidity()) <= 1)
 					{
 						h_Mee_Pt_Cen__unlikeSame_Ro->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
+						h_Mee_Pt_Cen__1m4p_RoB->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 					}
 				}
 			} // end: -+
+
 
 			int nEMinusInBuffer = 0;
 			int nEPlusInBuffer = 0;
@@ -1117,6 +1149,10 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_Mee_Pt_Cen__likemm->Write();
 	h_Mee_Pt_Cen__likepp->Write();
 	h_Mee_Pt_Cen__unlikeSame_Ro->Write();
+	h_Mee_Pt_Cen__1p4m_RoB->Write();
+	h_Mee_Pt_Cen__1m4p_RoB->Write();
+	h_Mee_Pt_Cen__1p4m_RoA->Write();
+	h_Mee_Pt_Cen__1m4p_RoA->Write();
 	h_Mee_Pt_Cen__likemm_Ro->Write();
 	h_Mee_Pt_Cen__likepp_Ro->Write();
 	h_Mee_Pt_Cen__unlikeMixed->Write();
@@ -1152,8 +1188,6 @@ Bool_t StPicoDstarMixedMaker::isGoodEvent(StPicoEvent const *const picoEvent) co
 Bool_t StPicoDstarMixedMaker::isGoodTrack(StPicoTrack const *trk, StPicoEvent const *const picoEvent) const
 {
 	TVector3 mom = trk->pMom();
-	// trk->gPt() > anaCuts::GPt &&
-	// fabs(trk->gMom().Eta()) < anaCuts::Eta &&
 	return (
 			   (mom.Perp() >= 0.2 &&
 				fabs(trk->nHitsFit()) >= anaCuts::NHitsFit_highPt &&
@@ -1163,7 +1197,7 @@ Bool_t StPicoDstarMixedMaker::isGoodTrack(StPicoTrack const *trk, StPicoEvent co
 				fabs(trk->nHitsFit()) >= anaCuts::NHitsFit_lowPt &&
 				fabs(trk->nHitsDedx()) >= anaCuts::NHitsDedx_lowPt &&
 				trk->gDCA(picoEvent->primaryVertex()).Mag() <= anaCuts::Dca_lowPt)) &&
-		   fabs(trk->nHitsFit() * 1.0 / trk->nHitsMax()) >= anaCuts::NHitsFitRatio;
+		   		fabs(trk->nHitsFit() * 1.0 / trk->nHitsMax()) >= anaCuts::NHitsFitRatio;
 }
 
 Float_t StPicoDstarMixedMaker::getTofBeta(StPicoTrack const *const trk) const

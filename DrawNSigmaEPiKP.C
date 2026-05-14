@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 // 16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/20260416_iTPCmodel44_TypicalTrackCut_P24iy.root", Int_t number = 49) //
+void DrawNSigmaEPiKP(TString inFilename = "roots/54_20260514_iTPCmodel14_Rotation_P24iy.root", Int_t number = 54) //
 {
 	// 从root文件中导入待拟合的直方图
 	TFile *inFile = new TFile(inFilename);
@@ -110,26 +110,84 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/20260416_iTPCmodel44_TypicalTra
 	TH1F *h_phi_ratio_EperP = (TH1F *)h_phi__electrons->Clone("h_phi_ratio_EperP");
 	h_phi_ratio_EperP->SetTitle("e^{-}/e^{+} #phi ratio;#phi [GeV/c];Ratio");
 	h_phi_ratio_EperP->Divide(h_phi__positrons);
+	// correlation analysis
+
+
+	
 	if (0) // clear plot
 	{
-		TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 1200, 600);
-		c_temp->Divide(2, 1);
+		TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 1200, 900);
+		c_temp->Divide(3, 2);
+
+		// c_temp->cd(1);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_ppTc_pPhi->GetXaxis()->SetRangeUser(0.0, 5.0);
+		// h_ppTc_pPhi->DrawClone("col z");
+
+		// c_temp->cd(2);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_ppTc_pPhi->GetXaxis()->SetRangeUser(-5.0, 0.0);
+		// h_ppTc_pPhi->DrawClone("col z");
 
 		c_temp->cd(1);
 		gPad->SetLogz(1);
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
-		h_ppTc_pPhi->GetXaxis()->SetRangeUser(0.0, 5.0);
-		h_ppTc_pPhi->DrawClone("col z");
+		h_nHitsFit_Pt->SetTitle("nHitsFit vs p_{T}");
+		h_nHitsFit_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
+		h_nHitsFit_Pt->DrawClone("col z");
 
 		c_temp->cd(2);
 		gPad->SetLogz(1);
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
-		h_ppTc_pPhi->GetXaxis()->SetRangeUser(-5.0, 0.0);
-		h_ppTc_pPhi->DrawClone("col z");
+		h_nHitsDEdx_Pt->SetTitle("nHitsDEdx vs p_{T}");
+		h_nHitsDEdx_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
+		h_nHitsDEdx_Pt->DrawClone("col z");
+
+		c_temp->cd(3);
+		gPad->SetLogz(1);
+		gPad->SetLeftMargin(0.12);
+		gPad->SetRightMargin(0.12);
+		gStyle->SetOptStat(0);
+		h_pDca_Pt->SetTitle("DCA vs p_{T}");
+		h_pDca_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
+		h_pDca_Pt->DrawClone("col z");
+
+		c_temp->cd(4);
+		gPad->SetLogz(1);
+		gPad->SetLeftMargin(0.12);
+		gPad->SetRightMargin(0.12);
+		gStyle->SetOptStat(0);
+		h_nHitsFit_Pt->SetTitle("nHitsFit vs p_{T}");
+		h_nHitsFit_Pt->GetXaxis()->SetRangeUser(0.0, 0.3);
+		h_nHitsFit_Pt->DrawClone("col z");
+
+		c_temp->cd(5);
+		gPad->SetLogz(1);
+		gPad->SetLeftMargin(0.12);
+		gPad->SetRightMargin(0.12);
+		gStyle->SetOptStat(0);
+		h_nHitsDEdx_Pt->SetTitle("nHitsDEdx vs p_{T}");
+		h_nHitsDEdx_Pt->GetXaxis()->SetRangeUser(0.0, 0.3);
+		h_nHitsDEdx_Pt->DrawClone("col z");
+
+		c_temp->cd(6);
+		gPad->SetLogz(1);
+		gPad->SetLeftMargin(0.12);
+		gPad->SetRightMargin(0.12);
+		gStyle->SetOptStat(0);
+		h_pDca_Pt->SetTitle("DCA vs p_{T}");
+		h_pDca_Pt->GetXaxis()->SetRangeUser(0.0, 0.3);
+		h_pDca_Pt->DrawClone("col z");
 	}
 	if (0) // nsigmaElectron__EID, h_pP_ppT, h_passEvtcut, h_passTrkcut
 	{

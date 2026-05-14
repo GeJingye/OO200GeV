@@ -239,8 +239,10 @@ class StPicoDstarMixedMaker : public StMaker
     // pair 信息
     TH1F* h_Qinv__likemm;
 	TH1F* h_Qinv__likepp;
+	TH1F* h_Qinv__unlikeSame;
 	TH1F* h_Qinv__likemmMixed;
 	TH1F* h_Qinv__likeppMixed;
+	TH1F* h_Qinv__unlikeMixed;
 	TH1F* h_DeltaPt__unlikeSame;
 	TH1F* h_DeltaEta__unlikeSame;
 	TH1F* h_DeltaPhi__unlikeSame;
@@ -263,6 +265,10 @@ class StPicoDstarMixedMaker : public StMaker
     TH3F* h_Mee_Pt_Cen__likemm;
     TH3F* h_Mee_Pt_Cen__likepp;
     TH3F* h_Mee_Pt_Cen__unlikeSame_Ro;
+    TH3F* h_Mee_Pt_Cen__1p4m_RoB;
+    TH3F* h_Mee_Pt_Cen__1m4p_RoB;
+    TH3F* h_Mee_Pt_Cen__1p4m_RoA;
+    TH3F* h_Mee_Pt_Cen__1m4p_RoA;
     TH3F* h_Mee_Pt_Cen__likemm_Ro;
     TH3F* h_Mee_Pt_Cen__likepp_Ro;
     TH3F* h_Mee_Pt_Cen__unlikeMixed;
@@ -270,6 +276,10 @@ class StPicoDstarMixedMaker : public StMaker
     TH3F* h_Mee_Pt_Cen__likeppMixed;
 
     const Float_t M_electron=0.000511;// GeV
+    const Float_t M_positron=0.000511;// GeV
+    const Float_t M_pion=0.139570;// GeV
+    const Float_t M_kaon=0.493677;// GeV
+    const Float_t M_proton=0.938272;// GeV
 
     ClassDef(StPicoDstarMixedMaker, 1)
 };
