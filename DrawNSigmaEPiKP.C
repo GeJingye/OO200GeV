@@ -821,7 +821,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/54_20260514_iTPCmodel14_Rotatio
 
 		c6->SaveAs(Form("roots/%d_group3.png", number));
 	}
-	if (0) // check PhiV cut
+	if (1) // check PhiV cut
 	{
 		h_Mee__unlikeSame->SetLineColor(kBlack);
 		h_Mee__unlikeSame->GetYaxis()->SetTitleOffset(1.5);
