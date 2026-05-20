@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 // 16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/54_20260514_iTPCmodel14_Rotation_P24iy.root", Int_t number = 54) //
+void DrawNSigmaEPiKP(TString inFilename = "roots/20260520_iTPCmodel11_DeltaPtEtaPhi_Qinv.root", Int_t number = 57) //
 {
 	// 从root文件中导入待拟合的直方图
 	TFile *inFile = new TFile(inFilename);
@@ -872,7 +872,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/54_20260514_iTPCmodel14_Rotatio
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
-		h_Mee__unlikeSame->GetXaxis()->SetRangeUser(0, 4);
+		h_Mee__unlikeSame->GetXaxis()->SetRangeUser(0, 1);
 		h_Mee__unlikeSame->DrawClone("");
 
 		c_temp->cd(4);

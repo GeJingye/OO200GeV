@@ -255,6 +255,9 @@ class StPicoDstarMixedMaker : public StMaker
 	TH1F* h_DeltaPt__unlikeMixed;
 	TH1F* h_DeltaEta__unlikeMixed;
 	TH1F* h_DeltaPhi__unlikeMixed;
+    TH1F* h_Phi__likemm_deltaPhi_0p2;
+    TH1F* h_Phi__likepp_deltaPhi_0p2;
+    TH1F* h_Phi__unlike_deltaPhi_3p0;
 
     TH1F* h_Rapidity__unlikeSame;
     TH2F* h_Mee_PhiV__unlikeSame;
