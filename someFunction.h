@@ -292,22 +292,22 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	pt->SetTextFont(42);
 	pt->SetTextSize(0.07);
 	pt->SetTextAlign(12);
-	pt->AddText(Form("%.1f<p_{T}^{ee}<%.1f",y_low,y_up));
+	pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f",y_low,y_up));
 	pt->DrawClone("same");
 
-	// TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
-	// pt2->SetFillColorAlpha(0, 0);   //
-	// pt2->SetFillStyle(0);
-	// pt2->SetBorderSize(0);
-	// pt2->SetTextFont(42);
-	// pt2->SetTextSize(0.055);
-	// pt2->SetTextAlign(12);
-	// pt2->AddText("Au+Au@200GeV");
-	// pt2->AddText("Cen:0~80%");
-	// pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
-	// pt2->AddText(Form("Focused region:%.1f<M_{ee}<%.1f", x_low_LS, x_up_LS));
-	// pt2->AddText(Form("S/#sqrt{S+2B}=%.1f", signif_LS));
-	//pt2->DrawClone("same");
+	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
+	pt2->SetFillColorAlpha(0, 0);   //
+	pt2->SetFillStyle(0);
+	pt2->SetBorderSize(0);
+	pt2->SetTextFont(42);
+	pt2->SetTextSize(0.055);
+	pt2->SetTextAlign(12);
+	//pt2->AddText("Au+Au@200GeV");
+	//pt2->AddText("Cen:0~80%");
+	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
+	pt2->AddText(Form("Focused region:%.2f<M_{ee}<%.2f", x_low_LS, x_up_LS));
+	pt2->AddText(Form("S/#sqrt{S+2B}=%.2f", signif_LS));
+	pt2->DrawClone("same");
 }
 
 // Recalibrate.C
@@ -534,4 +534,56 @@ void printHist2DSci(TH2* h) {
     printf("Total content: %10.4e\n", total);
     printf("(1,1) content: %10.4e\n", bin11);
     printf("Proportion   : %6.4f \n", ratio2);
+}
+//计算mixed event的scale factor
+Float_t ComputeMixEventScale( TH3* h_likepp_Rebin,		TH3* h_likemm_Rebin,
+                              TH3* h_likeppMixed_Rebin, TH3* h_likemmMixed_Rebin,
+                              TH3* h_unlikeMixed_Rebin,
+                              Float_t NR_low_M, Float_t NR_up_M,
+                              Float_t NR_low_pt, Float_t NR_up_pt,
+                              Float_t cen_low, Float_t cen_up)
+{
+    // 指针有效性检查
+    if (!h_likepp_Rebin || !h_likeppMixed_Rebin || !h_likemm_Rebin || !h_likemmMixed_Rebin || !h_unlikeMixed_Rebin) {
+        std::cerr << "Error: null histogram pointer in ComputeMixEventScale" << std::endl;
+        return 1.0;
+    }
+
+    // 获取中心度（Z轴）的 bin 数量
+    Int_t nCenBins = h_likepp_Rebin->GetZaxis()->GetNbins();
+
+    // 查找归一化区域对应的 bin 范围（加微小偏移避免边界浮点误差）
+    Int_t bin_low_M  = h_likepp_Rebin->GetXaxis()->FindBin(NR_low_M  + 1e-3);
+    Int_t bin_up_M   = h_likepp_Rebin->GetXaxis()->FindBin(NR_up_M   - 1e-3);
+    Int_t bin_low_pt = h_likepp_Rebin->GetYaxis()->FindBin(NR_low_pt + 1e-3);
+    Int_t bin_up_pt  = h_likepp_Rebin->GetYaxis()->FindBin(NR_up_pt  - 1e-3);
+	Int_t bin_low_cen = h_likepp_Rebin->GetZaxis()->FindBin(cen_low + 1e-3);
+    Int_t bin_up_cen  = h_likepp_Rebin->GetZaxis()->FindBin(cen_up - 1e-3);
+    // 在归一化区域内积分（对 Z 轴所有中心度 bin 积分）
+    Double_t int_likepp_Rebin  = h_likepp_Rebin->Integral(bin_low_M, bin_up_M, bin_low_pt, bin_up_pt, bin_low_cen, bin_up_cen, "");
+    Double_t int_likeppMixed   = h_likeppMixed_Rebin->Integral(bin_low_M, bin_up_M, bin_low_pt, bin_up_pt, bin_low_cen, bin_up_cen, "");
+    Double_t int_likemm_Rebin  = h_likemm_Rebin->Integral(bin_low_M, bin_up_M, bin_low_pt, bin_up_pt, bin_low_cen, bin_up_cen, "");
+    Double_t int_likemmMixed   = h_likemmMixed_Rebin->Integral(bin_low_M, bin_up_M, bin_low_pt, bin_up_pt, bin_low_cen, bin_up_cen, "");
+
+    // 计算 each 的比值（数据/混合）
+    Float_t App = int_likepp_Rebin / int_likeppMixed;
+    Float_t Amm = int_likemm_Rebin / int_likemmMixed;
+
+    // 全范围积分（用于估计整个混合事件谱的预期总计数）
+    Double_t total_likeppMixed = h_likeppMixed_Rebin->Integral();
+    Double_t total_likemmMixed = h_likemmMixed_Rebin->Integral();
+
+    Double_t Bpp_normal = App * total_likeppMixed;
+    Double_t Bmm_normal = Amm * total_likemmMixed;
+
+    // 异号混合事件的全范围积分
+    Double_t total_unlikeMixed = h_unlikeMixed_Rebin->Integral();
+	if (total_unlikeMixed == 0) {
+		std::cerr << "Error: total_unlikeMixed is zero in ComputeMixEventScale, cannot compute scale factor." << std::endl;
+		return 1.0; // 或者返回一个默认值，或者抛出异常
+	}
+
+    // 计算缩放因子
+    Float_t scale = 2.0 * TMath::Sqrt(Bpp_normal * Bmm_normal) / total_unlikeMixed;
+    return scale;
 }
