@@ -247,20 +247,21 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 		h1->SetBinError(ix, std::sqrt(sumErr2));
 	}
 
-	return h1;   // �����߸�������ڴ�
+	return h1;
 }
 
-void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float y_low,float y_up)
+void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float y_low,float y_up,float z_low,float z_up)
 {
-	float ylow = y_low + 0.001;
-	float yup = y_up - 0.001;
-	int bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_low);
-	int bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_up);
-	TH1F *h_Mee_PtBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin->ProjectionX("_px", bin_low, bin_up, 0, -1);	  ResetBinContent(h_Mee_PtBin__unlikeSame_Rebin);
-	TH1F *h_Mee_PtBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin->ProjectionX("_px", bin_low, bin_up, 0, -1);		  ResetBinContent(h_Mee_PtBin__LikeSame_Rebin);
-	TH1F *h_Mee_PtBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionX("_px", bin_low, bin_up, 0, -1);  ResetBinContent(h_Mee_PtBin__unlikeMixed_Rebin);
-	TH1F *h_Mee_PtBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin->ProjectionX("_px", bin_low, bin_up, 0, -1);				  ResetBinContent(h_Mee_PtBin__rmLS_Rebin);
-	TH1F *h_Mee_PtBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin->ProjectionX("_px", bin_low, bin_up, 0, -1);				  ResetBinContent(h_Mee_PtBin__rmUM_Rebin);
+	int pT_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_low+1e-3);
+	int pT_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_up-1e-3);
+	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-3);
+	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-3);
+
+	TH1F *h_Mee_PtBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeSame_Rebin); h_Mee_PtBin__unlikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__LikeSame_Rebin); h_Mee_PtBin__LikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeMixed_Rebin); h_Mee_PtBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmLS_Rebin); h_Mee_PtBin__rmLS_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmUM_Rebin); h_Mee_PtBin__rmUM_Rebin->SetMarkerSize(0.1);
 
 	h_Mee_PtBin__unlikeSame_Rebin->SetTitle(Form("Raw signal of e^{+}e^{-} with p_{T} range of %.2f ~ %.2f GeV/c;M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}",y_low,y_up));
 	h_Mee_PtBin__unlikeSame_Rebin->SetMaximum(1e8);
@@ -282,17 +283,22 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	gStyle->SetLegendTextSize(0.04);
 	legend->DrawClone("same");
 
-	Float_t x_low_LS = 0.4, x_up_LS = 2.8;
+	Float_t x_low_LS = 0.4, x_up_LS = 0.76;
 	auto[signif_LS, N_LS, N_error2_LS, B_LS, B_error2_LS] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS, x_up_LS);
+	Float_t x_low_LS2 = 0.76, x_up_LS2 = 1.2;
+	auto[signif_LS2, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS2, x_up_LS2);
+	Float_t x_low_LS3 = 1.2, x_up_LS3 = 2.6;
+	auto[signif_LS3, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS3, x_up_LS3);
 
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
 	pt->SetFillColorAlpha(0, 0);   //
 	pt->SetFillStyle(0);
 	pt->SetBorderSize(0);
 	pt->SetTextFont(42);
-	pt->SetTextSize(0.07);
+	pt->SetTextSize(0.05);
 	pt->SetTextAlign(12);
-	pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f",y_low,y_up));
+	pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f,Cen:%.0f~%.0f%%",y_low,y_up,80-5*z_up,80-5*z_low));
+	//pt->AddText(Form("%.0f~%.0f\%",80-5*z_up,80-5*z_low));
 	pt->DrawClone("same");
 
 	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
@@ -305,8 +311,10 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	//pt2->AddText("Au+Au@200GeV");
 	//pt2->AddText("Cen:0~80%");
 	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
-	pt2->AddText(Form("Focused region:%.2f<M_{ee}<%.2f", x_low_LS, x_up_LS));
-	pt2->AddText(Form("S/#sqrt{S+2B}=%.2f", signif_LS));
+	pt2->AddText(Form("Mass region and significance:"));
+	pt2->AddText(Form("[%.2f,%.2f]:%.2f", x_low_LS, x_up_LS,signif_LS));
+	pt2->AddText(Form("[%.2f,%.2f]:%.2f", x_low_LS2, x_up_LS2,signif_LS2));
+	pt2->AddText(Form("[%.2f,%.2f]:%.2f", x_low_LS3, x_up_LS3,signif_LS3));
 	pt2->DrawClone("same");
 }
 
