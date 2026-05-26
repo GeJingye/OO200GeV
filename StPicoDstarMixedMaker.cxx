@@ -149,15 +149,16 @@ void StPicoDstarMixedMaker::initHists()
 	h_nTofMat_RefMul = new TH2F("h_nTofMat_RefMul", "RefMul VS nTofmatch;RefMul;nTofMatch", 250, 0, 250, 250, 0, 250); // 与TOF匹配的径迹数vs参考多重数关系
 	h_RefMult6 = new TH1F("h_RefMult6", "h_RefMult6", 250, 0, 250);													   // 监控事件多重数分布->计算中心度
 	h_TotnMIP = new TH1F("h_TotnMIP", "h_TotnMIP", 1000, 0, 1000);													   // 最小电离粒子（MIP）总数
-	h_passEvtcut = new TH1F("h_passEvtcut", "pass event cut", 8, -0.5, 7.5);
+	h_passEvtcut = new TH1F("h_passEvtcut", "pass event cut", 9, -1.5, 7.5);
 	h_passEvtcut->GetXaxis()->SetBinLabel(1, "All");
-	h_passEvtcut->GetXaxis()->SetBinLabel(2, "Good Runs");
-	h_passEvtcut->GetXaxis()->SetBinLabel(3, "passVz");
-	h_passEvtcut->GetXaxis()->SetBinLabel(4, "passVerr");
-	h_passEvtcut->GetXaxis()->SetBinLabel(5, "passVr");
-	h_passEvtcut->GetXaxis()->SetBinLabel(6, "notPileUp");
-	h_passEvtcut->GetXaxis()->SetBinLabel(7, "0-80%");
-	h_passEvtcut->GetXaxis()->SetBinLabel(8, "pass VpdVz-Vz");
+	h_passEvtcut->GetXaxis()->SetBinLabel(2, "Good Trigger");
+	h_passEvtcut->GetXaxis()->SetBinLabel(3, "Good Runs");
+	h_passEvtcut->GetXaxis()->SetBinLabel(4, "passVz");
+	h_passEvtcut->GetXaxis()->SetBinLabel(5, "passVerr");
+	h_passEvtcut->GetXaxis()->SetBinLabel(6, "passVr");
+	h_passEvtcut->GetXaxis()->SetBinLabel(7, "pass VpdVz-Vz");
+	h_passEvtcut->GetXaxis()->SetBinLabel(8, "notPileUp");
+	h_passEvtcut->GetXaxis()->SetBinLabel(9, "0-80%");
 
 	h_passTrkcut = new TH1D("h_passTrkcut", "tracks in different conditions", 7, -0.5, 6.5);
 	h_passTrkcut->GetXaxis()->SetBinLabel(1, "All");
@@ -310,6 +311,7 @@ Int_t StPicoDstarMixedMaker::Make()
 	// -------------- USER ANALYSIS -------------------------
 
 	StPicoEvent const *picoEvent = picoDst->event();
+	h_passEvtcut->Fill(-1); // All events count +1
 	if (!isGoodTrigger(picoEvent))
 		return kStOK;
 	mRunId = picoEvent->runId();
@@ -323,7 +325,7 @@ Int_t StPicoDstarMixedMaker::Make()
 	mVpdVz = picoEvent->vzVpd(); // 获得VPD测量的该事例顶点的z坐标
 
 	// event and track level QA
-	h_passEvtcut->Fill(0); // 原始事例数+1
+	h_passEvtcut->Fill(0); // goot trigger +1
 
 	if (!isBadrun(mRunId)) // bad run list
 	{
@@ -358,11 +360,11 @@ Int_t StPicoDstarMixedMaker::Make()
 		mCen16 = mRefMultCorrUtil->getCentralityBin16();
 		// 不同条件cut后的事例数统计
 		Bool_t vzcut = mVz < anaCuts::Vz_up && mVz > anaCuts::Vz_low;
-		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
 		Bool_t vrcut = mVr < anaCuts::Vr;
+		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
+		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 		Bool_t notPileUp = !mRefMultCorrUtil->isPileUpEvent(mRefmult6, picoEvent->nBTOFMatch(), mVz, mTotnMIP);
 		Bool_t cen0280cut = mCen16 > -1;
-		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 
 		if (vzcut)
 			h_passEvtcut->Fill(2);
@@ -370,11 +372,11 @@ Int_t StPicoDstarMixedMaker::Make()
 			h_passEvtcut->Fill(3);
 		if (vzcut && vrcut && verrcut)
 			h_passEvtcut->Fill(4);
-		if (vzcut && vrcut && verrcut && notPileUp)
+		if (vzcut && vrcut && verrcut && vzvpdvzcut)
 			h_passEvtcut->Fill(5);
-		if (vzcut && vrcut && verrcut && notPileUp && cen0280cut)
+		if (vzcut && vrcut && verrcut && vzvpdvzcut && notPileUp)
 			h_passEvtcut->Fill(6);
-		if (vzcut && vrcut && verrcut && notPileUp && cen0280cut && vzvpdvzcut)
+		if (vzcut && vrcut && verrcut && vzvpdvzcut && notPileUp && cen0280cut)
 			h_passEvtcut->Fill(7);
 
 		if (isGoodEvent(picoEvent) && notPileUp)

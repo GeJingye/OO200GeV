@@ -139,15 +139,17 @@ void StPicoDstarMixedMaker::initHists()
 	h_nTofMat_RefMul = new TH2F("h_nTofMat_RefMul", "RefMul VS nTofmatch;RefMul;nTofMatch", 250, 0, 250, 250, 0, 250); // 与TOF匹配的径迹数vs参考多重数关系
 	h_RefMult6 = new TH1F("h_RefMult6", "h_RefMult6", 250, 0, 250);													   // 监控事件多重数分布->计算中心度
 	h_TotnMIP = new TH1F("h_TotnMIP", "h_TotnMIP", 1000, 0, 1000);													   // 最小电离粒子（MIP）总数
-	h_passEvtcut = new TH1F("h_passEvtcut", "pass event cut", 8, -0.5, 7.5);
+	h_passEvtcut = new TH1F("h_passEvtcut", "pass event cut", 9, -1.5, 7.5);
 	h_passEvtcut->GetXaxis()->SetBinLabel(1, "All");
-	h_passEvtcut->GetXaxis()->SetBinLabel(2, "Good Runs");
-	h_passEvtcut->GetXaxis()->SetBinLabel(3, "passVz");
-	h_passEvtcut->GetXaxis()->SetBinLabel(4, "passVerr");
-	h_passEvtcut->GetXaxis()->SetBinLabel(5, "passVr");
-	h_passEvtcut->GetXaxis()->SetBinLabel(6, "notPileUp");
-	h_passEvtcut->GetXaxis()->SetBinLabel(7, "0-80%");
-	h_passEvtcut->GetXaxis()->SetBinLabel(8, "pass VpdVz-Vz");
+	h_passEvtcut->GetXaxis()->SetBinLabel(2, "Good Trigger");
+	h_passEvtcut->GetXaxis()->SetBinLabel(3, "Good Runs");
+	h_passEvtcut->GetXaxis()->SetBinLabel(4, "passVz");
+	h_passEvtcut->GetXaxis()->SetBinLabel(5, "passVerr");
+	h_passEvtcut->GetXaxis()->SetBinLabel(6, "passVr");
+	h_passEvtcut->GetXaxis()->SetBinLabel(7, "pass VpdVz-Vz");
+	h_passEvtcut->GetXaxis()->SetBinLabel(8, "notPileUp");
+	h_passEvtcut->GetXaxis()->SetBinLabel(9, "0-80%");
+	
 
 	h_passTrkcut = new TH1D("h_passTrkcut", "tracks in different conditions", 7, -0.5, 6.5);
 	h_passTrkcut->GetXaxis()->SetBinLabel(1, "All");
@@ -316,6 +318,7 @@ Int_t StPicoDstarMixedMaker::Make()
 	// -------------- USER ANALYSIS -------------------------
 
 	StPicoEvent const *picoEvent = picoDst->event();
+	h_passEvtcut->Fill(-1); // All events count +1
 	if (!isGoodTrigger(picoEvent))
 		return kStOK;
 
@@ -334,7 +337,7 @@ Int_t StPicoDstarMixedMaker::Make()
 	mVpdVz = picoEvent->vzVpd(); // 获得VPD测量的该事例顶点的z坐标
 
 	// event and track level QA
-	h_passEvtcut->Fill(0); // 原始事例数+1
+	h_passEvtcut->Fill(0); // goot trigger +1
 
 	if (!isBadrun(mRunId)) // bad run list
 	{
@@ -369,11 +372,11 @@ Int_t StPicoDstarMixedMaker::Make()
 		mCen16 = mRefMultCorrUtil->getCentralityBin16();
 		// 不同条件cut后的事例数统计
 		Bool_t vzcut = mVz < anaCuts::Vz_up && mVz > anaCuts::Vz_low;
-		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
 		Bool_t vrcut = mVr < anaCuts::Vr;
+		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
+		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 		Bool_t notPileUp = !mRefMultCorrUtil->isPileUpEvent(mRefmult6, picoEvent->nBTOFMatch(), mVz, mTotnMIP);
 		Bool_t cen0280cut = mCen16 > -1;
-		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 
 		if (vzcut)
 			h_passEvtcut->Fill(2);
@@ -381,11 +384,11 @@ Int_t StPicoDstarMixedMaker::Make()
 			h_passEvtcut->Fill(3);
 		if (vzcut && vrcut && verrcut)
 			h_passEvtcut->Fill(4);
-		if (vzcut && vrcut && verrcut && notPileUp)
+		if (vzcut && vrcut && verrcut && vzvpdvzcut)
 			h_passEvtcut->Fill(5);
-		if (vzcut && vrcut && verrcut && notPileUp && cen0280cut)
+		if (vzcut && vrcut && verrcut && vzvpdvzcut && notPileUp)
 			h_passEvtcut->Fill(6);
-		if (vzcut && vrcut && verrcut && notPileUp && cen0280cut && vzvpdvzcut)
+		if (vzcut && vrcut && verrcut && vzvpdvzcut && notPileUp && cen0280cut)
 			h_passEvtcut->Fill(7);
 
 		if (isGoodEvent(picoEvent) && notPileUp)
@@ -487,13 +490,14 @@ Int_t StPicoDstarMixedMaker::Make()
 
 				// Recalibrate nSigmaElectron nSigmaPion
 				Double_t nSigmaE_corrfactor = getNSigmaECorr(mom);
-				Double_t nSigmaE_corr = nSigmaE - nSigmaE_corrfactor;
-				h_nSigmaEcorr_P->Fill(mom.Mag(), nSigmaE_corr);
+				Double_t nSigmaEcorr = nSigmaE - nSigmaE_corrfactor;
+				h_nSigmaEcorr_P->Fill(mom.Mag(), nSigmaEcorr);
 
 				Double_t nSigmaPi_corrfactor = getNSigmaPiKPCorr(trk->charge() > 0 ? 1 : -1, mom);
 				Double_t nSigmaPi_corr = nSigmaPi - nSigmaPi_corrfactor;
 				h_nSigmaPicorr_P->Fill(mom.Mag(), nSigmaPi_corr);
-				// Double_t temp = nSigmaE_corr; nSigmaE_corr = nSigmaE; nSigmaE = temp;//将nsigmaE和nsigmaEcorr置换
+
+				// Double_t temp = nSigmaEcorr; nSigmaEcorr = nSigmaE; nSigmaE = temp;//将nsigmaE和nsigmaEcorr置换
 
 				/*	  if (nSigmaPi > -3.5 && nSigmaPi < 3.5)
 					  {
@@ -524,6 +528,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				Bool_t isElectronRegion1 = kFALSE;
 				Bool_t isElectronRegion2 = kFALSE;
 				Bool_t isElectronRegion3 = kFALSE;
+				Bool_t isElectronRegion4 = kFALSE;
 
 				// TPC cut + TOF cut
 				// groupn 1
@@ -624,16 +629,17 @@ Int_t StPicoDstarMixedMaker::Make()
 						{
 							isLowPElectron__3 = nSigmaE < -75 * mom.Mag() + 12.5;
 							isLowEtaElectron__3 = fabs(mom.Eta()) < 0.1;
-							isSomePhiElectron__3 = mom.Phi() < -1.1 && mom.Phi() > -1.6;
 							h_nSigmaElectron_P__EIDcut_3->Fill(mom.Mag(), nSigmaE);
-							isElectronRegion3 = kTRUE;
 							if (isLowPElectron__3)
 							{
 								h_nSigmaElectron_Eta__EIDcut_3_lowP->Fill(mom.Eta(), nSigmaE);
-								isValidElectron__lowP_3 = (mom.Phi() < 3.2) && (fabs(mom.Eta()) < 0.8 && fabs(mom.Eta()) > 0.1) && (mom.Perp() > 0.07 && mom.Perp() < 0.14);
+								if(!isLowEtaElectron__3)isElectronRegion4 = kTRUE;
 							}
 							if (!isLowPElectron__3)
+							{
 								h_nSigmaElectron_Eta__EIDcut_3_highP->Fill(mom.Eta(), nSigmaE);
+								isElectronRegion3 = kTRUE;
+							}
 						}
 					}
 				}
@@ -642,14 +648,8 @@ Int_t StPicoDstarMixedMaker::Make()
 				//if (isElectronRegion3 && !isLowPElectron__3)//model 3
 				//if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				//if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
-				if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && !isLowPElectron__3))//model 1+2+3
+				if (isElectronRegion1 || isElectronRegion2 || isElectronRegion3)//model 1+2+3
 				{
-					// h_Pt_Cen_nSigmaE->Fill(mom.Perp(), mCen16, nSigmaE, reWeight);
-					// h_Eta_Cen_nSigmaE->Fill(mom.Eta(), mCen16, nSigmaE, reWeight);
-					// h_Phi_Cen_nSigmaE->Fill(mom.Phi(), mCen16, nSigmaE, reWeight);
-					//  h_Pt_Cen_nSigmaEcorr->Fill(mom.Perp(), mCen16, nSigmaE_corr, reWeight);
-					//  h_Eta_Cen_nSigmaEcorr->Fill(mom.Eta(), mCen16, nSigmaE_corr, reWeight);
-					//  h_Phi_Cen_nSigmaEcorr->Fill(mom.Phi(), mCen16, nSigmaE_corr, reWeight);
 					h_nSigmaElectron_P__EIDcut_total->Fill(mom.Mag(), nSigmaE);
 					if (trk->charge() < 0) // electron
 					{
@@ -659,6 +659,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						particleinfo.phi = mom.Phi();
 						particleinfo.p = mom.Mag();
 						particleinfo.nSigmaE = nSigmaE;
+						particleinfo.nSigmaEcorr = nSigmaEcorr;
 						particleinfo.beta = beta;
 						particleinfo.energy = sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0));
 						particleinfo.p1 = mom.X();
@@ -682,6 +683,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						particleinfo.phi = mom.Phi();
 						particleinfo.p = mom.Mag();
 						particleinfo.nSigmaE = nSigmaE;
+						particleinfo.nSigmaEcorr = nSigmaEcorr;
 						particleinfo.beta = beta;
 						particleinfo.energy = sqrt(pow(M_electron, 2.0) + pow(mom.Mag(), 2.0));
 						particleinfo.p1 = mom.X();
@@ -741,7 +743,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					}
 				}
 			}
-			// for (x = 0; x < num_positron; x++)
+			// for (x = 0; x < num_positron; x++) // make phiV cut more loose
 			// {
 			// 	for (y = x + 1; y < num_positron; y++) // 从x+1开始，避免自组合和重复组合
 			// 	{
@@ -765,7 +767,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			// 		}
 			// 	}
 			// }
-			// for (x = 0; x < num_electron; x++)
+			// for (x = 0; x < num_electron; x++) // make phiV cut more loose
 			// {
 			// 	for (y = x + 1; y < num_electron; y++) // 从x+1开始，避免自组合和重复组合
 			// 	{
@@ -794,9 +796,12 @@ Int_t StPicoDstarMixedMaker::Make()
 			{
 				if (positroninfo[x].isPureE)
 				{
-					h_Pt_Cen_nSigmaE__PureE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
-					h_Eta_Cen_nSigmaE__PureE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
-					h_Phi_Cen_nSigmaE__PureE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
+					h_Pt_Cen_nSigmaE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
+					h_Eta_Cen_nSigmaE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
+					h_Phi_Cen_nSigmaE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
+					h_Pt_Cen_nSigmaEcorr->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaEcorr, reWeight);
+					h_Eta_Cen_nSigmaEcorr->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaEcorr, reWeight);
+					h_Phi_Cen_nSigmaEcorr->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaEcorr, reWeight);
 				}
 				if (!positroninfo[x].isPhotonicE)
 				{
@@ -811,9 +816,12 @@ Int_t StPicoDstarMixedMaker::Make()
 			{
 				if (electroninfo[x].isPureE)
 				{
-					h_Pt_Cen_nSigmaE__PureE->Fill(positroninfo[x].pt, mCen16, positroninfo[x].nSigmaE, reWeight);
-					h_Eta_Cen_nSigmaE__PureE->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaE, reWeight);
-					h_Phi_Cen_nSigmaE__PureE->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaE, reWeight);
+					h_Pt_Cen_nSigmaE->Fill(electroninfo[x].pt, mCen16, electroninfo[x].nSigmaE, reWeight);
+					h_Eta_Cen_nSigmaE->Fill(electroninfo[x].eta, mCen16, electroninfo[x].nSigmaE, reWeight);
+					h_Phi_Cen_nSigmaE->Fill(electroninfo[x].phi, mCen16, electroninfo[x].nSigmaE, reWeight);
+					h_Pt_Cen_nSigmaEcorr->Fill(electroninfo[x].pt, mCen16, electroninfo[x].nSigmaEcorr, reWeight);
+					h_Eta_Cen_nSigmaEcorr->Fill(electroninfo[x].eta, mCen16, electroninfo[x].nSigmaEcorr, reWeight);
+					h_Phi_Cen_nSigmaEcorr->Fill(electroninfo[x].phi, mCen16, electroninfo[x].nSigmaEcorr, reWeight);
 				}
 				if (!electroninfo[x].isPhotonicE)
 				{
@@ -1503,8 +1511,8 @@ Double_t StPicoDstarMixedMaker::getNSigmaECorr(TVector3 mom) const
 
 	return anaCuts::etaCorr_24iy_TOF[cen8Bin][etaBin] + anaCuts::phiCorr_24iy_TOF[cen8Bin][phiBin] - anaCuts::phiAverageCorr_24iy_TOF[cen8Bin];
 }
-// Double_t StPicoDstarMixedMaker::getNSigmaPiKPCorr(Int_t num_variable, TVector3 mom) const // P24ia
-//{
+Double_t StPicoDstarMixedMaker::getNSigmaPiKPCorr(Int_t num_variable, TVector3 mom) const // P24ia
+{
 //	Int_t n_cen = 0;
 //	if (mCen16 == 15 || mCen16 == 14) n_cen = 0;//0:0~10%, 1:10~20%, 2:20~40%, 3:40~60%, 4:60~80%
 //	if (mCen16 == 13 || mCen16 == 12) n_cen = 1;
@@ -1537,9 +1545,6 @@ Double_t StPicoDstarMixedMaker::getNSigmaECorr(TVector3 mom) const
 //
 //	if (within_range) return (*(anaCuts::mean_nsigma_1d_array_from_txt + index));
 //	else return 0;
-// }
-Double_t StPicoDstarMixedMaker::getNSigmaPiKPCorr(Int_t num_variable, TVector3 mom) const // P24iy
-{
 	return 0;
 }
 

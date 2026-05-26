@@ -1,4 +1,4 @@
-// ���庯��
+//对直方图开根号，并计算误差
 template <typename H1>
 H1* SqrtHist(H1* h, const TString& newName = "h_new", Bool_t setError = kTRUE)
 {
@@ -30,6 +30,7 @@ H1* SqrtHist(H1* h, const TString& newName = "h_new", Bool_t setError = kTRUE)
 	}
 	return h_new;
 }
+//Rebin直方图，并计算误差
 template <typename H3>
 void RebinHist(H3* oldH, H3* newH)//Rebin
 {
@@ -45,12 +46,12 @@ void RebinHist(H3* oldH, H3* newH)//Rebin
 				Int_t gBinOld = oldH->GetBin(ix, iy, iz);
 
 				Double_t oldContent = oldH->GetBinContent(gBinOld);
-				Double_t oldError2 = oldH->GetSumw2()->At(gBinOld);// ���ƽ��
+				Double_t oldError2 = oldH->GetSumw2()->At(gBinOld);
 
 				Double_t oldBinx = oldH->GetXaxis()->GetBinCenter(ix);
 				Double_t oldBiny = oldH->GetYaxis()->GetBinCenter(iy);
 				Double_t oldBinz = oldH->GetZaxis()->GetBinCenter(iz);
-				int gBinNew = newH->FindBin(oldBinx, oldBiny, oldBinz);// ��������λ
+				int gBinNew = newH->FindBin(oldBinx, oldBiny, oldBinz);
 
 				Double_t newError2 = newH->GetSumw2()->At(gBinNew);
 				newH->AddBinContent(gBinNew, oldContent);
@@ -58,10 +59,9 @@ void RebinHist(H3* oldH, H3* newH)//Rebin
 			}
 		}
 	}
-
-	// ͬ��ȫ��ͳ����
 	newH->SetEntries(newH->GetEntries() + oldH->GetEntries());
 }
+//计算dN/dM，dN/dpT等，并计算误差
 template <typename H2>
 void ResetBinContent(H2* h, Bool_t flag = kTRUE, Bool_t setError = kTRUE)
 {
@@ -100,26 +100,7 @@ void ResetBinContent(H2* h, Bool_t flag = kTRUE, Bool_t setError = kTRUE)
 	}
 	if (sum_minux > 0)cout << "sum_minux of " << h->GetName() << ": " << sum_minux << endl;
 }
-template <typename H4>
-void SetMinusContentZero(H4* h, Bool_t setError = kTRUE)
-{
-	for (int ix = 1; ix <= h->GetNbinsX(); ++ix)
-	{
-		for (int iy = 1; iy <= h->GetNbinsY(); ++iy)
-		{
-			for (int iz = 1; iz <= h->GetNbinsZ(); ++iz)
-			{
-				Int_t gBin = h->GetBin(ix, iy, iz);
-				Float_t oldContent = h->GetBinContent(gBin);
-				if (oldContent <= 0)
-				{
-					h->SetBinContent(gBin, 0);
-					if (setError) h->SetBinError(gBin, 0);
-				}
-			}
-		}
-	}
-}
+//将指定x范围内的bin内容置0，用于混合like-sign和mix方法到同一背景
 template <typename H5>
 void SetHistXRangeZero(H5* h, Double_t x_low, Double_t x_up)
 {
@@ -144,6 +125,7 @@ void SetHistXRangeZero(H5* h, Double_t x_low, Double_t x_up)
 		}
 	}
 }
+//计算信号显著性
 template <typename H6>
 std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N, H6* h_B, Float_t x_low, Float_t x_up)
 {
@@ -169,6 +151,7 @@ std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N,
 	Float_t signif = (N - B) / TMath::Sqrt(N_error2 + B_error2);//TMath::Sqrt(N_error2+B_error2);
 	return std::make_tuple(signif, N, N_error2, B, B_error2);
 }
+//计算信号显著性的直方图
 template <typename H7>
 H7* CalSignificance(H7* h_N, H7* h_B, TString newName = "h_Mee__Signif")
 {
@@ -194,7 +177,7 @@ H7* CalSignificance(H7* h_N, H7* h_B, TString newName = "h_Mee__Signif")
 	return h_Signif;
 }
 
-//��3Dֱ��ͼ(bin�ɱ�)����x�����ȨͶӰ��1Dֱ��ͼ��Ȩ����(y,z)Χ�ɵ����
+//将3D直方图沿X轴投影，并计算dN/dx和误差
 TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 {
 	if (!h3) {
@@ -202,7 +185,6 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 		return nullptr;
 	}
 
-	/* ---------- ����������Ϣ ---------- */
 	TAxis* xAxis = h3->GetXaxis();
 	TAxis* yAxis = h3->GetYaxis();
 	TAxis* zAxis = h3->GetZaxis();
@@ -211,7 +193,6 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 	const Int_t ny = yAxis->GetNbins();
 	const Int_t nz = zAxis->GetNbins();
 
-	/* ---------- �½� 1-D ֱ��ͼ��x ���� h3 ��ȫһ�� ---------- */
 	std::unique_ptr<double[]> xEdges(new double[nx + 1]);
 	for (int ix = 0; ix <= nx; ++ix)
 		xEdges[ix] = xAxis->GetBinLowEdge(ix + 1);
@@ -222,10 +203,9 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 	h1->SetXTitle(h3->GetXaxis()->GetTitle());
 	h1->SetYTitle("dN/dx [x]^{-1}");
 
-	/* ---------- ��ÿ�� x-bin ����Ȩ�ۼ� + ���� ---------- */
 	for (int ix = 1; ix <= nx; ++ix) {
-		double sumW = 0.0;   // ��Ȩ����
-		double sumErr2 = 0.0;  // ��Ȩ���ƽ����
+		double sumW = 0.0;
+		double sumErr2 = 0.0;
 
 		for (int iy = 1; iy <= ny; ++iy) {
 			double dy = yAxis->GetBinWidth(iy);
@@ -236,7 +216,6 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 				double c = h3->GetBinContent(ix, iy, iz);
 				double e = h3->GetBinError(ix, iy, iz);
 
-				// ����û��������趨��������ʹ�ã������� sqrt(c)
 				if (e == 0.0 && c > 0) e = std::sqrt(c);
 
 				sumW += c * area;
@@ -246,10 +225,9 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 		h1->SetBinContent(ix, sumW);
 		h1->SetBinError(ix, std::sqrt(sumErr2));
 	}
-
 	return h1;
 }
-
+//计算不同pT和中心度范围内的Mee分布，并计算信号显著性
 void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float y_low,float y_up,float z_low,float z_up)
 {
 	int pT_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_low+1e-3);
@@ -319,19 +297,16 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 }
 
 // Recalibrate.C
-// ��Ȩƽ���� bin count
 TH2F* MeanOfH3D_binCount(TH3F* h3, const char* outputName = "h2_zmean_binCount")
 {
 	int nBinsX = h3->GetNbinsX();
 	int nBinsY = h3->GetNbinsY();
 	int nBinsZ = h3->GetNbinsZ();
 
-	// ������άֱ��ͼ�洢 z �ľ�ֵ�������� h3 ��ͬ�� x,y �ᶨ�壩
 	TH2F *h2_zmean = new TH2F("outputName", "Mean nsigmaE value;X(Pt,eta,phi);Cen",
 		nBinsX, h3->GetXaxis()->GetXmin(), h3->GetXaxis()->GetXmax(),
 		nBinsY, h3->GetYaxis()->GetXmin(), h3->GetYaxis()->GetXmax());
 
-	// ����ÿ�� (x,y) bin
 	for (int ix = 1; ix <= nBinsX; ix++)
 	{
 		for (int iy = 1; iy <= nBinsY; iy++)
@@ -339,7 +314,6 @@ TH2F* MeanOfH3D_binCount(TH3F* h3, const char* outputName = "h2_zmean_binCount")
 			float sum_weights = 0.0;
 			float sum_weighted_z = 0.0;
 
-			// ���� z ������Ȩƽ��
 			for (int iz = 1; iz <= nBinsZ; iz++)
 			{
 				float weight = h3->GetBinContent(ix, iy, iz);
@@ -348,11 +322,9 @@ TH2F* MeanOfH3D_binCount(TH3F* h3, const char* outputName = "h2_zmean_binCount")
 				sum_weighted_z += weight * z_center;
 			}
 
-			// �����ֵ�����������������ȫ�գ���Ϊ 0 �� histo Ĭ��ֵ��
 			float mean_z = (sum_weights > 0) ? sum_weighted_z / sum_weights : 0.0;
 			h2_zmean->SetBinContent(ix, iy, mean_z);
 
-			// ��ѡ�����㲢��������׼��� of the mean��
 			if (sum_weights > 0)
 			{
 				float sum_sq_diff = 0.0;
@@ -371,31 +343,23 @@ TH2F* MeanOfH3D_binCount(TH3F* h3, const char* outputName = "h2_zmean_binCount")
 	}
 	return h2_zmean;
 }
-// ��˹��Ϸ� gaus fit
 TH2F* MeanOfH3D_gausFit(TH3F *h3, const char* outputName = "h2_zmean_gausFit") {
 
 	int nBinsX = h3->GetNbinsX();
 	int nBinsY = h3->GetNbinsY();
 
-	// �����洢����Ķ�άֱ��ͼ
 	TH2F *h2_mean = new TH2F(Form("%s_mean", outputName), "Z Mean from Gaussian Fit;X(Pt,eta,phi);Cen",
 		nBinsX, h3->GetXaxis()->GetXmin(), h3->GetXaxis()->GetXmax(),
 		nBinsY, h3->GetYaxis()->GetXmin(), h3->GetYaxis()->GetXmax());
 
-	// �����˹������gaus = [0]*exp(-0.5*((x-[1])/[2])^2)
 	// [0]=Amplitude, [1]=Mean, [2]=Sigma
 	TF1 *gaus = new TF1("gaus_fit", "gaus", h3->GetZaxis()->GetXmin(), h3->GetZaxis()->GetXmax());
 
 	int fitSuccess = 0;
 	int fitFailed = 0;
-	// ����ÿ�� (x,y) bin
 	for (int ix = 1; ix <= nBinsX; ix++) {
 		for (int iy = 1; iy <= nBinsY; iy++) {
-
-			// ��ȡ�� (x,y) λ�õ� z ��ͶӰ�����Զ������µ� TH1F��
 			TH1F* h1_z = (TH1F*)h3->ProjectionZ("_temp", ix, ix, iy, iy);
-
-			// ����ͳ����̫�ٵ� bin���ɸ�����Ҫ������ֵ��
 			if (h1_z->GetEntries() < 10) {
 				h2_mean->SetBinContent(ix, iy, 0);
 				h2_mean->SetBinError(ix, iy, 0);
@@ -404,22 +368,18 @@ TH2F* MeanOfH3D_gausFit(TH3F *h3, const char* outputName = "h2_zmean_gausFit") {
 				continue;
 			}
 
-			// ���ó�ʼ�����²⣨�������ȶ��ԣ�
 			float mean_est = h1_z->GetMean();
 			float sigma_est = h1_z->GetRMS();
 			float amp_est = h1_z->GetMaximum();
 			gaus->SetParameters(amp_est, mean_est, sigma_est);
 
-			// ���Ʋ�����Χ����ѡ����ֹ��Ϸ�ɢ��
 			gaus->SetParLimits(1, h3->GetZaxis()->GetXmin(), h3->GetZaxis()->GetXmax()); // Mean
 			gaus->SetParLimits(2, 0, (h3->GetZaxis()->GetXmax() - h3->GetZaxis()->GetXmin())); // Sigma > 0
 
-			// ִ�����
 			// "Q"=Quiet, "N"=No drawing, "M"=Improve fit with Minuit
 			int fitStatus = h1_z->Fit(gaus, "Q N L", "", h3->GetZaxis()->GetXmin(), h3->GetZaxis()->GetXmax());
-			// ����������
 			bool isGoodFit = (fitStatus == 0) && (gaus->GetParError(1) > 0)
-				&& (gaus->GetParameter(2) > 0); // sigma����Ϊ��
+				&& (gaus->GetParameter(2) > 0);
 
 			if (isGoodFit) {
 				float mean = gaus->GetParameter(1);
@@ -429,13 +389,12 @@ TH2F* MeanOfH3D_gausFit(TH3F *h3, const char* outputName = "h2_zmean_gausFit") {
 				fitSuccess++;
 			}
 			else {
-				// ���ʧ��ʱ���˵��򵥾�ֵ���㣬����Ϊ 0
 				h2_mean->SetBinContent(ix, iy, h1_z->GetMean());
 				h2_mean->SetBinError(ix, iy, h1_z->GetMeanError());
 				fitFailed++;
 			}
 
-			delete h1_z; // �����ͷ��ڴ棬��ֹ�ڴ�й©
+			delete h1_z;
 		}
 	}
 	delete gaus;
@@ -443,13 +402,11 @@ TH2F* MeanOfH3D_gausFit(TH3F *h3, const char* outputName = "h2_zmean_gausFit") {
 	printf(" fitting done: %d succeeded, %d failed (or low stats)\n", fitSuccess, fitFailed);
 	return h2_mean;
 }
-//����ÿ��bin��ƽ��ֵ
 TH1F* Meanof2DAlongX(const TH2F* h2, const char* outputName = "h1_xmean")
 {
 	int nybins = h2->GetNbinsY();
 	const TAxis* yaxis = h2->GetYaxis();
 
-	// ���� 1F ֱ��ͼ��X ���Ӧԭ Y ��
 	TH1F* h1_xmean = new TH1F(outputName, ";Cen8;Mean along x",
 		nybins, yaxis->GetXmin(), yaxis->GetXmax());
 
@@ -460,7 +417,6 @@ TH1F* Meanof2DAlongX(const TH2F* h2, const char* outputName = "h1_xmean")
 
 		for (int ix = 1; ix <= nxbins; ix++) {
 			double content = h2->GetBinContent(ix, iy);
-			// ������������Ƿ������� bin
 			if (content == 0) continue;
 			sum += content;
 			count++;
@@ -471,25 +427,19 @@ TH1F* Meanof2DAlongX(const TH2F* h2, const char* outputName = "h1_xmean")
 	}
 	return h1_xmean;
 }
-//��ֱ��ͼ��contentȡ��ֵ
 void NegateBinContents(TH1F* hist) {
-	// ���ֱ��ͼָ���Ƿ���Ч
 	if (!hist) {
 		std::cerr << "Error: Null histogram pointer!" << std::endl;
 		return;
 	}
 
-	// ��ȡֱ��ͼ��bin����
 	int nBinsX = hist->GetNbinsX();
 
-	// ��������bin������underflow bin 0 �� overflow bin nBinsX+1��
 	for (int i = 0; i <= nBinsX + 1; ++i) {
 		double content = hist->GetBinContent(i);
 		double error = hist->GetBinError(i);
 
-		// contentȡ��
 		hist->SetBinContent(i, -content);
-		// ������ֵ������ǶԳƵģ�ȡ����ֵ��
 		hist->SetBinError(i, std::abs(error));
 	}
 }

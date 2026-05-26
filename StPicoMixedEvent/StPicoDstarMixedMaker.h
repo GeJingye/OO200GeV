@@ -43,6 +43,7 @@ class ParticleInfo
 	Float_t phi;
 	Float_t p;
 	Float_t nSigmaE;
+	Float_t nSigmaEcorr;
 	// Float_t nSigmaPi;
 	// Float_t nSigmaK;
 	// Float_t nSigmaP;
