@@ -648,7 +648,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				//if (isElectronRegion3 && !isLowPElectron__3)//model 3
 				//if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				//if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
-				if (isElectronRegion1 || isElectronRegion2 || isElectronRegion3)//model 1+2+3
+				if (isElectronRegion1)// || isElectronRegion2 || isElectronRegion3)//model 1+2+3
 				{
 					h_nSigmaElectron_P__EIDcut_total->Fill(mom.Mag(), nSigmaE);
 					if (trk->charge() < 0) // electron
@@ -1157,7 +1157,6 @@ Int_t StPicoDstarMixedMaker::Make()
 						{
 							h_Mee_Pt_Cen__likemmMixed->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 						}
-						//}
 					}
 				}
 			} // End Mixed Event

@@ -18,8 +18,8 @@
 
 namespace anaCuts
 {
-	//const std::array<UInt_t, 4> trigNumber = {860001, 860002, 860011, 860012};// OO_200: minibias
-	const std::array<UInt_t, 2> trigNumber = {860111, 860109};// ps_OO_200: high multplicity
+	const std::array<UInt_t, 4> trigNumber = {860001, 860002, 860011, 860012};// OO_200: minibias
+	//const std::array<UInt_t, 2> trigNumber = {860111, 860109};// ps_OO_200: high multplicity
 	//Recalibrate nSigmaElectron  
 	//from zih, P24ia,TOF and nsigma_e
 	const Double_t etaCorr_24ia[8][40] =
