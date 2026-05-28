@@ -129,18 +129,33 @@ void SetHistXRangeZero(H5* h, Double_t x_low, Double_t x_up)
 template <typename H6>
 std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N, H6* h_B, Float_t x_low, Float_t x_up)
 {
+	// 空指针检查
+    if (!h_N || !h_B) {
+        std::cerr << "ERROR: Null histogram pointer!" << std::endl;
+        return std::make_tuple(0, 0, 0, 0, 0);
+    }
+    // 维度检查
+    if (h_N->GetDimension() != 1 || h_B->GetDimension() != 1) {
+        std::cerr << "ERROR: Please input 1-D histograms!" << std::endl;
+        return std::make_tuple(0, 0, 0, 0, 0);
+    }
 
-	if (h_N->GetDimension() > 1 || h_B->GetDimension() > 1) {
-		cout << "ERROR! PLease input 1-D hisogram! Exiting...";
-			return std::make_tuple(0, 0, 0, 0, 0);
-	}
+    // 有效边界查找
+    Int_t bin_low = h_N->GetXaxis()->FindBin(x_low + 1e-3);
+	Int_t bin_up  = h_N->GetXaxis()->FindBin(x_up  - 1e-3);
+    bin_low = std::max(1, bin_low);
+    bin_up  = std::min(h_N->GetNbinsX(), bin_up);
+    if (bin_low > bin_up) {
+        std::cerr << "ERROR: Invalid x range [" << x_low << ", " << x_up << "]" << std::endl;
+        return std::make_tuple(0, 0, 0, 0, 0);
+    }
+
 	Float_t N = 0;
 	Float_t	B = 0;
 	Float_t N_width, B_width;
 	Float_t N_error2 = 0;
 	Float_t	B_error2 = 0;
-	Int_t bin_low = h_N->GetXaxis()->FindBin(x_low + 1e-3);
-	Int_t bin_up  = h_N->GetXaxis()->FindBin(x_up  - 1e-3);
+	
 	for (int ix = bin_low; ix <= bin_up; ix++)
 	{
 		N += h_N->GetBinContent(ix) * h_N->GetBinWidth(ix);
@@ -148,8 +163,15 @@ std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N,
 		N_error2 += TMath::Power(h_N->GetBinError(ix) * h_N->GetBinWidth(ix),2);
 		B_error2 += TMath::Power(h_B->GetBinError(ix) * h_B->GetBinWidth(ix),2);
 	}
-	Float_t signif = (N - B) / TMath::Sqrt(N_error2 + B_error2);//TMath::Sqrt(N_error2+B_error2);
-	return std::make_tuple(signif, N, N_error2, B, B_error2);
+	if (N_error2 + B_error2 > 0)
+	{
+		Float_t signif = (N - B) / TMath::Sqrt(N_error2 + B_error2);
+		return std::make_tuple(signif, N, N_error2, B, B_error2);
+	}
+	else
+	{
+		return std::make_tuple(0, N, N_error2, B, B_error2);
+	}
 }
 //计算信号显著性的直方图
 template <typename H7>
@@ -171,7 +193,14 @@ H7* CalSignificance(H7* h_N, H7* h_B, TString newName = "h_Mee__Signif")
 		B = h_B->GetBinContent(ix) * h_B->GetBinWidth(ix);
 		N_error2 = TMath::Power(h_N->GetBinError(ix) * h_N->GetBinWidth(ix), 2);
 		B_error2 = TMath::Power(h_B->GetBinError(ix) * h_B->GetBinWidth(ix), 2);
-		h_Signif->SetBinContent(ix, (N - B) / TMath::Sqrt(N_error2 + B_error2));
+		if (N_error2 + B_error2 > 0)
+		{
+			h_Signif->SetBinContent(ix, (N - B) / TMath::Sqrt(N_error2 + B_error2));
+		}
+		else
+		{
+			h_Signif->SetBinContent(ix, 0);
+		}
 		h_Signif->SetBinError(ix, 0.0);
 	}
 	return h_Signif;
@@ -241,7 +270,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	TH1F *h_Mee_PtBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmLS_Rebin); h_Mee_PtBin__rmLS_Rebin->SetMarkerSize(0.1);
 	TH1F *h_Mee_PtBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmUM_Rebin); h_Mee_PtBin__rmUM_Rebin->SetMarkerSize(0.1);
 
-	h_Mee_PtBin__unlikeSame_Rebin->SetTitle(Form("Raw signal of e^{+}e^{-} with p_{T} range of %.2f ~ %.2f GeV/c;M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}",y_low,y_up));
+	h_Mee_PtBin__unlikeSame_Rebin->SetTitle(Form("Raw signal of e^{+}e^{-};M_{ee} (GeV/c^{2})^{-1};dN/dM_{ee} (GeV/c^{2})^{-1}",y_low,y_up));
 	h_Mee_PtBin__unlikeSame_Rebin->SetMaximum(1e8);
 	h_Mee_PtBin__unlikeSame_Rebin->SetMinimum(1e0);
 	h_Mee_PtBin__unlikeSame_Rebin->DrawClone("");
@@ -261,38 +290,52 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	gStyle->SetLegendTextSize(0.04);
 	legend->DrawClone("same");
 
-	Float_t x_low_LS = 0.4, x_up_LS = 0.76;
-	auto[signif_LS, N_LS, N_error2_LS, B_LS, B_error2_LS] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS, x_up_LS);
+	Float_t x_low_LS = 0.4, x_up_LS = 1.0;
+	auto[signif_LS, N_LS, N_error2_LS, B_LS, B_error2_LS]	   = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS, x_up_LS);
+	Float_t x_low_LS1 = 0.4, x_up_LS1 = 0.76;
+	auto[signif_LS1, N_LS1, N_error2_LS1, B_LS1, B_error2_LS1] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS1, x_up_LS1);
 	Float_t x_low_LS2 = 0.76, x_up_LS2 = 1.2;
 	auto[signif_LS2, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS2, x_up_LS2);
 	Float_t x_low_LS3 = 1.2, x_up_LS3 = 2.6;
 	auto[signif_LS3, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS3, x_up_LS3);
 
-	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
-	pt->SetFillColorAlpha(0, 0);   //
-	pt->SetFillStyle(0);
-	pt->SetBorderSize(0);
-	pt->SetTextFont(42);
-	pt->SetTextSize(0.05);
-	pt->SetTextAlign(12);
-	pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f,Cen:%.0f~%.0f%%",y_low,y_up,80-5*z_up,80-5*z_low));
-	//pt->AddText(Form("%.0f~%.0f\%",80-5*z_up,80-5*z_low));
-	pt->DrawClone("same");
+	// TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
+	// pt->SetFillColorAlpha(0, 0);   //
+	// pt->SetFillStyle(0);
+	// pt->SetBorderSize(0);
+	// pt->SetTextFont(42);
+	// pt->SetTextSize(0.05);
+	// pt->SetTextAlign(12);
+	// pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f,Cen:%.0f~%.0f%%",y_low,y_up,80-5*z_up,80-5*z_low));
+	// pt->AddText(Form("%.0f~%.0f\%",80-5*z_up,80-5*z_low));
+	// pt->DrawClone("same");
 
-	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
-	pt2->SetFillColorAlpha(0, 0);   //
+	// TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
+	// pt2->SetFillColorAlpha(0, 0);   //
+	// pt2->SetFillStyle(0);
+	// pt2->SetBorderSize(0);
+	// pt2->SetTextFont(42);
+	// pt2->SetTextSize(0.055);
+	// pt2->SetTextAlign(12);
+	// pt2->AddText("Au+Au@200GeV");
+	// pt2->AddText("Cen:0~80%");
+	// pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
+	// pt2->AddText(Form("Mass, significance, S, S/B:"));
+	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS, x_up_LS,signif_LS, N_LS-B_LS, (N_LS-B_LS)/B_LS));
+	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS1, x_up_LS1,signif_LS1, N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
+	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS2, x_up_LS2,signif_LS2, N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
+	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS3, x_up_LS3,signif_LS3, N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
+	// pt2->DrawClone("same");
+	TPaveText *pt2 = new TPaveText(0.18, 0.15, 0.55, 0.32, "NDC NB");
+	pt2->SetFillColorAlpha(0, 0);   // 透明底
 	pt2->SetFillStyle(0);
 	pt2->SetBorderSize(0);
 	pt2->SetTextFont(42);
-	pt2->SetTextSize(0.055);
+	pt2->SetTextSize(0.032);
 	pt2->SetTextAlign(12);
-	//pt2->AddText("Au+Au@200GeV");
-	//pt2->AddText("Cen:0~80%");
-	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
-	pt2->AddText(Form("Mass region and significance:"));
-	pt2->AddText(Form("[%.2f,%.2f]:%.2f", x_low_LS, x_up_LS,signif_LS));
-	pt2->AddText(Form("[%.2f,%.2f]:%.2f", x_low_LS2, x_up_LS2,signif_LS2));
-	pt2->AddText(Form("[%.2f,%.2f]:%.2f", x_low_LS3, x_up_LS3,signif_LS3));
+	pt2->AddText(Form("Focused region:%.1f<M_{ee}<%.1f", x_low_LS, x_up_LS));
+	pt2->AddText(Form("S=%.1f B=%.1f", N_LS - B_LS, B_LS));
+	pt2->AddText(Form("S/B=%.4f S/#sqrt{S+2B}=%.1f", (N_LS - B_LS) / B_LS, signif_LS));
 	pt2->DrawClone("same");
 }
 
@@ -544,4 +587,9 @@ Float_t ComputeMixEventScale( TH3* h_likepp_Rebin,		TH3* h_likemm_Rebin,
     // 计算缩放因子
     Float_t scale = 2.0 * TMath::Sqrt(Bpp_normal * Bmm_normal) / total_unlikeMixed;
     return scale;
+}
+void RebinXCen(TH3F* h3)
+{
+	h3->RebinX(10);
+	h3->RebinY(2);
 }

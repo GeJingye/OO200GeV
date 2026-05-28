@@ -361,7 +361,7 @@ Int_t StPicoDstarMixedMaker::Make()
 		// 不同条件cut后的事例数统计
 		Bool_t vzcut = mVz < anaCuts::Vz_up && mVz > anaCuts::Vz_low;
 		Bool_t vrcut = mVr < anaCuts::Vr;
-		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
+		Bool_t verrcut = kTRUE;//!(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
 		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 		Bool_t notPileUp = !mRefMultCorrUtil->isPileUpEvent(mRefmult6, picoEvent->nBTOFMatch(), mVz, mTotnMIP);
 		Bool_t cen0280cut = mCen16 > -1;
@@ -1180,9 +1180,9 @@ Bool_t StPicoDstarMixedMaker::isGoodEvent(StPicoEvent const *const picoEvent) co
 	TVector3 pVtx = picoEvent->primaryVertex();
 	return pVtx.z() < anaCuts::Vz_up &&
 		   pVtx.z() > anaCuts::Vz_low &&
-		   fabs(pVtx.x()) > anaCuts::Verror &&
-		   fabs(pVtx.y()) > anaCuts::Verror &&
-		   fabs(pVtx.z()) > anaCuts::Verror &&
+		   //fabs(pVtx.x()) > anaCuts::Verror &&
+		   //fabs(pVtx.y()) > anaCuts::Verror &&
+		   //fabs(pVtx.z()) > anaCuts::Verror &&
 		   sqrt(pVtx.x() * pVtx.x() + pVtx.y() * pVtx.y()) < anaCuts::Vr &&
 		   fabs(pVtx.z() - picoEvent->vzVpd()) < anaCuts::vzVpdVz;
 }

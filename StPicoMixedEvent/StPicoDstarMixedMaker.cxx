@@ -130,10 +130,15 @@ void StPicoDstarMixedMaker::initHists()
 	h_cen__reWeight = new TH1F("h_cen__reWeight", "h_cen__reWeight", 17, -1.5, 15.5);
 	for (Int_t i = 1; i < h_cen->GetNbinsX() + 1; i++)
 	{
-		if (i == 1)
+		if (i == 1){
 			h_cen->GetXaxis()->SetBinLabel(i, "80-100%");
-		else
+			h_cen__reWeight->GetXaxis()->SetBinLabel(i, "80-100%");
+		}
+
+		else{
 			h_cen->GetXaxis()->SetBinLabel(i, Form("%d-%d%%", 85 - 5 * i, 90 - 5 * i));
+			h_cen__reWeight->GetXaxis()->SetBinLabel(i, Form("%d-%d%%", 85 - 5 * i, 90 - 5 * i));
+		}
 	}
 	h_RefMult = new TH1F("h_RefMult", "h_RefMult", 250, 0, 250);													   // 参考多重数
 	h_nTofMat_RefMul = new TH2F("h_nTofMat_RefMul", "RefMul VS nTofmatch;RefMul;nTofMatch", 250, 0, 250, 250, 0, 250); // 与TOF匹配的径迹数vs参考多重数关系
@@ -161,7 +166,6 @@ void StPicoDstarMixedMaker::initHists()
 	h_passTrkcut->GetXaxis()->SetBinLabel(7, "GoodTrack");
 
 	// 顶点位置
-	h_Vx_Vy_Vz = new TH3F("h_Vx_Vy_Vz", "Vz vs Vy vs Vx;Vx(cm);Vy(cm);Vz(cm)", 250, -5, 5, 250, -5, 5, 400, -200, 200);
 	h_Vx_Vy = new TH2F("h_Vx_Vy", "Vy vs Vx;Vx(cm);Vy(cm)", 1400, -7, 7, 1400, -7, 7);
 	h_Vr = new TH1F("h_Vr", "Vr;Vr(cm);Counts", 400, 0, 4);
 	h_Vz = new TH1F("h_Vz", "Vz;Vz(cm);Counts", 400, -200, 200);
@@ -175,8 +179,9 @@ void StPicoDstarMixedMaker::initHists()
 	h_nHitsDEdx = new TH1F("h_nHitsDEdx", "nHitsDedx;nHitsDedx", 160, -80., 80.);
 	h_nHitsFit_Pt_Eta = new TH3F("h_nHitsFit_Pt_Eta", "nHitsFit vs p_{T} vs #eta;p_{T} (GeV/c);#eta;nHitsFit", 500, 0., 5., 40, -2., 2., 80, 0., 80.);
 	h_nHitsDEdx_Pt_Eta = new TH3F("h_nHitsDEdx_Pt_Eta", "nHitsDedx vs p_{T} vs #eta;p_{T} (GeV/c);#eta;nHitsDedx", 500, 0., 5., 40, -2., 2., 80, 0., 80.);
+	h_pDca_Pt_Eta = new TH3F("h_pDca_Pt_Eta", "#eta vs p_{T} vs DCA;DCA;p_{T};#eta", 50, 0., 5., 1000, 0., 10., 40, -2., 2.);
 
-	h_pDca = new TH1F("h_pDca", "pDca;DCA;counts", 50, 0., 5.); // p代表primary，pDCA指主径迹与重建顶点的最小距离
+	h_pDca = new TH1F("h_pDca", "pDca;DCA;counts", 100, 0., 5.); // p代表primary，pDCA指主径迹与重建顶点的最小距离
 	h_ppT = new TH1F("h_ppT", "primary p_{T};p_{T} (GeV/c);counts", 1000, 0., 10.);
 	h_pP = new TH1F("h_pP", "primary p;p (GeV/c);counts", 1000, 0., 10.);
 	h_pP_ppT = new TH2F("h_pP_ppT", "primary p vs primary p_{T};p (GeV/c);p_{T} (GeV/c)", 1000, 0., 10., 1000, 0., 10.);
@@ -185,8 +190,6 @@ void StPicoDstarMixedMaker::initHists()
 	h_pPhi = new TH1F("h_pPhi", "primary #phi;#phi;counts", 80, -4.0, 4.0);
 	h_ppTc_pEta = new TH2F("h_ppTc_pEta", "p_{T}*q vs #eta;p_{T}*q (GeV/c);#eta", 400, -10, 10, 500, -2.5, 2.5);
 	h_ppTc_pPhi = new TH2F("h_ppTc_pPhi", "p_{T}*q vs #phi;p_{T}*q (GeV/c);#phi", 400, -10, 10, 800, -4, 4);
-	h_pDca_Eta_NHitsFit = new TH3F("h_pDca_Eta_NHitsFit", "NHitsFit vs #eta vs DCA;DCA;#eta;NHitsFit", 50, 0., 5., 40, -2., 2., 90, 0, 90);
-	h_pDca_Pt_Eta = new TH3F("h_pDca_Pt_Eta", "#eta vs p_{T} vs DCA;DCA;p_{T};#eta", 50, 0., 5., 1000, 0., 10., 40, -2., 2.);
 	// GoodTrack径迹信息
 	h_nSigmaElectron_P = new TH2F("h_nSigmaElectron_P", "n#sigma_{e} vs p;p (GeV/c);n#sigma_{e}", 500, 0, 5, 4000, -20, 20);
 	h_nSigmaEcorr_P = new TH2F("h_nSigmaEcorr_P", "corrected n#sigma_{e} vs p;p (GeV/c);corrected n#sigma_{e}", 500, 0, 5, 4000, -20, 20);
@@ -194,14 +197,10 @@ void StPicoDstarMixedMaker::initHists()
 	h_nSigmaPicorr_P = new TH2F("h_nSigmaPicorr_P", "corrected n#sigma_{pi} vs p;p (GeV/c);corrected n#sigma_{pi}", 500, 0, 5, 4000, -20, 20);
 	h_nSigmaKaon_P = new TH2F("h_nSigmaKaon_P", "n#sigma_{K} vs p;p (GeV/c);n#sigma_{K}", 500, 0, 5, 4000, -20, 20);
 	h_nSigmaProton_P = new TH2F("h_nSigmaProton_P", "n#sigma_{P} vs p;p (GeV/c);n#sigma_{P}", 500, 0, 5, 4000, -20, 20);
-	h_dEdx_Pc = new TH2F("h_dEdx_Pc", "dE/dx vs p*q;p*q(GeV/c);#frac{dE}{dx} (GeV cm^{2}/g)", 400, -2, 2, 400, 0, 25);
+	h_dEdx_Pc = new TH2F("h_dEdx_Pc", "dE/dx vs p*q;p*q(GeV/c);#frac{dE}{dx} (GeV cm^{2}/g)", 1000, -5, 5, 400, 0, 25);
 	h_m2 = new TH1F("h_m2", "m^{2};m^{2};counts", 2000, -0.5, 1.5);
 	h_m2_Pc = new TH2F("h_m2_Pc", "m^{2} vs p*q;p*q (GeV/c);m^{2} (GeV/c^{2})^{2}", 1000, -5, 5, 2000, -0.5, 1.5);
-	// nSigmaE
-	h_Pt_Cen_nSigmaE__PureE = new TH3F("h_Pt_Cen_nSigmaE__PureE", "p_{T} vs Cen vs n#sigma_{e};p_{T};Cen;n#sigma_{e}", 50, 0, 5, 8, 0, 8, 200, -10, 10);
-	h_Eta_Cen_nSigmaE__PureE = new TH3F("h_Eta_Cen_nSigmaE__PureE", "#eta vs Cen vs n#sigma_{e};#eta;Cen;n#sigma_{e}", 40, -2, 2, 8, 0, 8, 200, -10, 10);
-	h_Phi_Cen_nSigmaE__PureE = new TH3F("h_Phi_Cen_nSigmaE__PureE", "#phi vs Cen vs n#sigma_{e};#phi;Cen;n#sigma_{e}", 64, -3.2, 3.2, 8, 0, 8, 200, -10, 10);
-
+	// nSigmaE correction
 	h_Pt_Cen_nSigmaE = new TH3F("h_Pt_Cen_nSigmaE", "n#sigma_{e} vs p_{T} vs Cen;p_{T} (GeV/c);Cen;n#sigma_{e}", 500, 0, 5, 16, 0, 16, 2000, -10, 10);
 	h_Eta_Cen_nSigmaE = new TH3F("h_Eta_Cen_nSigmaE", "n#sigma_{e} vs #eta vs Cen;#eta;Cen;n#sigma_{e}", 400, -2.0, 2.0, 16, 0, 16, 2000, -10, 10);
 	h_Phi_Cen_nSigmaE = new TH3F("h_Phi_Cen_nSigmaE", "n#sigma_{e} vs #phi vs Cen;#phi;Cen;n#sigma_{e}", 640, -3.2, 3.2, 16, 0, 16, 2000, -10, 10);
@@ -225,8 +224,8 @@ void StPicoDstarMixedMaker::initHists()
 	h_nSigmaElectron_P__PID_3 = new TH2F("h_nSigmaElectron_P__PID_3", "n#sigma_{e} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__EIDcut_1 = new TH2F("h_nSigmaElectron_P__EIDcut_1", "n#sigma_{e} vs p (p_{T}>0.2,|#eta|<0.9);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaElectron_P__EIDcut_2 = new TH2F("h_nSigmaElectron_P__EIDcut_2", "n#sigma_{e} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
-	h_nSigmaElectron_Eta__EIDcut_2 = new TH2F("h_nSigmaElectron_Eta__EIDcut_2", "n#sigma_{e} vs #eta (p_{T}>0.2,0.9<|#eta|<1.8);#eta;n#sigma_{e}", 400, -2, 2, 2000, -10, 10);
 	h_nSigmaElectron_P__EIDcut_3 = new TH2F("h_nSigmaElectron_P__EIDcut_3", "n#sigma_{e} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
+	h_nSigmaElectron_Eta__EIDcut_2 = new TH2F("h_nSigmaElectron_Eta__EIDcut_2", "n#sigma_{e} vs #eta (p_{T}>0.2,0.9<|#eta|<1.8);#eta;n#sigma_{e}", 400, -2, 2, 2000, -10, 10);
 	h_nSigmaElectron_Eta__EIDcut_3_lowP = new TH2F("h_nSigmaElectron_Eta__EIDcut_3_lowP", "n#sigma_{e} vs #eta (p_{T}<0.2,low p,|#eta|<1.8);#eta;n#sigma_{e}", 400, -2.0, 2.0, 2000, -10, 10);
 	h_nSigmaElectron_Eta__EIDcut_3_highP = new TH2F("h_nSigmaElectron_Eta__EIDcut_3_highP", "n#sigma_{e} vs #eta (p_{T}<0.2,high p,|#eta|<1.8);#eta;n#sigma_{e}", 400, -2.0, 2.0, 2000, -10, 10);
 	h_nSigmaElectron_P__EIDcut_total = new TH2F("h_nSigmaElectron_P__EIDcut_total", "n#sigma_{e} vs p (p_{T}>0.06,0.0<|#eta|<1.8);p (GeV/c);n#sigma_{e}", 500, 0, 5, 2000, -10, 10);
@@ -234,8 +233,6 @@ void StPicoDstarMixedMaker::initHists()
 	h_nSigmaProton_P__2 = new TH2F("h_nSigmaProton_P__2", "n#sigma_{P} vs p (p_{T}>0.2,0.9<|#eta|<1.8);p (GeV/c);n#sigma_{P}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaPion_P__3 = new TH2F("h_nSigmaPion_P__3", "n#sigma_{pi} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{pi}", 500, 0, 5, 2000, -10, 10);
 	h_nSigmaKaon_P__3 = new TH2F("h_nSigmaKaon_P__3", "n#sigma_{K} vs p (p_{T}<0.2,|#eta|<1.8);p (GeV/c);n#sigma_{K}", 500, 0, 5, 2000, -10, 10);
-	h_pT_Eta_Phi__EIDcut_3_lowP_e = new TH3F("h_pT_Eta_Phi__EIDcut_3_lowP_e", "p_{T} vs #eta vs #phi;p_{T} (GeV/c);#eta;#phi", 50, 0., 0.5, 50, -2.5, 2.5, 64, -3.2, 3.2);
-	h_pT_Eta_Phi__EIDcut_3_lowP_p = new TH3F("h_pT_Eta_Phi__EIDcut_3_lowP_p", "p_{T} vs #eta vs #phi;p_{T} (GeV/c);#eta;#phi", 50, 0., 0.5, 50, -2.5, 2.5, 64, -3.2, 3.2);
 
 	// TOF匹配的径迹信息
 	h_invBeta_P__TOFMatch = new TH2F("h_invBeta_P__TOFMatch", "1/#beta vs p;p (GeV/c);1/#beta", 500, 0, 5, 5000, 0, 5);
@@ -286,15 +283,15 @@ void StPicoDstarMixedMaker::initHists()
 	h_Mee__unlikeSame = new TH1F("h_Mee__unlikeSame", "Mee without #phi_{V} cut;Mee(GeV/c^{2})", 800, 0, 4);
 	h_Mee__unlikeSame__w_PhiV_Cut = new TH1F("h_Mee__unlikeSame__w_PhiV_Cut", "Mee with #phi_{V} cut;Mee(GeV/c^{2})", 800, 0, 4);
 
-	h_Mee_Pt_Cen__unlikeSame = new TH3F("h_Mee_Pt_Cen__unlikeSame", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__likemm = new TH3F("h_Mee_Pt_Cen__likemm", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__likepp = new TH3F("h_Mee_Pt_Cen__likepp", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__unlikeSame_Ro = new TH3F("h_Mee_Pt_Cen__unlikeSame_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__likemm_Ro = new TH3F("h_Mee_Pt_Cen__likemm_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__likepp_Ro = new TH3F("h_Mee_Pt_Cen__likepp_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__unlikeMixed = new TH3F("h_Mee_Pt_Cen__unlikeMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__likemmMixed = new TH3F("h_Mee_Pt_Cen__likemmMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
-	h_Mee_Pt_Cen__likeppMixed = new TH3F("h_Mee_Pt_Cen__likeppMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 100, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__unlikeSame = new TH3F("h_Mee_Pt_Cen__unlikeSame", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likemm = new TH3F("h_Mee_Pt_Cen__likemm", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likepp = new TH3F("h_Mee_Pt_Cen__likepp", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__unlikeSame_Ro = new TH3F("h_Mee_Pt_Cen__unlikeSame_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likemm_Ro = new TH3F("h_Mee_Pt_Cen__likemm_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likepp_Ro = new TH3F("h_Mee_Pt_Cen__likepp_Ro", "Mee vs p_{T} vs Cen;Mee (GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__unlikeMixed = new TH3F("h_Mee_Pt_Cen__unlikeMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likemmMixed = new TH3F("h_Mee_Pt_Cen__likemmMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
+	h_Mee_Pt_Cen__likeppMixed = new TH3F("h_Mee_Pt_Cen__likeppMixed", "Mee vs p_{T} vs Cen;Mee(GeV/c^{2});p_{T} (GeV/c);Cen", 800, 0, 4, 500, 0, 5, 16, 0, 16);
 } //
 
 Int_t StPicoDstarMixedMaker::Make()
@@ -342,7 +339,6 @@ Int_t StPicoDstarMixedMaker::Make()
 	if (!isBadrun(mRunId)) // bad run list
 	{
 		h_passEvtcut->Fill(1); // 通过bad run cut的事例数+1
-		h_Vx_Vy_Vz->Fill(mVx, mVy, mVz);
 		h_Vz->Fill(mVz);
 		h_Vx_Vy->Fill(mVx, mVy);
 		h_Vr->Fill(mVr);
@@ -373,7 +369,7 @@ Int_t StPicoDstarMixedMaker::Make()
 		// 不同条件cut后的事例数统计
 		Bool_t vzcut = mVz < anaCuts::Vz_up && mVz > anaCuts::Vz_low;
 		Bool_t vrcut = mVr < anaCuts::Vr;
-		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
+		Bool_t verrcut = kTRUE;//!(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
 		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 		Bool_t notPileUp = !mRefMultCorrUtil->isPileUpEvent(mRefmult6, picoEvent->nBTOFMatch(), mVz, mTotnMIP);
 		Bool_t cen0280cut = mCen16 > -1;
@@ -460,7 +456,6 @@ Int_t StPicoDstarMixedMaker::Make()
 				h_nHitsDEdx->Fill(trk->nHitsDedx() * trk->charge());
 				h_nHitsFit_Pt_Eta->Fill(mom.Perp(), mom.Eta(), trk->nHitsFit());
 				h_nHitsDEdx_Pt_Eta->Fill(mom.Perp(), mom.Eta(), trk->nHitsDedx());
-				h_pDca_Eta_NHitsFit->Fill(mgDCAs, mom.Eta(), trk->nHitsFit());
 				h_pDca_Pt_Eta->Fill(mgDCAs, mom.Perp(), mom.Eta());
 
 				h_nSigmaElectron_P->Fill(mom.Mag(), nSigmaE);
@@ -497,7 +492,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				Double_t nSigmaPi_corr = nSigmaPi - nSigmaPi_corrfactor;
 				h_nSigmaPicorr_P->Fill(mom.Mag(), nSigmaPi_corr);
 
-				// Double_t temp = nSigmaEcorr; nSigmaEcorr = nSigmaE; nSigmaE = temp;//将nsigmaE和nsigmaEcorr置换
+				//Double_t temp = nSigmaEcorr; nSigmaEcorr = nSigmaE; nSigmaE = temp;//将nsigmaE和nsigmaEcorr置换
 
 				/*	  if (nSigmaPi > -3.5 && nSigmaPi < 3.5)
 					  {
@@ -648,7 +643,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				//if (isElectronRegion3 && !isLowPElectron__3)//model 3
 				//if (isElectronRegion3 && isLowPElectron__3 && !isLowEtaElectron__3)//model 4
 				//if (isElectronRegion1 || isElectronRegion2 || (isElectronRegion3 && isValidElectron__lowP_3))// && !isLowPElectron__3;isLowEtaElectron__3
-				if (isElectronRegion1)// || isElectronRegion2 || isElectronRegion3)//model 1+2+3
+				if (isElectronRegion1 || isElectronRegion2 || isElectronRegion3)//model 1+2+3
 				{
 					h_nSigmaElectron_P__EIDcut_total->Fill(mom.Mag(), nSigmaE);
 					if (trk->charge() < 0) // electron
@@ -1180,7 +1175,6 @@ Int_t StPicoDstarMixedMaker::Finish()
 
 	// write the hists
 	// event QA
-	h_Vx_Vy_Vz->Write();
 	h_Vz->Write();
 	h_VpdVz->Write();
 	h_Vr->Write();
@@ -1189,7 +1183,6 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_Vx_Vy->Write();
 	h_nTofMat_RefMul->Write();
 	h_RefMult->Write();
-	h_pDca_Eta_NHitsFit->Write();
 	h_pDca_Pt_Eta->Write();
 	// track level QA
 	h_nHitsFit->Write();
@@ -1230,9 +1223,6 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_Eta_Cen_nSigmaPicorr->Write();
 	h_Phi_Cen_nSigmaPicorr->Write();
 
-	h_Pt_Cen_nSigmaE__PureE->Write();
-	h_Eta_Cen_nSigmaE__PureE->Write();
-	h_Phi_Cen_nSigmaE__PureE->Write();
 	h_Pt_Cen_nSigmaE->Write();
 	h_Eta_Cen_nSigmaE->Write();
 	h_Phi_Cen_nSigmaE->Write();
@@ -1258,8 +1248,6 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_nSigmaPion_P__3->Write();
 	h_nSigmaKaon_P__3->Write();
 	h_nSigmaProton_P__2->Write();
-	h_pT_Eta_Phi__EIDcut_3_lowP_e->Write();
-	h_pT_Eta_Phi__EIDcut_3_lowP_p->Write();
 
 	// phiV cut
 	h_e_p__Number_Same->Write();
@@ -1336,9 +1324,9 @@ Bool_t StPicoDstarMixedMaker::isGoodEvent(StPicoEvent const *const picoEvent) co
 	TVector3 pVtx = picoEvent->primaryVertex();
 	return pVtx.z() < anaCuts::Vz_up &&
 		   pVtx.z() > anaCuts::Vz_low &&
-		   fabs(pVtx.x()) > anaCuts::Verror &&
-		   fabs(pVtx.y()) > anaCuts::Verror &&
-		   fabs(pVtx.z()) > anaCuts::Verror &&
+		   //fabs(pVtx.x()) > anaCuts::Verror &&
+		   //fabs(pVtx.y()) > anaCuts::Verror &&
+		   //fabs(pVtx.z()) > anaCuts::Verror &&
 		   sqrt(pVtx.x() * pVtx.x() + pVtx.y() * pVtx.y()) < anaCuts::Vr &&
 		   fabs(pVtx.z() - picoEvent->vzVpd()) < anaCuts::vzVpdVz;
 }

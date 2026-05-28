@@ -135,7 +135,6 @@ class StPicoDstarMixedMaker : public StMaker
     
     // Histograms
     // event QA
-    TH3F* h_Vx_Vy_Vz;
 	TH2F* h_Vx_Vy;
 	TH1F* h_Vr;
     TH1F* h_Vz;
@@ -144,8 +143,6 @@ class StPicoDstarMixedMaker : public StMaker
     TH1F* h_VpdVzmVz;
     TH2F* h_nTofMat_RefMul;
     TH1F* h_RefMult;
-    TH3F* h_pDca_Eta_NHitsFit;
-	TH3F* h_pDca_Pt_Eta;
 
     // track level QA
     TH1F* h_nHitsFit;
@@ -153,6 +150,7 @@ class StPicoDstarMixedMaker : public StMaker
     TH1F* h_nHitsDEdx;
 	TH3F* h_nHitsFit_Pt_Eta;
     TH3F* h_nHitsDEdx_Pt_Eta;
+	TH3F* h_pDca_Pt_Eta;
     TH2F* h_dEdx_Pc;
 	TH1F* h_m2;
     TH2F* h_m2_Pc;
@@ -218,9 +216,6 @@ class StPicoDstarMixedMaker : public StMaker
 	TH2F* h_nSigmaPion_P__3;
     TH2F* h_nSigmaKaon_P__3;
     TH2F* h_nSigmaProton_P__2;
-
-	TH3F* h_pT_Eta_Phi__EIDcut_3_lowP_e;
-	TH3F* h_pT_Eta_Phi__EIDcut_3_lowP_p;
 	// phiV cut
 	TH2F* h_e_p__Number_Same;
 	TH2F* h_e_p__Number_Mix;
