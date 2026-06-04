@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"//16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;
 //23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut
-void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", Int_t number = 61)//26_20260204_TOF_corrEtaPhi_reW_P24ia;27_20260304_TOF_corrEtaPhi_P24iy;28_20260301_group3_P24iy;;
+void CalMee(TString inFileName = "roots/62_20260603_OO_iTPC44_PureE_mb.root", Int_t number = 62)//26_20260204_TOF_corrEtaPhi_reW_P24ia;27_20260304_TOF_corrEtaPhi_P24iy;28_20260301_group3_P24iy;;
 {
 	//vector<Double_t> Mee__newEdges = {0.25,0.27,0.28,0.29,0.30,0.31,0.32,0.33,0.34,0.35,0.36,0.37, 0.38,0.39, 0.40,0.41,0.42,0.6};//pion mass
 	// 定义新的bin边界
@@ -115,9 +115,9 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 	h_Mee_Pt_Cen__LikeMixed_Rebin = SqrtHist(h_Mee_Pt_Cen__temp2_Rebin,"h_Mee_Pt_Cen__LikeMixed_Rebin");
 	h_Mee_Pt_Cen__LikeMixed_Rebin->Scale(2.0);
 	h_Mee_Pt_Cen__CorrLS_Rebin->Divide(h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__LikeMixed_Rebin, 1.0, 1.0);
-	h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin = (TH3F*)h_Mee_Pt_Cen__LikeSame_Rebin->Clone("h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin");
-	h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin->Multiply(h_Mee_Pt_Cen__CorrLS_Rebin);
-	//h_Mee_Pt_Cen__LikeSame_Rebin->Multiply(h_Mee_Pt_Cen__CorrLS_Rebin);
+	//h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin = (TH3F*)h_Mee_Pt_Cen__LikeSame_Rebin->Clone("h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin");
+	//h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin->Multiply(h_Mee_Pt_Cen__CorrLS_Rebin);
+	h_Mee_Pt_Cen__LikeSame_Rebin->Multiply(h_Mee_Pt_Cen__CorrLS_Rebin);
 	// 1-D Like-SameEvent背景
 	h_Mee__temp_Rebin->Multiply(h_Mee__likemm_Rebin, h_Mee__likepp_Rebin, 1.0, 1.0);
 	h_Mee__LikeSame_Rebin = SqrtHist(h_Mee__temp_Rebin, "h_Mee__LikeSame_Rebin");
@@ -158,14 +158,14 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 	//Float_t NR_low_M = 0.2, NR_up_M = 0.9, NR_low_pt = 0, NR_up_pt = 1;//model 11+13+33
 	Float_t NR_low_M = 0.5, NR_up_M = 2, NR_low_pt = 0, NR_up_pt = 2;//model ps_11
 	Float_t scale = ComputeMixEventScale(h_Mee_Pt_Cen__likepp_Rebin, h_Mee_Pt_Cen__likemm_Rebin,h_Mee_Pt_Cen__likeppMixed_Rebin, h_Mee_Pt_Cen__likemmMixed_Rebin,h_Mee_Pt_Cen__unlikeMixed_Rebin, NR_low_M, NR_up_M, NR_low_pt, NR_up_pt, Cen__newEdges.front(), Cen__newEdges.back());
-	cout << "scale: " << scale << endl;// "\t" << "error:" << error << endl;
+	cout << "scale: " << scale << endl;
 	// 3-D Unlike-MixedEvent背景
 	h_Mee_Pt_Cen__unlikeMixed_Rebin->Scale(scale);
 	// 1-D Unlike-MixedEvent背景
 	h_Mee__unlikeMixed_Rebin->Scale(scale);
 	// // 1-D MixBKG
 	// Float_t BKG_border = 1.05;
-	// TH1F* h_Mee0to1__LikeSame_Rebin = (TH1F*)h_Mee__LikeSame_Rebin->Clone("h_Mee0to1__LikeSame_Rebin");
+	// TH1F* h_Mee0to1__LikeSame_Rebin = (TH1F*)h_Mee__LikeSame_PSACcorr_Rebin->Clone("h_Mee0to1__LikeSame_Rebin");
 	// TH1F* h_Mee1to4__unlikeMixed_Rebin = (TH1F*)h_Mee__unlikeMixed_Rebin->Clone("h_Mee1to4__unlikeMixed_Rebin");
 	// SetHistXRangeZero(h_Mee0to1__LikeSame_Rebin, BKG_border, 4.0);
 	// SetHistXRangeZero(h_Mee1to4__unlikeMixed_Rebin, 0.0, BKG_border);
@@ -180,7 +180,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 	// 去除背景，还原信号
 	//h_Mee_Pt_Cen__rmMixBKG_Rebin->Add(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__MixBKG_Rebin, 1.0, -1.0);
 	h_Mee_Pt_Cen__rmLS_Rebin->Add(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, 1.0, -1.0);
-	h_Mee_Pt_Cen__rmLS_PSACcorr_Rebin->Add(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_PSACcorr_Rebin, 1.0, -1.0);
+	h_Mee_Pt_Cen__rmLS_PSACcorr_Rebin->Add(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, 1.0, -1.0);
 	h_Mee_Pt_Cen__rmLS_Ro_Rebin->Add(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Ro_Rebin, 1.0, -1.0);
 	h_Mee_Pt_Cen__rmUM_Rebin->Add(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, 1.0, -1.0);
 	h_Mee__rmLS_Rebin->Add(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_Rebin, 1.0, -1.0);
@@ -210,34 +210,34 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 	// 如果取消掉该节的注释，即选择将3-D LS背景投影成1-D的方式计算1-D LS背景，MixBKG背景的计算方式亦同。
 	//h_Mee__unlikeSame_Rebin 	= myProject3D2x(, "h_Mee__unlikeSame_Rebin");//如果对RetSetContent()后的3D直方图投影，请使用myProject3D2x()函数
 	//h_Mee__unlikeSame_Rebin  	= (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin->Project3D("x"); ResetBinContent(h_Mee__unlikeSame_Rebin);
-	//h_Mee__LikeSame_Rebin    	= (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin->Project3D("x");   ResetBinContent(h_Mee__LikeSame_Rebin);
+	//h_Mee__LikeSame_PSACcorr_Rebin    	= (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin->Project3D("x");   ResetBinContent(h_Mee__LikeSame_PSACcorr_Rebin);
 	//h_Mee__unlikeMixed_Rebin	= (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->Project3D("x");ResetBinContent(h_Mee__unlikeMixed_Rebin);
 	//h_Mee__MixBKG_Rebin		= (TH1F*)h_Mee_Pt_Cen__MixBKG_Rebin->Project3D("x");			ResetBinContent(h_Mee__MixBKG_Rebin);
-	//h_Mee__rmLS_Rebin			= (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin->Project3D("x");		ResetBinContent(h_Mee__rmLS_Rebin);
+	//h_Mee__rmLS_PSACcorr_Rebin			= (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin->Project3D("x");		ResetBinContent(h_Mee__rmLS_PSACcorr_Rebin);
 	//h_Mee__rmUM_Rebin			= (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin->Project3D("x");		 		ResetBinContent(h_Mee__rmUM_Rebin);
 	//h_Mee__rmMixBKG_Rebin		= (TH1F*)h_Mee_Pt_Cen__rmMixBKG_Rebin->Project3D("x");   ResetBinContent(h_Mee__rmMixBKG_Rebin);
 
 	// 计算不同背景下的信号显著性
-	TH1F* h_Mee__Signif_LS = (TH1F*)CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_Rebin, "h_Mee__Signif_LS");
+	TH1F* h_Mee__Signif_LS = (TH1F*)CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_PSACcorr_Rebin, "h_Mee__Signif_LS");
 	TH1F* h_Mee__Signif_UM = (TH1F*)CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__unlikeMixed_Rebin, "h_Mee__Signif_UM");
 	Float_t x_low_LS = 0.4, x_up_LS = 1.0;
-	auto[signif_LS, N_LS, N_error2_LS, B_LS, B_error2_LS] = CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_Rebin, x_low_LS, x_up_LS);
-	auto[signif_LS_PSACcorr, N_LS_PSACcorr, N_error2_LS_PSACcorr, B_LS_PSACcorr, B_error2_LS_PSACcorr] = CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_PSACcorr_Rebin, x_low_LS, x_up_LS);
+	auto[signif_LS, signif_err2_LS, N_LS, N_err2_LS, B_LS, B_err2_LS] = CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_PSACcorr_Rebin, x_low_LS, x_up_LS);
+	auto[signif_LS_PSACcorr, signif_err2_LS_PSACcorr, N_LS_PSACcorr, N_err2_LS_PSACcorr, B_LS_PSACcorr, B_err2_LS_PSACcorr] = CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__LikeSame_PSACcorr_Rebin, x_low_LS, x_up_LS);
 	Float_t x_low_UM = 1.0, x_up_UM = 2.8;
-	auto[signif_UM, N_UM, N_error2_UM, B_UM, B_error2_UM] = CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__unlikeMixed_Rebin, x_low_UM, x_up_UM);
+	auto[signif_UM, signif_err2_UM, N_UM, N_err2_UM, B_UM, B_err2_UM] = CalSignificance(h_Mee__unlikeSame_Rebin, h_Mee__unlikeMixed_Rebin, x_low_UM, x_up_UM);
 
 	//计算各种比例
-	TH1F *h_Mee__BKGRatio_Rebin = new TH1F(*h_Mee__LikeSame_Rebin);
-	*h_Mee__BKGRatio_Rebin = *h_Mee__LikeSame_Rebin / *h_Mee__unlikeMixed_Rebin;//背景比
+	TH1F *h_Mee__BKGRatio_Rebin = new TH1F(*h_Mee__LikeSame_PSACcorr_Rebin);
+	*h_Mee__BKGRatio_Rebin = *h_Mee__LikeSame_PSACcorr_Rebin / *h_Mee__unlikeMixed_Rebin;//背景比
 
-	TH1F *h_Mee__BKGRatio2_Rebin = new TH1F(*h_Mee__LikeSame_Rebin);
-	*h_Mee__BKGRatio2_Rebin = *h_Mee__LikeSame_Rebin / *h_Mee__LikeSame_Ro_Rebin;//背景比
+	TH1F *h_Mee__BKGRatio2_Rebin = new TH1F(*h_Mee__LikeSame_PSACcorr_Rebin);
+	*h_Mee__BKGRatio2_Rebin = *h_Mee__LikeSame_PSACcorr_Rebin / *h_Mee__LikeSame_Ro_Rebin;//背景比
 
-	TH1F *h_Mee__BKGRatio3_Rebin = new TH1F(*h_Mee__LikeSame_Rebin);
-	*h_Mee__BKGRatio3_Rebin = *h_Mee__LikeSame_Rebin / *h_Mee__unlikeSame_Ro_Rebin;//背景比
+	TH1F *h_Mee__BKGRatio3_Rebin = new TH1F(*h_Mee__LikeSame_PSACcorr_Rebin);
+	*h_Mee__BKGRatio3_Rebin = *h_Mee__LikeSame_PSACcorr_Rebin / *h_Mee__unlikeSame_Ro_Rebin;//背景比
 
-	TH1F *h_Mee__SBR_LS_Rebin = new TH1F(*h_Mee__rmLS_Rebin);
-	*h_Mee__SBR_LS_Rebin = *h_Mee__rmLS_Rebin / *h_Mee__LikeSame_Rebin;//LS信背比
+	TH1F *h_Mee__SBR_LS_Rebin = new TH1F(*h_Mee__rmLS_PSACcorr_Rebin);
+	*h_Mee__SBR_LS_Rebin = *h_Mee__rmLS_PSACcorr_Rebin / *h_Mee__LikeSame_PSACcorr_Rebin;//LS信背比
 
 	TH1F *h_Mee__SBR_UM_Rebin = new TH1F(*h_Mee__rmUM_Rebin);
 	*h_Mee__SBR_UM_Rebin = *h_Mee__rmUM_Rebin / *h_Mee__unlikeMixed_Rebin;//UM信背比
@@ -488,7 +488,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up);
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_pT_0_0p05_Cen_0_80.png", number));
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -497,8 +497,8 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		
 		//画图
 		Float_t Cen_bin_low = 0.0, Cen_bin_up = 16;
-		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1200, 900);
-		c_Pt->Divide(3, 3);
+		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1400, 700);
+		c_Pt->Divide(4, 2);
 		c_Pt->cd(1);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
@@ -518,27 +518,23 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		c_Pt->cd(5);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.2, 0.25,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(6);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.25, 0.3,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.05,0.1,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(7);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.0, 0.15,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.1, 0.15,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(8);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.3,Cen_bin_low,Cen_bin_up);
-		c_Pt->cd(9);
-		gPad->SetLogy(1);
-		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.3, 5.0,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.2,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_lowPtBins_Cen_0_80.png", number));
 		delete c_Pt;
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -547,8 +543,8 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		
 		//画图
 		Float_t Cen_bin_low = 8, Cen_bin_up = 16;
-		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1200, 900);
-		c_Pt->Divide(3, 3);
+		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1400, 700);
+		c_Pt->Divide(4, 2);
 		c_Pt->cd(1);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
@@ -568,27 +564,23 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		c_Pt->cd(5);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.2, 0.25,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(6);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.25, 0.3,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.05,0.1,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(7);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.0, 0.15,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.1, 0.15,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(8);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.3,Cen_bin_low,Cen_bin_up);
-		c_Pt->cd(9);
-		gPad->SetLogy(1);
-		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.3, 5.0,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.2,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_lowPtBins_Cen_0_40.png", number));
 		delete c_Pt;
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -597,8 +589,8 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		
 		//画图
 		Float_t Cen_bin_low = 0, Cen_bin_up = 8;
-		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1200, 900);
-		c_Pt->Divide(3, 3);
+		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1400, 700);
+		c_Pt->Divide(4, 2);
 		c_Pt->cd(1);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
@@ -618,27 +610,23 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		c_Pt->cd(5);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.2, 0.25,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(6);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.25, 0.3,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.05,0.1,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(7);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.0, 0.15,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.1, 0.15,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(8);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.3,Cen_bin_low,Cen_bin_up);
-		c_Pt->cd(9);
-		gPad->SetLogy(1);
-		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.3, 5.0,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.2,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_lowPtBins_Cen_40_80.png", number));
 		delete c_Pt;
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -647,8 +635,8 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		
 		//画图
 		Float_t Cen_bin_low = 0, Cen_bin_up = 4;
-		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1200, 900);
-		c_Pt->Divide(3, 3);
+		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1400, 700);
+		c_Pt->Divide(4, 2);
 		c_Pt->cd(1);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
@@ -668,27 +656,23 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		c_Pt->cd(5);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.2, 0.25,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(6);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.25, 0.3,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.05,0.1,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(7);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.0, 0.15,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.1, 0.15,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(8);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.3,Cen_bin_low,Cen_bin_up);
-		c_Pt->cd(9);
-		gPad->SetLogy(1);
-		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.3, 5.0,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.2,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_lowPtBins_Cen_60_80.png", number));
 		delete c_Pt;
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -697,8 +681,8 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		
 		//画图
 		Float_t Cen_bin_low = 0, Cen_bin_up = 2;
-		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1200, 900);
-		c_Pt->Divide(3, 3);
+		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 1400, 700);
+		c_Pt->Divide(4, 2);
 		c_Pt->cd(1);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
@@ -718,32 +702,28 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		c_Pt->cd(5);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.2, 0.25,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(6);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.25, 0.3,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.05,0.1,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(7);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.0, 0.15,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.1, 0.15,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->cd(8);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.3,Cen_bin_low,Cen_bin_up);
-		c_Pt->cd(9);
-		gPad->SetLogy(1);
-		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.3, 5.0,Cen_bin_low,Cen_bin_up);
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin, 0.15, 0.2,Cen_bin_low,Cen_bin_up,"-");
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_lowPtBins_Cen_70_80.png", number));
 		delete c_Pt;
 	}
 
-	if (0)// 信号1/2/3，背景1/2/3，信号-背景1/2/3
+	if (1)// 信号1/2/3，背景1/2/3，信号-背景1/2/3
 	{
 		//设置直方图格式
 		h_Mee__unlikeSame_Rebin->SetLineColor(1);		h_Mee__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee__unlikeSame_Rebin->SetMarkerColor(1); h_Mee__unlikeSame_Rebin->SetMarkerSize(0.5);
-		h_Mee__LikeSame_Rebin->SetLineColor(2);			h_Mee__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_Rebin->SetMarkerColor(2); h_Mee__LikeSame_Rebin->SetMarkerSize(0.5);
+		h_Mee__LikeSame_PSACcorr_Rebin->SetLineColor(2);			h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerColor(2); h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerSize(0.5);
 		h_Mee__unlikeMixed_Rebin->SetLineColor(2);		h_Mee__unlikeMixed_Rebin->SetMarkerStyle(kOpenSquare);	h_Mee__unlikeMixed_Rebin->SetMarkerColor(2); h_Mee__unlikeMixed_Rebin->SetMarkerSize(0.5);
 		h_Mee__rmLS_Rebin->SetLineColor(6);				h_Mee__rmLS_Rebin->SetMarkerStyle(kOpenCross);			h_Mee__rmLS_Rebin->SetMarkerColor(6); h_Mee__rmLS_Rebin->SetMarkerSize(0.5);
 		h_Mee__rmLS_PSACcorr_Rebin->SetLineColor(9);	h_Mee__rmLS_PSACcorr_Rebin->SetMarkerStyle(kOpenCross);	h_Mee__rmLS_PSACcorr_Rebin->SetMarkerColor(9); h_Mee__rmLS_PSACcorr_Rebin->SetMarkerSize(0.5);
@@ -757,7 +737,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		h_Mee__rmLS_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__rmUM_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__unlikeSame_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
-		h_Mee__LikeSame_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
+		h_Mee__LikeSame_PSACcorr_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__LikeSame_Ro_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__rmLS_Ro_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__CorrLS_Rebin->SetTitle("PSAC vs M_{ee};M_{ee} (GeV/c^{2});PSAC");
@@ -773,16 +753,17 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
-		h_Mee__unlikeSame_Rebin->SetMaximum(1e8);
-		h_Mee__unlikeSame_Rebin->SetMinimum(1e1);
+		h_Mee__unlikeSame_Rebin->SetMaximum(1e7);
+		h_Mee__unlikeSame_Rebin->SetMinimum(1e6);
+		h_Mee__unlikeSame_Rebin->GetXaxis()->SetRangeUser(0,0.5);
 		h_Mee__unlikeSame_Rebin->DrawClone("PE");
 		h_Mee__rmLS_Rebin->DrawClone("same PE");
 		h_Mee__rmLS_PSACcorr_Rebin->DrawClone("same PE");
-		h_Mee__LikeSame_Rebin->DrawClone("same PE");
+		h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("same PE");
 		auto legend_LS = new TLegend(0.45, 0.65, 0.55, 0.90);
-		legend_LS->SetFillColor(0); legend_LS->SetBorderSize(0);
+		legend_LS->SetFillColor(0);legend_LS->SetFillStyle(0); legend_LS->SetBorderSize(0);
 		legend_LS->AddEntry(h_Mee__unlikeSame_Rebin, "\t Unlike-Sign Same-Event", "lp");
-		legend_LS->AddEntry(h_Mee__LikeSame_Rebin, "\t Like-Sign Same-Event", "lp");
+		legend_LS->AddEntry(h_Mee__LikeSame_PSACcorr_Rebin, "\t Like-Sign Same-Event", "lp");
 		legend_LS->AddEntry(h_Mee__rmLS_Rebin, "\t US - LS", "lp");
 		legend_LS->AddEntry(h_Mee__rmLS_PSACcorr_Rebin, "\t US - LS(corrected)", "lp");
 		legend_LS->SetMargin(0.45); //legend_BR->SetTextAlign(12);
@@ -800,7 +781,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		h_Mee__unlikeMixed_Rebin->DrawClone("same PE");
 		h_Mee__rmUM_Rebin->DrawClone("same PE");
 		auto legend_UM = new TLegend(0.45, 0.65, 0.55, 0.90);
-		legend_UM->SetFillColor(0); legend_UM->SetBorderSize(0);
+		legend_UM->SetFillColor(0); legend_UM->SetFillStyle(0); legend_UM->SetBorderSize(0);
 		legend_UM->AddEntry(h_Mee__unlikeSame_Rebin, "\t Unlike-Sign Same-Event", "lp");
 		legend_UM->AddEntry(h_Mee__unlikeMixed_Rebin, "\t Unlike-Sign Mix-Event", "lp");
 		legend_UM->AddEntry(h_Mee__rmUM_Rebin, "\t US - UM", "lp");
@@ -819,7 +800,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		h_Mee__LikeSame_Ro_Rebin->DrawClone("PE same");
 		h_Mee__rmLS_Ro_Rebin->DrawClone("PE same");
 		auto legend_Ro1 = new TLegend(0.45, 0.65, 0.55, 0.90);
-		legend_Ro1->SetFillColor(0); legend_Ro1->SetBorderSize(0);
+		legend_Ro1->SetFillColor(0);legend_Ro1->SetFillStyle(0);  legend_Ro1->SetBorderSize(0);
 		legend_Ro1->AddEntry(h_Mee__unlikeSame_Rebin, "\t Unlike-Sign Same-Event", "lp");
 		legend_Ro1->AddEntry(h_Mee__LikeSame_Ro_Rebin, "\t Like-Sign Same-Event (Rotated)", "lp");
 		legend_Ro1->AddEntry(h_Mee__rmLS_Ro_Rebin, "\t US - LS(Rotated)", "lp");
@@ -903,22 +884,23 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		gStyle->SetLegendTextSize(0.04);
 		legend_R->Draw("same");
 
-		c2->SaveAs(Form("roots/%d_Mee_pt_test.png", number));
+		c2->SaveAs(Form("roots/%d_Mee_pt.png", number));
 	}
 	if (0)// 画高清大图（包括raw signal，background ratio）
 	{
 		//设置直方图格式
 		h_Mee__unlikeSame_Rebin->SetLineColor(1);		h_Mee__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee__unlikeSame_Rebin->SetMarkerColor(1);
-		h_Mee__LikeSame_Rebin->SetLineColor(2);			h_Mee__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_Rebin->SetMarkerColor(2);
+		h_Mee__LikeSame_PSACcorr_Rebin->SetLineColor(2);			h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerColor(2);
 		h_Mee__unlikeMixed_Rebin->SetLineColor(4);		h_Mee__unlikeMixed_Rebin->SetMarkerStyle(kCircle);		h_Mee__unlikeMixed_Rebin->SetMarkerColor(4);
 		h_Mee__rmLS_Rebin->SetLineColor(6);				h_Mee__rmLS_Rebin->SetMarkerStyle(kOpenCross);			h_Mee__rmLS_Rebin->SetMarkerColor(6);
 		h_Mee__rmLS_PSACcorr_Rebin->SetLineColor(9);	h_Mee__rmLS_PSACcorr_Rebin->SetMarkerStyle(kOpenCross);	h_Mee__rmLS_PSACcorr_Rebin->SetMarkerColor(9);
 		h_Mee__rmUM_Rebin->SetLineColor(3);				h_Mee__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Mee__rmUM_Rebin->SetMarkerColor(3);
 
 		h_Mee__rmLS_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
+		h_Mee__rmLS_PSACcorr_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__rmUM_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__unlikeSame_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
-		h_Mee__LikeSame_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
+		h_Mee__LikeSame_PSACcorr_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__unlikeMixed_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__CorrLS_Rebin->SetTitle("PSAC vs M_{ee};M_{ee} (GeV/c^{2});PSAC");
 
@@ -942,7 +924,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		legend2->AddEntry(h_Mee__rmLS_PSACcorr_Rebin, "\t PSAC corr", "lp");
 		h_Mee__rmLS_Rebin->DrawClone("PE");
 		h_Mee__rmLS_PSACcorr_Rebin->DrawClone("same PE");
-		h_Mee__LikeSame_Rebin->DrawClone("same PE");
+		h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("same PE");
 		h_Mee__unlikeSame_Rebin->DrawClone("same PE");
 		legend2->Draw("same");
 		TPaveText *pt2 = new TPaveText(0.48, 0.65, 0.85, 0.96, "NDC NB");
@@ -1027,14 +1009,14 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 
 		h_Mee__rmUM_Rebin->DrawClone("PE");
 		h_Mee__rmLS_PSACcorr_Rebin->DrawClone("same PE");
-		h_Mee__LikeSame_Rebin->DrawClone("same PE");
+		h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("same PE");
 		h_Mee__unlikeMixed_Rebin->DrawClone("same PE");
 		h_Mee__unlikeSame_Rebin->DrawClone("same PE");
 		auto legend = new TLegend(0.60, 0.55, 0.85, 0.85);
 		legend->SetFillColor(0); legend->SetBorderSize(0);
 		legend->AddEntry(h_Mee__rmLS_PSACcorr_Rebin, "\t US - LS", "lp");
 		legend->AddEntry(h_Mee__rmUM_Rebin, "\t US - UM", "lp");
-		legend->AddEntry(h_Mee__LikeSame_Rebin, "\t LS", "lp");
+		legend->AddEntry(h_Mee__LikeSame_PSACcorr_Rebin, "\t LS", "lp");
 		legend->AddEntry(h_Mee__unlikeMixed_Rebin, "\t UM", "lp");
 		legend->AddEntry(h_Mee__unlikeSame_Rebin, "\t US", "lp");
 		legend->SetMargin(0.20); //legend->SetTextAlign(12);
@@ -1042,7 +1024,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		legend->Draw();
 		c3->SaveAs(Form("roots/%d_Plot_LSandUM.png", number));
 
-		//h_Mee__LikeSame_Rebin->SetLineColor(2);			h_Mee__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_Rebin->SetMarkerColor(2);
+		//h_Mee__LikeSame_PSACcorr_Rebin->SetLineColor(2);			h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerColor(2);
 		//h_Mee__unlikeMixed_Rebin->SetLineColor(4);		h_Mee__unlikeMixed_Rebin->SetMarkerStyle(kCircle);		h_Mee__unlikeMixed_Rebin->SetMarkerColor(4);
 		//h_Mee__LikeSame_Ro_Rebin->SetLineColor(6);		h_Mee__LikeSame_Ro_Rebin->SetMarkerStyle(kOpenCross);	h_Mee__LikeSame_Ro_Rebin->SetMarkerColor(6);
 		h_Mee__BKGRatio2_Rebin->SetLineColor(8);			h_Mee__BKGRatio2_Rebin->SetMarkerStyle(kOpenDiamond);	h_Mee__BKGRatio2_Rebin->SetMarkerColor(8);
@@ -1064,11 +1046,11 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		gStyle->SetOptStat(0);
 		
 		h_Mee__unlikeMixed_Rebin->DrawClone("PE");
-		h_Mee__LikeSame_Rebin->DrawClone("PE same");
+		h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("PE same");
 		h_Mee__LikeSame_Ro_Rebin->DrawClone("PE same");
 		auto legend_B = new TLegend(0.45, 0.75, 0.95, 0.45);
 		legend_B->SetFillColor(0); legend_B->SetBorderSize(0);
-		legend_B->AddEntry(h_Mee__LikeSame_Rebin, "\t Like-Sign Same-Event", "lp");
+		legend_B->AddEntry(h_Mee__LikeSame_PSACcorr_Rebin, "\t Like-Sign Same-Event", "lp");
 		legend_B->AddEntry(h_Mee__unlikeMixed_Rebin, "\t Unlike-Sign Mixed-Event", "lp");
 		legend_B->AddEntry(h_Mee__LikeSame_Ro_Rebin, "\t Like-Sign(Rotated)", "lp");
 		legend_B->SetMargin(0.45); //legend_BR->SetTextAlign(12);
@@ -1107,55 +1089,11 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		c_BR->Update();
 		c_BR->SaveAs(Form("roots/%d_BackgroundRatio.png", number));
 	}
-	if (0)
-	{
-		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
-		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
-		h_Mee_Pt_Cen__rmLS_Rebin->SetLineColor(6);				h_Mee_Pt_Cen__rmLS_Rebin->SetMarkerStyle(kOpenCross);			h_Mee_Pt_Cen__rmLS_Rebin->SetMarkerColor(6); h_Mee_Pt_Cen__rmLS_Rebin->SetMarkerSize(0.1);
-		h_Mee_Pt_Cen__rmUM_Rebin->SetLineColor(3);				h_Mee_Pt_Cen__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Mee_Pt_Cen__rmUM_Rebin->SetMarkerColor(3); h_Mee_Pt_Cen__rmUM_Rebin->SetMarkerSize(0.1);
-		
-		TCanvas *c2 = new TCanvas("c2", "c2", 800, 600);
-		c2->Divide(1);
-		c2->cd(1);//背景+信号
-		gPad->SetLogy(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.3,5,0,16);
-
-
-		TPaveText *pt = new TPaveText(0.18, 0.70, 0.55, 0.88, "NDC NB");
-		pt->SetFillColorAlpha(0, 0);   // 透明底
-		pt->SetFillStyle(0);
-		pt->SetBorderSize(0);
-		pt->SetTextFont(42);
-		pt->SetTextSize(0.032);
-		pt->SetTextAlign(12);
-		pt->AddText("O+O@200GeV");
-		pt->AddText("Cen:0~80%");
-		pt->AddText("0.3<p_{T}^{ee}<5");
-		pt->AddText("p_{T}^{e}>0.2,|#eta|<0.9, |y_{ee}|<1");
-		pt->DrawClone("same");
-
-		TPaveText *pt2 = new TPaveText(0.18, 0.15, 0.55, 0.32, "NDC NB");
-		pt2->SetFillColorAlpha(0, 0);   // 透明底
-		pt2->SetFillStyle(0);
-		pt2->SetBorderSize(0);
-		pt2->SetTextFont(42);
-		pt2->SetTextSize(0.032);
-		pt2->SetTextAlign(12);
-		pt2->AddText(Form("Focused region:%.1f<M_{ee}<%.1f", x_low_LS, x_up_LS));
-		pt2->AddText(Form("S=%.1f B=%.1f", N_LS - B_LS, B_LS));
-		pt2->AddText(Form("S/B=%.4f S/#sqrt{S+2B}=%.1f", (N_LS - B_LS) / B_LS, signif_LS));
-		//pt2->DrawClone("same");
-
-		c2->SaveAs(Form("roots/%d_RawSignal_TOF_clear.png", number));
-	}
 	if (0) // rotation 1D-check		
 	{
 		//设置直方图格式
 		h_Mee__unlikeSame_Rebin->SetLineColor(1);		h_Mee__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee__unlikeSame_Rebin->SetMarkerColor(1);
-		//h_Mee__LikeSame_Rebin->SetLineColor(2);		h_Mee__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_Rebin->SetMarkerColor(2);
+		//h_Mee__LikeSame_PSACcorr_Rebin->SetLineColor(2);		h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee__LikeSame_PSACcorr_Rebin->SetMarkerColor(2);
 		h_Mee__LikeSame_Ro_Rebin->SetLineColor(2);		h_Mee__LikeSame_Ro_Rebin->SetMarkerStyle(kOpenSquare);	h_Mee__LikeSame_Ro_Rebin->SetMarkerColor(2);
 		h_Mee__unlikeSame_Ro_Rebin->SetLineColor(2);	h_Mee__unlikeSame_Ro_Rebin->SetMarkerStyle(kOpenSquare);h_Mee__unlikeSame_Ro_Rebin->SetMarkerColor(2);
 		//h_Mee__rmLS_Rebin->SetLineColor(6);			h_Mee__rmLS_Rebin->SetMarkerStyle(kOpenCross);			h_Mee__rmLS_Rebin->SetMarkerColor(6);
@@ -1165,9 +1103,10 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		//h_Mee__rmUM_Rebin->SetLineColor(3);			h_Mee__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Mee__rmUM_Rebin->SetMarkerColor(3);
 
 		h_Mee__rmLS_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
+		h_Mee__rmLS_PSACcorr_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__rmUM_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__unlikeSame_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
-		h_Mee__LikeSame_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
+		h_Mee__LikeSame_PSACcorr_Rebin->SetTitle(";M_{ee} (GeV/c^{2});dN/dM_{ee} (GeV/c^{2})^{-1}");
 		h_Mee__CorrLS_Rebin->SetTitle("PSAC vs M_{ee};M_{ee} (GeV/c^{2});PSAC");
 		//画图
 		TCanvas *c2_ro = new TCanvas("c2_ro", "c2_ro", 1000, 600);
@@ -1188,7 +1127,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		//h_Mee__rmUS_Ro_Rebin->DrawClone("same PE");
 		// h_Mee__rmLS_Rebin->DrawClone("same PE");
 		// h_Mee__rmLS_PSACcorr_Rebin->DrawClone("same PE");
-		// h_Mee__LikeSame_Rebin->DrawClone("same PE");
+		// h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("same PE");
 		auto legend_Ro1 = new TLegend(0.45, 0.35, 0.55, 0.65);
 		legend_Ro1->SetFillColor(0); legend_Ro1->SetBorderSize(0);
 		legend_Ro1->AddEntry(h_Mee__unlikeSame_Rebin, "\t Unlike-Sign Same-Event", "lp");
@@ -1213,7 +1152,7 @@ void CalMee(TString inFileName = "roots/20260526_OO_iTPC1p2p3_PureE_mb.root", In
 		h_Mee__rmUS_Ro_Rebin->DrawClone("same PE");
 		// h_Mee__rmLS_Rebin->DrawClone("same PE");
 		// h_Mee__rmLS_PSACcorr_Rebin->DrawClone("same PE");
-		// h_Mee__LikeSame_Rebin->DrawClone("same PE");
+		// h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("same PE");
 		auto legend_Ro2 = new TLegend(0.45, 0.35, 0.55, 0.65);
 		legend_Ro2->SetFillColor(0); legend_Ro2->SetBorderSize(0);
 		legend_Ro2->AddEntry(h_Mee__unlikeSame_Rebin, "\t Unlike-Sign Same-Event", "lp");

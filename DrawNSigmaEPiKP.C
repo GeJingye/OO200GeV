@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 // 16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/27_20260304_TOF_corrEtaPhi_P24iy.root", Int_t number = 27) //
+void DrawNSigmaEPiKP(TString inFilename = "roots/62_20260603_OO_iTPC44_PureE_mb.root", Int_t number = 62) //
 {
 	// 从root文件中导入待拟合的直方图
 	TFile *inFile = new TFile(inFilename);
@@ -316,7 +316,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/27_20260304_TOF_corrEtaPhi_P24i
 
 		c1->SaveAs(Form("roots/%d_TrackQA_and_TrackTOFMatch.png", number));
 	}
-	if (0) // check PhiV cut
+	if (1) // check PhiV cut
 	{
 		h_Mee__unlikeSame->SetLineColor(kBlack);
 		h_Mee__unlikeSame->GetYaxis()->SetTitleOffset(1.5);
@@ -381,7 +381,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/27_20260304_TOF_corrEtaPhi_P24i
 	}
 
 	TString Tag = "P24iy";
-	if (1) // EID in group1(pT>0.2, |eta|<1)
+	if (0) // EID in group1(pT>0.2, |eta|<1)
 	{
 		// 设置直方图格式
 		// 去除误差条，设置Marker形状颜色，设置线条颜色，设置图例，设置坐标轴标题，设置对数Y坐标）

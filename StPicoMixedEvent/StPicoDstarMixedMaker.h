@@ -253,7 +253,11 @@ class StPicoDstarMixedMaker : public StMaker
 	TH1F* h_DeltaPhi__unlikeMixed;
     TH1F* h_Phi__likemm_deltaPhi_0p2;
     TH1F* h_Phi__likepp_deltaPhi_0p2;
+    TH1F* h_Phi__unlike_deltaPhi_0p2;
     TH1F* h_Phi__unlike_deltaPhi_3p0;
+    TH1F* h_Mee__unlike_deltaPhi_3p0;
+    TH1F* h_Mee__likemm_deltaPhi_0p2;
+    TH1F* h_Mee__likepp_deltaPhi_0p2;
 
     TH1F* h_Rapidity__unlikeSame;
     TH2F* h_Mee_PhiV__unlikeSame;
@@ -264,10 +268,6 @@ class StPicoDstarMixedMaker : public StMaker
     TH3F* h_Mee_Pt_Cen__likemm;
     TH3F* h_Mee_Pt_Cen__likepp;
     TH3F* h_Mee_Pt_Cen__unlikeSame_Ro;
-    TH3F* h_Mee_Pt_Cen__1p4m_RoB;
-    TH3F* h_Mee_Pt_Cen__1m4p_RoB;
-    TH3F* h_Mee_Pt_Cen__1p4m_RoA;
-    TH3F* h_Mee_Pt_Cen__1m4p_RoA;
     TH3F* h_Mee_Pt_Cen__likemm_Ro;
     TH3F* h_Mee_Pt_Cen__likepp_Ro;
     TH3F* h_Mee_Pt_Cen__unlikeMixed;

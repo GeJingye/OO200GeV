@@ -127,17 +127,17 @@ void SetHistXRangeZero(H5* h, Double_t x_low, Double_t x_up)
 }
 //计算信号显著性
 template <typename H6>
-std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N, H6* h_B, Float_t x_low, Float_t x_up)
+std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N, H6* h_B, Float_t x_low, Float_t x_up)
 {
 	// 空指针检查
     if (!h_N || !h_B) {
         std::cerr << "ERROR: Null histogram pointer!" << std::endl;
-        return std::make_tuple(0, 0, 0, 0, 0);
+        return std::make_tuple(0, 0, 0, 0, 0, 0);
     }
     // 维度检查
     if (h_N->GetDimension() != 1 || h_B->GetDimension() != 1) {
         std::cerr << "ERROR: Please input 1-D histograms!" << std::endl;
-        return std::make_tuple(0, 0, 0, 0, 0);
+        return std::make_tuple(0, 0, 0, 0, 0, 0);
     }
 
     // 有效边界查找
@@ -147,7 +147,7 @@ std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N,
     bin_up  = std::min(h_N->GetNbinsX(), bin_up);
     if (bin_low > bin_up) {
         std::cerr << "ERROR: Invalid x range [" << x_low << ", " << x_up << "]" << std::endl;
-        return std::make_tuple(0, 0, 0, 0, 0);
+        return std::make_tuple(0, 0, 0, 0, 0, 0);
     }
 
 	Float_t N = 0;
@@ -166,11 +166,16 @@ std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N,
 	if (N_error2 + B_error2 > 0)
 	{
 		Float_t signif = (N - B) / TMath::Sqrt(N_error2 + B_error2);
-		return std::make_tuple(signif, N, N_error2, B, B_error2);
+		Float_t denom = (N + B) * (N + B);
+		Float_t dN = 2 * B / denom;   // 偏导 ∂f/∂N
+		Float_t dB = -2 * N / denom;  // ∂f/∂B
+		Float_t signif_error2 = dN*dN * N_error2 + dB*dB * B_error2;
+		return std::make_tuple(signif, signif_error2, N, N_error2, B, B_error2);
+
 	}
 	else
 	{
-		return std::make_tuple(0, N, N_error2, B, B_error2);
+		return std::make_tuple(0, 0,N, N_error2, B, B_error2);
 	}
 }
 //计算信号显著性的直方图
@@ -257,7 +262,7 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 	return h1;
 }
 //计算不同pT和中心度范围内的Mee分布，并计算信号显著性
-void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float y_low,float y_up,float z_low,float z_up)
+void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float y_low,float y_up,float z_low,float z_up,TString option = "+")
 {
 	int pT_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_low+1e-3);
 	int pT_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_up-1e-3);
@@ -269,7 +274,18 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	TH1F *h_Mee_PtBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeMixed_Rebin); h_Mee_PtBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
 	TH1F *h_Mee_PtBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmLS_Rebin); h_Mee_PtBin__rmLS_Rebin->SetMarkerSize(0.1);
 	TH1F *h_Mee_PtBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmUM_Rebin); h_Mee_PtBin__rmUM_Rebin->SetMarkerSize(0.1);
-
+	if (option == "-") {
+		TH1F* h_Mee_PtBin__rmLS_Rebin_Clone=(TH1F*)h_Mee_PtBin__rmLS_Rebin->Clone("h_Mee_PtBin__rmLS_Rebin_Clone");
+        for (Int_t i = 1; i <= h_Mee_PtBin__rmLS_Rebin->GetNbinsX(); i++) {
+            Double_t cont = h_Mee_PtBin__rmLS_Rebin->GetBinContent(i);
+            h_Mee_PtBin__rmLS_Rebin_Clone->SetBinContent(i, -cont);
+        }
+		h_Mee_PtBin__rmLS_Rebin_Clone->SetTitle(Form("Raw signal of e^{+}e^{-};M_{ee} (GeV/c^{2})^{-1};-dN/dM_{ee} (GeV/c^{2})^{-1}",y_low,y_up));
+		h_Mee_PtBin__rmLS_Rebin_Clone->SetMaximum(1e8);
+		h_Mee_PtBin__rmLS_Rebin_Clone->SetMinimum(1e0);
+		h_Mee_PtBin__rmLS_Rebin_Clone->DrawClone("");
+		return;
+    }
 	h_Mee_PtBin__unlikeSame_Rebin->SetTitle(Form("Raw signal of e^{+}e^{-};M_{ee} (GeV/c^{2})^{-1};dN/dM_{ee} (GeV/c^{2})^{-1}",y_low,y_up));
 	h_Mee_PtBin__unlikeSame_Rebin->SetMaximum(1e8);
 	h_Mee_PtBin__unlikeSame_Rebin->SetMinimum(1e0);
@@ -287,56 +303,136 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	legend->AddEntry(h_Mee_PtBin__rmLS_Rebin, "\t US - LS", "lp");
 	//legend->AddEntry(h_Mee_PtBin__rmUM_Rebin, "\t US - UM", "lp");
 	legend->SetMargin(0.20);
-	gStyle->SetLegendTextSize(0.04);
+	gStyle->SetLegendTextSize(0.032);
 	legend->DrawClone("same");
 
-	Float_t x_low_LS = 0.4, x_up_LS = 1.0;
-	auto[signif_LS, N_LS, N_error2_LS, B_LS, B_error2_LS]	   = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS, x_up_LS);
+	Float_t x_low_LS = 0.4, x_up_LS = 2.6;
+	auto[signif_LS, signif_err2_LS, N_LS, N_error2_LS, B_LS, B_error2_LS]	   = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS, x_up_LS);
 	Float_t x_low_LS1 = 0.4, x_up_LS1 = 0.76;
-	auto[signif_LS1, N_LS1, N_error2_LS1, B_LS1, B_error2_LS1] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS1, x_up_LS1);
+	auto[signif_LS1, signif_err2_LS2, N_LS1, N_error2_LS1, B_LS1, B_error2_LS1] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS1, x_up_LS1);
 	Float_t x_low_LS2 = 0.76, x_up_LS2 = 1.2;
-	auto[signif_LS2, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS2, x_up_LS2);
+	auto[signif_LS2, signif_err2_LS3, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS2, x_up_LS2);
 	Float_t x_low_LS3 = 1.2, x_up_LS3 = 2.6;
-	auto[signif_LS3, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS3, x_up_LS3);
+	auto[signif_LS3, signif_err2_LS4, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS3, x_up_LS3);
 
-	// TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
-	// pt->SetFillColorAlpha(0, 0);   //
-	// pt->SetFillStyle(0);
-	// pt->SetBorderSize(0);
-	// pt->SetTextFont(42);
-	// pt->SetTextSize(0.05);
-	// pt->SetTextAlign(12);
-	// pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f,Cen:%.0f~%.0f%%",y_low,y_up,80-5*z_up,80-5*z_low));
-	// pt->AddText(Form("%.0f~%.0f\%",80-5*z_up,80-5*z_low));
-	// pt->DrawClone("same");
+	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
+	pt->SetFillColorAlpha(0, 0);   //
+	pt->SetFillStyle(0);
+	pt->SetBorderSize(0);
+	pt->SetTextFont(42);
+	pt->SetTextSize(0.04);
+	pt->SetTextAlign(12);
+	pt->AddText(Form("%.2f<p_{T}^{ee}<%.2f,Cen:%.0f~%.0f%%",y_low,y_up,80-5*z_up,80-5*z_low));
+	//pt->AddText(Form("%.0f~%.0f\%",80-5*z_up,80-5*z_low));
+	pt->DrawClone("same");
 
-	// TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
-	// pt2->SetFillColorAlpha(0, 0);   //
-	// pt2->SetFillStyle(0);
-	// pt2->SetBorderSize(0);
-	// pt2->SetTextFont(42);
-	// pt2->SetTextSize(0.055);
-	// pt2->SetTextAlign(12);
-	// pt2->AddText("Au+Au@200GeV");
-	// pt2->AddText("Cen:0~80%");
-	// pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
-	// pt2->AddText(Form("Mass, significance, S, S/B:"));
-	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS, x_up_LS,signif_LS, N_LS-B_LS, (N_LS-B_LS)/B_LS));
-	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS1, x_up_LS1,signif_LS1, N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
-	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS2, x_up_LS2,signif_LS2, N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
-	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS3, x_up_LS3,signif_LS3, N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
-	// pt2->DrawClone("same");
-	TPaveText *pt2 = new TPaveText(0.18, 0.15, 0.55, 0.32, "NDC NB");
-	pt2->SetFillColorAlpha(0, 0);   // 透明底
+	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
+	pt2->SetFillColorAlpha(0, 0);   //
 	pt2->SetFillStyle(0);
 	pt2->SetBorderSize(0);
 	pt2->SetTextFont(42);
-	pt2->SetTextSize(0.032);
+	pt2->SetTextSize(0.04);
 	pt2->SetTextAlign(12);
-	pt2->AddText(Form("Focused region:%.1f<M_{ee}<%.1f", x_low_LS, x_up_LS));
-	pt2->AddText(Form("S=%.1f B=%.1f", N_LS - B_LS, B_LS));
-	pt2->AddText(Form("S/B=%.4f S/#sqrt{S+2B}=%.1f", (N_LS - B_LS) / B_LS, signif_LS));
+	//pt2->AddText("Au+Au@200GeV");
+	//pt2->AddText("Cen:0~80%");
+	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
+	pt2->AddText(Form("Mass, significance,Sigerr S, S/B:"));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS, x_up_LS, signif_LS, sqrt(signif_err2_LS), N_LS-B_LS, (N_LS-B_LS)/B_LS));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS1, x_up_LS1, signif_LS1, sqrt(signif_err2_LS2), N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS2, x_up_LS2, signif_LS2, sqrt(signif_err2_LS3), N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS3, x_up_LS3, signif_LS3, sqrt(signif_err2_LS4), N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
 	pt2->DrawClone("same");
+}
+void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float x_low,float x_up,float z_low,float z_up,TString option = "+")
+{	
+	int Mee_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(x_low+1e-3);
+	int Mee_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(x_up-1e-3);
+	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-3);
+	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-3);
+
+	TH1F *h_Pt_MeeBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeSame_Rebin); //h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__LikeSame_Rebin); //h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeMixed_Rebin); //h_Pt_MeeBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmLS_Rebin); //h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmUM_Rebin); //h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);	
+	// h_Pt_MeeBin__unlikeSame_Rebin->SetLineColor(1);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerColor(1); 	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
+	// h_Pt_MeeBin__LikeSame_Rebin->SetLineColor(2);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerColor(2);		h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
+	h_Pt_MeeBin__rmLS_Rebin->SetLineColor(6);		h_Pt_MeeBin__rmLS_Rebin->SetMarkerStyle(kOpenCross);		h_Pt_MeeBin__rmLS_Rebin->SetMarkerColor(6); 		h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.5);
+	// h_Pt_MeeBin__rmUM_Rebin->SetLineColor(3);		h_Pt_MeeBin__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Pt_MeeBin__rmUM_Rebin->SetMarkerColor(3); 		h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);
+	
+	if (option == "-") {
+		TH1F* h_Pt_MeeBin__rmLS_Rebin_Clone=(TH1F*)h_Pt_MeeBin__rmLS_Rebin->Clone("h_Pt_MeeBin__rmLS_Rebin_Clone");
+        for (Int_t i = 1; i <= h_Pt_MeeBin__rmLS_Rebin->GetNbinsX(); i++) {
+            Double_t cont = h_Pt_MeeBin__rmLS_Rebin->GetBinContent(i);
+            h_Pt_MeeBin__rmLS_Rebin_Clone->SetBinContent(i, -cont);
+        }
+		h_Pt_MeeBin__rmLS_Rebin_Clone->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);-dN/dp_{T} (GeV/c)^{-1}",x_low,x_up));
+		h_Pt_MeeBin__rmLS_Rebin_Clone->GetXaxis()->SetRangeUser(0,1);
+		h_Pt_MeeBin__rmLS_Rebin_Clone->GetXaxis()->SetNdivisions(405);
+		h_Pt_MeeBin__rmLS_Rebin_Clone->SetMaximum(1e8);
+		h_Pt_MeeBin__rmLS_Rebin_Clone->SetMinimum(1e0);
+		h_Pt_MeeBin__rmLS_Rebin_Clone->DrawClone("");
+		return;
+    }
+	
+	h_Pt_MeeBin__unlikeSame_Rebin->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);dN/dp_{T} (GeV/c^{2})^{-1}",x_low,x_up));
+	h_Pt_MeeBin__rmLS_Rebin->SetMaximum(1e8);
+	h_Pt_MeeBin__rmLS_Rebin->SetMinimum(1e0);
+	h_Pt_MeeBin__unlikeSame_Rebin->GetXaxis()->SetRangeUser(0,1);
+	h_Pt_MeeBin__rmLS_Rebin->GetXaxis()->SetRangeUser(0,1);
+	h_Pt_MeeBin__rmLS_Rebin->GetXaxis()->SetNdivisions(405);
+	//h_Pt_MeeBin__unlikeSame_Rebin->DrawClone("");
+	//h_Pt_MeeBin__LikeSame_Rebin->DrawClone("same");
+	//h_Pt_MeeBin__unlikeMixed_Rebin->DrawClone("same");
+	h_Pt_MeeBin__rmLS_Rebin->DrawClone("");
+	//h_Pt_MeeBin__rmUM_Rebin->DrawClone("same");
+
+	auto legend = new TLegend(0.63, 0.58, 0.88, 0.88);
+	legend->SetFillColor(0);legend->SetFillStyle(0); legend->SetBorderSize(0);
+	//legend->AddEntry(h_Pt_MeeBin__unlikeMixed_Rebin, "\t UM", "lp");
+	//legend->AddEntry(h_Pt_MeeBin__unlikeSame_Rebin, "\t US", "lp");
+	//legend->AddEntry(h_Pt_MeeBin__LikeSame_Rebin, "\t LS", "lp");
+	legend->AddEntry(h_Pt_MeeBin__rmLS_Rebin, "\t US - LS", "lp");
+	//legend->AddEntry(h_Pt_MeeBin__rmUM_Rebin, "\t US - UM", "lp");
+	legend->SetMargin(0.20);
+	gStyle->SetLegendTextSize(0.032);
+	legend->DrawClone("same");
+
+	Float_t y_low_LS = 0.0, y_up_LS = 5.0;
+	auto[signif_LS, signif_err2_LS, N_LS, N_error2_LS, B_LS, B_error2_LS]	   = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS, y_up_LS);
+	Float_t y_low_LS1 = 0.0, y_up_LS1 = 0.05;
+	auto[signif_LS1, signif_err2_LS2, N_LS1, N_error2_LS1, B_LS1, B_error2_LS1] = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS1, y_up_LS1);
+	Float_t y_low_LS2 = 0.05, y_up_LS2 = 0.1;
+	auto[signif_LS2, signif_err2_LS3, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS2, y_up_LS2);
+	Float_t y_low_LS3 = 0.1, y_up_LS3 = 0.15;
+	auto[signif_LS3, signif_err2_LS4, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS3, y_up_LS3);
+
+	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
+	pt->SetFillColorAlpha(0, 0);   //
+	pt->SetFillStyle(0);
+	pt->SetBorderSize(0);
+	pt->SetTextFont(42);
+	pt->SetTextSize(0.04);
+	pt->SetTextAlign(12);
+	pt->AddText(Form("%.2f<M_{ee}<%.2f,Cen:%.0f~%.0f%%",x_low,x_up,80-5*z_up,80-5*z_low));
+	pt->DrawClone("same");
+
+	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
+	pt2->SetFillColorAlpha(0, 0);   //
+	pt2->SetFillStyle(0);
+	pt2->SetBorderSize(0);
+	pt2->SetTextFont(42);
+	pt2->SetTextSize(0.04);
+	pt2->SetTextAlign(12);
+	//pt2->AddText("Au+Au@200GeV");
+	//pt2->AddText("Cen:0~80%");
+	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
+	pt2->AddText(Form("p_{T}, significance,Sigerr S, S/B:"));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS, y_up_LS, signif_LS, sqrt(signif_err2_LS), N_LS-B_LS, (N_LS-B_LS)/B_LS));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS1, y_up_LS1, signif_LS1, sqrt(signif_err2_LS2), N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS2, y_up_LS2, signif_LS2, sqrt(signif_err2_LS3), N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS3, y_up_LS3, signif_LS3, sqrt(signif_err2_LS4), N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
+	//pt2->DrawClone("same");
 }
 
 // Recalibrate.C

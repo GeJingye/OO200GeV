@@ -224,7 +224,7 @@ namespace anaCuts
 	Float_t const NHitsFitRatio = 0.52;
 	// high pT
 	Float_t const NHitsFit_highPt = 40;//40
-	Float_t const NHitsDedx_highPt =30;//30
+	Float_t const NHitsDedx_highPt = 30;//30
 	Float_t const Dca_highPt = 1;//1
 	// low pT
 	Float_t const NHitsFit_lowPt = 20;//20
@@ -233,6 +233,7 @@ namespace anaCuts
 	// border
 	Float_t const Pt = 0.15;
 	Float_t const Eta = 0.9;
+	Float_t const Eta_Gap = 0.4;
 	// beta cut
 	Float_t const invBetaCut = 0.025;
 	// phiV cut
