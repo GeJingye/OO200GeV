@@ -269,11 +269,11 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-3);
 	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-3);
 
-	TH1F *h_Mee_PtBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeSame_Rebin); h_Mee_PtBin__unlikeSame_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Mee_PtBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__LikeSame_Rebin); h_Mee_PtBin__LikeSame_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Mee_PtBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeMixed_Rebin); h_Mee_PtBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Mee_PtBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmLS_Rebin); h_Mee_PtBin__rmLS_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Mee_PtBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionX("_px", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmUM_Rebin); h_Mee_PtBin__rmUM_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionX("_px1", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeSame_Rebin); h_Mee_PtBin__unlikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionX("_px2", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__LikeSame_Rebin); h_Mee_PtBin__LikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionX("_px3", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeMixed_Rebin); h_Mee_PtBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionX("_px4", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmLS_Rebin); h_Mee_PtBin__rmLS_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Mee_PtBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionX("_px5", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__rmUM_Rebin); h_Mee_PtBin__rmUM_Rebin->SetMarkerSize(0.1);
 	if (option == "-") {
 		TH1F* h_Mee_PtBin__rmLS_Rebin_Clone=(TH1F*)h_Mee_PtBin__rmLS_Rebin->Clone("h_Mee_PtBin__rmLS_Rebin_Clone");
         for (Int_t i = 1; i <= h_Mee_PtBin__rmLS_Rebin->GetNbinsX(); i++) {
@@ -345,20 +345,20 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 }
 void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float x_low,float x_up,float z_low,float z_up,TString option = "+")
 {	
-	int Mee_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(x_low+1e-3);
-	int Mee_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(x_up-1e-3);
-	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-3);
-	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-3);
+	int Mee_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(x_low+1e-5);
+	int Mee_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(x_up-1e-5);
+	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-5);
+	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-5);
 
-	TH1F *h_Pt_MeeBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeSame_Rebin); //h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__LikeSame_Rebin); //h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeMixed_Rebin); //h_Pt_MeeBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmLS_Rebin); //h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionY("_px", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmUM_Rebin); //h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);	
-	// h_Pt_MeeBin__unlikeSame_Rebin->SetLineColor(1);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerColor(1); 	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
-	// h_Pt_MeeBin__LikeSame_Rebin->SetLineColor(2);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerColor(2);		h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionY("_px1", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeSame_Rebin); //h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionY("_px2", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__LikeSame_Rebin); //h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionY("_px3", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeMixed_Rebin); //h_Pt_MeeBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmLS_Rebin				 ->ProjectionY("_px4", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmLS_Rebin); //h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.1);
+	TH1F *h_Pt_MeeBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionY("_px5", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmUM_Rebin); //h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);	
+	h_Pt_MeeBin__unlikeSame_Rebin->SetLineColor(1);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerColor(1); 	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
+	h_Pt_MeeBin__LikeSame_Rebin->SetLineColor(2);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerColor(2);		h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
 	h_Pt_MeeBin__rmLS_Rebin->SetLineColor(6);		h_Pt_MeeBin__rmLS_Rebin->SetMarkerStyle(kOpenCross);		h_Pt_MeeBin__rmLS_Rebin->SetMarkerColor(6); 		h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.5);
-	// h_Pt_MeeBin__rmUM_Rebin->SetLineColor(3);		h_Pt_MeeBin__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Pt_MeeBin__rmUM_Rebin->SetMarkerColor(3); 		h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);
+	//h_Pt_MeeBin__rmUM_Rebin->SetLineColor(3);		h_Pt_MeeBin__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Pt_MeeBin__rmUM_Rebin->SetMarkerColor(3); 		h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);
 	
 	if (option == "-") {
 		TH1F* h_Pt_MeeBin__rmLS_Rebin_Clone=(TH1F*)h_Pt_MeeBin__rmLS_Rebin->Clone("h_Pt_MeeBin__rmLS_Rebin_Clone");
@@ -375,10 +375,9 @@ void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 		return;
     }
 	
-	h_Pt_MeeBin__unlikeSame_Rebin->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);dN/dp_{T} (GeV/c^{2})^{-1}",x_low,x_up));
+	h_Pt_MeeBin__rmLS_Rebin->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);dN/dp_{T} (GeV/c^{2})^{-1}",x_low,x_up));
 	h_Pt_MeeBin__rmLS_Rebin->SetMaximum(1e8);
 	h_Pt_MeeBin__rmLS_Rebin->SetMinimum(1e0);
-	h_Pt_MeeBin__unlikeSame_Rebin->GetXaxis()->SetRangeUser(0,1);
 	h_Pt_MeeBin__rmLS_Rebin->GetXaxis()->SetRangeUser(0,1);
 	h_Pt_MeeBin__rmLS_Rebin->GetXaxis()->SetNdivisions(405);
 	//h_Pt_MeeBin__unlikeSame_Rebin->DrawClone("");
@@ -398,15 +397,6 @@ void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	gStyle->SetLegendTextSize(0.032);
 	legend->DrawClone("same");
 
-	Float_t y_low_LS = 0.0, y_up_LS = 5.0;
-	auto[signif_LS, signif_err2_LS, N_LS, N_error2_LS, B_LS, B_error2_LS]	   = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS, y_up_LS);
-	Float_t y_low_LS1 = 0.0, y_up_LS1 = 0.05;
-	auto[signif_LS1, signif_err2_LS2, N_LS1, N_error2_LS1, B_LS1, B_error2_LS1] = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS1, y_up_LS1);
-	Float_t y_low_LS2 = 0.05, y_up_LS2 = 0.1;
-	auto[signif_LS2, signif_err2_LS3, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS2, y_up_LS2);
-	Float_t y_low_LS3 = 0.1, y_up_LS3 = 0.15;
-	auto[signif_LS3, signif_err2_LS4, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Pt_MeeBin__unlikeSame_Rebin, h_Pt_MeeBin__LikeSame_Rebin, y_low_LS3, y_up_LS3);
-
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
 	pt->SetFillColorAlpha(0, 0);   //
 	pt->SetFillStyle(0);
@@ -416,23 +406,6 @@ void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	pt->SetTextAlign(12);
 	pt->AddText(Form("%.2f<M_{ee}<%.2f,Cen:%.0f~%.0f%%",x_low,x_up,80-5*z_up,80-5*z_low));
 	pt->DrawClone("same");
-
-	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
-	pt2->SetFillColorAlpha(0, 0);   //
-	pt2->SetFillStyle(0);
-	pt2->SetBorderSize(0);
-	pt2->SetTextFont(42);
-	pt2->SetTextSize(0.04);
-	pt2->SetTextAlign(12);
-	//pt2->AddText("Au+Au@200GeV");
-	//pt2->AddText("Cen:0~80%");
-	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
-	pt2->AddText(Form("p_{T}, significance,Sigerr S, S/B:"));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS, y_up_LS, signif_LS, sqrt(signif_err2_LS), N_LS-B_LS, (N_LS-B_LS)/B_LS));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS1, y_up_LS1, signif_LS1, sqrt(signif_err2_LS2), N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS2, y_up_LS2, signif_LS2, sqrt(signif_err2_LS3), N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", y_low_LS3, y_up_LS3, signif_LS3, sqrt(signif_err2_LS4), N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
-	//pt2->DrawClone("same");
 }
 
 // Recalibrate.C

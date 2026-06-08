@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"//16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;
 //23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut
-void CalMee(TString inFileName = "roots/62_20260603_OO_iTPC44_PureE_mb.root", Int_t number = 62)//26_20260204_TOF_corrEtaPhi_reW_P24ia;27_20260304_TOF_corrEtaPhi_P24iy;28_20260301_group3_P24iy;;
+void CalMee(TString inFileName = "roots/60_20260604_OO_iTPC1p2p3_PureE_mb.root", Int_t number = 60)//26_20260204_TOF_corrEtaPhi_reW_P24ia;27_20260304_TOF_corrEtaPhi_P24iy;28_20260301_group3_P24iy;;
 {
 	//vector<Double_t> Mee__newEdges = {0.25,0.27,0.28,0.29,0.30,0.31,0.32,0.33,0.34,0.35,0.36,0.37, 0.38,0.39, 0.40,0.41,0.42,0.6};//pion mass
 	// 定义新的bin边界
@@ -153,10 +153,9 @@ void CalMee(TString inFileName = "roots/62_20260603_OO_iTPC44_PureE_mb.root", In
 	//Float_t NR_low_M = 0.1, NR_up_M = 0.5, NR_low_pt = 0.1, NR_up_pt = 0.4;//model 34
 	//Float_t NR_low_M = 0.12, NR_up_M = 0.24, NR_low_pt = 0.1, NR_up_pt = 0.2;//model 44
 	//Float_t NR_low_M = 0.3, NR_up_M = 0.36, NR_low_pt = 0.1, NR_up_pt = 0.2;//model 44;Pion mass
-	//Float_t NR_low_M = 0.2, NR_up_M = 1, NR_low_pt = 0, NR_up_pt = 1;//model 11+12+13+22+23+33 or 11+12+22
+	Float_t NR_low_M = 0.6, NR_up_M = 2.5, NR_low_pt = 1, NR_up_pt = 2;//model 11+12+13+22+23+33 or 11+12+22
 	//Float_t NR_low_M = 0.2, NR_up_M = 0.8, NR_low_pt = 0.2, NR_up_pt = 0.4;//model 22+23+33
 	//Float_t NR_low_M = 0.2, NR_up_M = 0.9, NR_low_pt = 0, NR_up_pt = 1;//model 11+13+33
-	Float_t NR_low_M = 0.5, NR_up_M = 2, NR_low_pt = 0, NR_up_pt = 2;//model ps_11
 	Float_t scale = ComputeMixEventScale(h_Mee_Pt_Cen__likepp_Rebin, h_Mee_Pt_Cen__likemm_Rebin,h_Mee_Pt_Cen__likeppMixed_Rebin, h_Mee_Pt_Cen__likemmMixed_Rebin,h_Mee_Pt_Cen__unlikeMixed_Rebin, NR_low_M, NR_up_M, NR_low_pt, NR_up_pt, Cen__newEdges.front(), Cen__newEdges.back());
 	cout << "scale: " << scale << endl;
 	// 3-D Unlike-MixedEvent背景
@@ -479,14 +478,14 @@ void CalMee(TString inFileName = "roots/62_20260603_OO_iTPC44_PureE_mb.root", In
 		h_Mee_Pt_Cen__rmUM_Rebin->SetLineColor(3);				h_Mee_Pt_Cen__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Mee_Pt_Cen__rmUM_Rebin->SetMarkerColor(3); h_Mee_Pt_Cen__rmUM_Rebin->SetMarkerSize(0.1);
 		
 		//画图
-		Float_t Cen_bin_low = 0, Cen_bin_up = 4;
+		Float_t Cen_bin_low = 0, Cen_bin_up = 8;
 		TCanvas *c_Pt = new TCanvas("c_Pt", "c_Pt", 600, 400);
 		c_Pt->Divide(1);
 		c_Pt->cd(1);
 		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.0,0.05,Cen_bin_low,Cen_bin_up);
-		c_Pt->SaveAs(Form("roots/%d_RawSignal_pT_0_0p05_Cen_0_80.png", number));
+		Draw_Mee_Ptslice(h_Mee_Pt_Cen__unlikeSame_Rebin, h_Mee_Pt_Cen__LikeSame_Rebin, h_Mee_Pt_Cen__unlikeMixed_Rebin, h_Mee_Pt_Cen__rmLS_Rebin, h_Mee_Pt_Cen__rmUM_Rebin,0.15,0.25,Cen_bin_low,Cen_bin_up);
+		c_Pt->SaveAs(Form("roots/%d_RawSignal_pT_0p15_0p25_Cen_0_80.png", number));
 	}
 	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{

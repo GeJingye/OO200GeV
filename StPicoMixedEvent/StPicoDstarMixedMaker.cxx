@@ -375,7 +375,7 @@ Int_t StPicoDstarMixedMaker::Make()
 		// 不同条件cut后的事例数统计
 		Bool_t vzcut = mVz < anaCuts::Vz_up && mVz > anaCuts::Vz_low;
 		Bool_t vrcut = mVr < anaCuts::Vr;
-		Bool_t verrcut = kTRUE;//!(fabs(mVx) < anaCuts::Verror && fabs(mVy) < anaCuts::Verror && fabs(mVz) < anaCuts::Verror); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
+		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verr && fabs(mVy) < anaCuts::Verr && fabs(mVz) < anaCuts::Verr); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
 		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 		Bool_t notPileUp = !mRefMultCorrUtil->isPileUpEvent(mRefmult6, picoEvent->nBTOFMatch(), mVz, mTotnMIP);
 		Bool_t cen0280cut = mCen16 > -1;
@@ -644,8 +644,8 @@ Int_t StPicoDstarMixedMaker::Make()
 				}
 				//if (isElectronRegion1)//model 1
 				//if (isElectronRegion2)//model 2
-				//if (isElectronRegion4)//model 4
-				if (isElectronRegion1)// || isElectronRegion2 || isElectronRegion3)// || isElectronRegion4)//model 1+2+3
+				if (isElectronRegion4)//model 4
+				//if (isElectronRegion1 || isElectronRegion2 || isElectronRegion3)// || isElectronRegion4)//model 1+2+3
 				{
 					h_nSigmaElectron_P__EIDcut_total->Fill(mom.Mag(), nSigmaE);
 					if (trk->charge() < 0) // electron
@@ -1346,9 +1346,7 @@ Bool_t StPicoDstarMixedMaker::isGoodEvent(StPicoEvent const *const picoEvent) co
 	TVector3 pVtx = picoEvent->primaryVertex();
 	return pVtx.z() < anaCuts::Vz_up &&
 		   pVtx.z() > anaCuts::Vz_low &&
-		   //fabs(pVtx.x()) > anaCuts::Verror &&
-		   //fabs(pVtx.y()) > anaCuts::Verror &&
-		   //fabs(pVtx.z()) > anaCuts::Verror &&
+		   !((fabs(pVtx.x())<anaCuts::Verr && fabs(pVtx.y())<anaCuts::Verr && fabs(pVtx.y())<anaCuts::Verr)) &&
 		   sqrt(pVtx.x() * pVtx.x() + pVtx.y() * pVtx.y()) < anaCuts::Vr &&
 		   fabs(pVtx.z() - picoEvent->vzVpd()) < anaCuts::vzVpdVz;
 }

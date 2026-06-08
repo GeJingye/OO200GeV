@@ -217,7 +217,7 @@ namespace anaCuts
 	// event cuts 
 	Float_t const Vz_up = 30;// < cm
 	Float_t const Vz_low = -30;// < cm
-	Float_t const Verror = 1.0e-5;
+	Float_t const Verr = 1.0e-5;
 	Float_t const Vr = 0.5; // cm
 	Float_t const vzVpdVz = 3; // cm
 	// tracks cuts
