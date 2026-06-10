@@ -233,7 +233,7 @@ namespace anaCuts
 	// border
 	Float_t const Pt = 0.15;
 	Float_t const Eta = 0.9;
-	Float_t const Eta_Gap = 0.4;
+	Float_t const Eta_Gap = 0;
 	// beta cut
 	Float_t const invBetaCut = 0.025;
 	// phiV cut

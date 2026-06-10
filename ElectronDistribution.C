@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
 // 16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_PureE_mb.root", Int_t number = 59) //
+void ElectronDistribution(TString inFilename = "roots/64_slice_22B85868CDB0CAE831F02E1EF35CC4D8_87.root", Int_t number = 64) //
 {
 	// 从root文件中导入待拟合的直方图
 	TFile *inFile = new TFile(inFilename);
@@ -44,6 +44,17 @@ void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_Pure
 	TH1F* h_Qinv__likemmMixed = (TH1F *)inFile->Get("h_Qinv__likemmMixed");h_Qinv__likemmMixed->Scale(1/100.0);//h_Qinv__likemmMixed->Rebin(5);
 	TH1F* h_Qinv__likeppMixed = (TH1F *)inFile->Get("h_Qinv__likeppMixed");h_Qinv__likeppMixed->Scale(1/100.0);//h_Qinv__likeppMixed->Rebin(5);
 	
+
+	TH1F* h_Mee__unlike_deltaPhi_3p0 = (TH1F *)inFile->Get("h_Mee__unlike_deltaPhi_3p0");
+	TH1F* h_Mee__likemm_deltaPhi_0p2 = (TH1F *)inFile->Get("h_Mee__likemm_deltaPhi_0p2");
+	TH1F* h_Mee__likepp_deltaPhi_0p2 = (TH1F *)inFile->Get("h_Mee__likepp_deltaPhi_0p2");
+	TH1F* h_Mee__unlikeSame 		    = (TH1F *)inFile->Get("h_Mee__unlikeSame");
+	TH1F* h_Mee__unlikeSame__w_PhiV_Cut = (TH1F *)inFile->Get("h_Mee__unlikeSame__w_PhiV_Cut");
+					TH3F* h_Mee_Pt_Cen__likemm = (TH3F *)inFile->Get("h_Mee_Pt_Cen__likemm");
+	TH1F* h_Mee__likemm = (TH1F *)h_Mee_Pt_Cen__likemm->ProjectionX("h_Mee__likemm", 1, -1, 1, -1);
+					TH3F* h_Mee_Pt_Cen__likepp = (TH3F *)inFile->Get("h_Mee_Pt_Cen__likepp");
+	TH1F* h_Mee__likepp = (TH1F *)h_Mee_Pt_Cen__likepp->ProjectionX("h_Mee__likepp", 1, -1, 1, -1);
+
     if (0) // ep number
 	{
 		TCanvas *c_sum = new TCanvas("c_sum", "c_sum", 1000, 500);
@@ -67,7 +78,7 @@ void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_Pure
 
 		c_sum->SaveAs(Form("roots/%d_epNumber.png", number));
 	}
-    if (1) // e+ e- pt/eta/phi distribution phiV cut check
+    if (0) // e+ e- pt/eta/phi distribution phiV cut check
 	{
         //设置格式
 		h_pT__p_PhiV_Cut->SetLineColor(kRed);
@@ -124,7 +135,7 @@ void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_Pure
 
 		c_PhiV->SaveAs(Form("roots/%d_ep_pt_eta_phi_PhiVcut.png", number));
 	}	
-	if (1) // e+ e- pt/eta/phi distribution track QA
+	if (0) // e+ e- pt/eta/phi distribution track QA
 	{
         //计算ratio e-/e+
         TH1F *h_pT_ratio_EperP = (TH1F *)h_pT__e_PhiV_Cut->Clone("h_pT_ratio_EperP");
@@ -194,7 +205,7 @@ void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_Pure
 		c_eTrack->SaveAs(Form("roots/%d_ep_TrackQA.png", number));
 		// delete c_eTrack;
 	}
-	if (1)// Delta Pt, Delta Eta, Delta Phi correlation analysis
+	if (0)// Delta Pt, Delta Eta, Delta Phi correlation analysis
 	{
 		//画图
 		TCanvas *c1 = new TCanvas("c1", "c1", 1200, 800);
@@ -278,7 +289,7 @@ void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_Pure
 
 		c1->SaveAs(Form("roots/%d_Delta_Pt_Eta_Phi.png", number));
 	}
-	if (1)// invariant Q correlation analysis
+	if (0)// invariant Q correlation analysis
 	{
 		TH1F *h_Qinv_SamePerMix__likemm = (TH1F *)h_Qinv__likemm->Clone("h_Qinv_SamePerMix__likemm");
 		TH1F *h_Qinv_SamePerMix__likepp = (TH1F *)h_Qinv__likepp->Clone("h_Qinv_SamePerMix__likepp");
@@ -335,4 +346,120 @@ void ElectronDistribution(TString inFilename = "roots/59_20260526_OO_iTPC11_Pure
 		c2->SaveAs(Form("roots/%d_Invariant_Q.png", number));
 	}	
 
+	if (1){//Mee distribution
+		h_Mee__unlike_deltaPhi_3p0->SetLineColor(kRed);h_Mee__unlike_deltaPhi_3p0->SetMarkerStyle(20);
+		h_Mee__likemm_deltaPhi_0p2->SetLineColor(kRed);h_Mee__likemm_deltaPhi_0p2->SetMarkerStyle(20);
+		h_Mee__likepp_deltaPhi_0p2->SetLineColor(kRed);h_Mee__likepp_deltaPhi_0p2->SetMarkerStyle(20);
+		h_Mee__unlikeSame->SetLineColor(kRed);h_Mee__unlikeSame->SetMarkerStyle(20);
+		h_Mee__unlikeSame__w_PhiV_Cut->SetLineColor(kRed);h_Mee__unlikeSame__w_PhiV_Cut->SetMarkerStyle(20);
+		h_Mee__likemm->SetLineColor(kRed);h_Mee__likemm->SetMarkerStyle(20);
+		h_Mee__likepp->SetLineColor(kRed);h_Mee__likepp->SetMarkerStyle(20);
+
+		//计算背景h_Mee__likemm+h_Mee__likepp
+		TH1F* h_Mee_Background = (TH1F *)h_Mee__likemm->Clone("h_Mee_Background");h_Mee_Background->Add(h_Mee__likepp);
+		h_Mee_Background->Add(h_Mee__likemm_deltaPhi_0p2,-1);h_Mee_Background->Add(h_Mee__likepp_deltaPhi_0p2,-1);
+		h_Mee_Background->SetTitle("Background;;");
+		//计算信号=h_Mee__unlikeSame - h_Mee_Background
+		TH1F* h_Mee_Signal = (TH1F *)h_Mee__unlikeSame__w_PhiV_Cut->Clone("h_Mee_Signal");h_Mee_Signal->Add(h_Mee_Background, -1);
+		h_Mee_Signal->SetTitle("Signal;;");
+		//计算修正信号h_Mee_Signal2=h_Mee_Signal-h_Mee__unlike_deltaPhi_3p0
+		TH1F* h_Mee_Signal2 = (TH1F *)h_Mee_Signal->Clone("h_Mee_Signal2");h_Mee_Signal2->Add(h_Mee__unlike_deltaPhi_3p0, -1);
+		h_Mee_Signal2->SetTitle("Signal with deltaPhi cut correction;;");
+		//计算h_Ratio=h_Mee__likemm/h_Mee__likepp
+		TH1F* h_Mee_Ratio = (TH1F *)h_Mee__likemm->Clone("h_Mee_Ratio");h_Mee_Ratio->Divide(h_Mee__likepp);
+		Float_t ymax=1000;
+		TCanvas *c_Mee = new TCanvas("c_Mee", "c_Mee", 900, 800);
+		c_Mee->Divide(3, 3);
+		c_Mee->cd(1);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__unlike_deltaPhi_3p0->SetMaximum(ymax);
+		h_Mee__unlike_deltaPhi_3p0->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__unlike_deltaPhi_3p0->DrawClone("PE");
+		//h_Mee__likemm_deltaPhi_0p2->DrawClone("PE same");
+		//h_Mee__likepp_deltaPhi_0p2->DrawClone("PE same");
+
+		c_Mee->cd(2);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__unlikeSame__w_PhiV_Cut->SetMaximum(ymax);
+		h_Mee__unlikeSame__w_PhiV_Cut->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__unlikeSame__w_PhiV_Cut->DrawClone("PE");
+
+		c_Mee->cd(3);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__unlikeSame->SetMaximum(ymax);
+		h_Mee__unlikeSame->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__unlikeSame->DrawClone("PE");
+
+		c_Mee->cd(4);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__likemm_deltaPhi_0p2->SetMaximum(ymax);
+		h_Mee__likemm_deltaPhi_0p2->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__likemm_deltaPhi_0p2->DrawClone("PE");
+
+		c_Mee->cd(5);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__likemm->SetMaximum(ymax);
+		h_Mee__likemm->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__likemm->DrawClone("PE");
+
+		c_Mee->cd(6);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee_Background->SetMaximum(ymax);
+		h_Mee_Background->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee_Background->DrawClone("PE");
+
+
+		c_Mee->cd(7);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__likepp_deltaPhi_0p2->SetMaximum(ymax);
+		h_Mee__likepp_deltaPhi_0p2->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__likepp_deltaPhi_0p2->DrawClone("PE");
+
+		c_Mee->cd(8);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee__likepp->SetMaximum(ymax);
+		h_Mee__likepp->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee__likepp->DrawClone("PE");
+
+		c_Mee->cd(9);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee_Signal->SetMaximum(ymax);
+		h_Mee_Signal->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee_Signal->DrawClone("PE");
+		TLine *line = new TLine(0, 0, 0.3, 0);
+		line->SetLineColor(kRed);
+		line->DrawClone("same");
+		
+		c_Mee->SaveAs(Form("roots/%d_Mee_Distribution.png", number));
+
+
+		TCanvas *c_Mee2 = new TCanvas("c_Mee2", "c_Mee2", 800, 400);
+		c_Mee2->Divide(2);
+		c_Mee2->cd(1);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee_Signal2->SetMaximum(ymax);
+		h_Mee_Signal2->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee_Signal2->DrawClone("PE");
+		line->DrawClone("same");
+
+		c_Mee2->cd(2);
+		gPad->SetLogy(0);
+		gStyle->SetOptStat(0);
+		h_Mee_Ratio->GetXaxis()->SetRangeUser(0,0.3);
+		h_Mee_Ratio->DrawClone("PE");
+		TLine *line1 = new TLine(0, 1, 0.3, 1);
+		line1->SetLineColor(kRed);
+		line1->DrawClone("same");
+
+	}
 }

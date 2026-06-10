@@ -242,16 +242,16 @@ void StPicoDstarMixedMaker::initHists()
 	// 经TPC和TOF判选后的single电子信息
 	h_e_p__Number_Same = new TH2F("h_e_p__Number_Same", ";Num. of e-;Num. of e+", 10, -0.5, 9.5, 10, -0.5, 9.5);
 	h_e_p__Number_Mix = new TH2F("h_e_p__Number_Mix", ";Num. of e-;Num. of e+", 50, -0.5, 49.5, 50, -0.5, 49.5);
-	h_pT__electrons = new TH1F("h_pT__electrons", "p_{T} of electrons;p_{T} (GeV/c)", 500, 0., 5.);
+	h_pT__electrons = new TH1F("h_pT__electrons", "p_{T} of electrons;p_{T} (GeV/c)", 500, 0., 0.2);
 	h_eta__electrons = new TH1F("h_eta__electrons", "#eta of electrons;#eta", 500, -2.5, 2.5);
 	h_phi__electrons = new TH1F("h_phi__electrons", "#phi of electrons;#phi", 64, -3.2, 3.2);
-	h_pT__electrons_w_PhiV_Cut = new TH1F("h_pT__electrons_w_PhiV_Cut", "p_{T} of electrons with #phi_{V} cut;p_{T} (GeV/c)", 500, 0., 5.); //"w"表示with, "wo"表示without
+	h_pT__electrons_w_PhiV_Cut = new TH1F("h_pT__electrons_w_PhiV_Cut", "p_{T} of electrons with #phi_{V} cut;p_{T} (GeV/c)", 500, 0., 0.2); //"w"表示with, "wo"表示without
 	h_eta__electrons_w_PhiV_Cut = new TH1F("h_eta__electrons_w_PhiV_Cut", "#eta of electrons with #phi_{V} cut;#eta", 500, -2.5, 2.5);
 	h_phi__electrons_w_PhiV_Cut = new TH1F("h_phi__electrons_w_PhiV_Cut", "#phi of electrons with #phi_{V} cut;#phi", 64, -3.2, 3.2);
 	h_pT__positrons = new TH1F("h_pT__positrons", "p_{T} of positrons;p_{T} (GeV/c)", 500, 0, 5.);
 	h_eta__positrons = new TH1F("h_eta__positrons", "#eta of positrons;#eta", 500, -2.5, 2.5);
 	h_phi__positrons = new TH1F("h_phi__positrons", "#phi of positrons;#phi", 64, -3.2, 3.2);
-	h_pT__positrons_w_PhiV_Cut = new TH1F("h_pT__positrons_w_PhiV_Cut", "p_{T} of positrons with #phi_{V} cut;p_{T} (GeV/c)", 500, 0., 5.); //"w"表示with, "wo"表示without
+	h_pT__positrons_w_PhiV_Cut = new TH1F("h_pT__positrons_w_PhiV_Cut", "p_{T} of positrons with #phi_{V} cut;p_{T} (GeV/c)", 500, 0., 0.2); //"w"表示with, "wo"表示without
 	h_eta__positrons_w_PhiV_Cut = new TH1F("h_eta__positrons_w_PhiV_Cut", "#eta of positrons with #phi_{V} cut;#eta", 500, -2.5, 2.5);
 	h_phi__positrons_w_PhiV_Cut = new TH1F("h_phi__positrons_w_PhiV_Cut", "#phi of positrons with #phi_{V} cut;#phi", 64, -3.2, 3.2);
 	// pair 信息
@@ -262,27 +262,34 @@ void StPicoDstarMixedMaker::initHists()
 	h_Qinv__likeppMixed = new TH1F("h_Qinv__likeppMixed", "#Delta p of e^{+}e^{+} in mixed event;q (GeV/c^{2});counts", 1000, 0, 5);
 	h_Qinv__unlikeMixed = new TH1F("h_Qinv__unlikeMixed", "#Delta p of e^{+}e^{-} in mixed event;q (GeV/c^{2});counts", 1000, 0, 5);
 
-	h_DeltaPt__unlikeSame = new TH1F("h_DeltaPt__unlikeSame", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200, -1.0, 1.0);
+	h_DeltaPt__unlikeSame = new TH1F("h_DeltaPt__unlikeSame", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__unlikeSame = new TH1F("h_DeltaEta__unlikeSame", "#Delta #eta distribution of e^{+}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__unlikeSame = new TH1F("h_DeltaPhi__unlikeSame", "#Delta #phi distribution of e^{+}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
-	h_DeltaPt__likepp = new TH1F("h_DeltaPt__likepp", "#Delta p_{T} distribution of e^{+}e^{+};#Delta p_{T} (GeV/c);counts", 200, -1.0, 1.0);
+	h_DeltaPt__likepp = new TH1F("h_DeltaPt__likepp", "#Delta p_{T} distribution of e^{+}e^{+};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__likepp = new TH1F("h_DeltaEta__likepp", "#Delta #eta distribution of e^{+}e^{+};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__likepp = new TH1F("h_DeltaPhi__likepp", "#Delta #phi distribution of e^{+}e^{+};#Delta #phi;counts", 640, -3.2, 3.2);
-	h_DeltaPt__likemm = new TH1F("h_DeltaPt__likemm", "#Delta p_{T} distribution of e^{-}e^{-};#Delta p_{T} (GeV/c);counts", 200, -1.0, 1.0);
+	h_DeltaPt__likemm = new TH1F("h_DeltaPt__likemm", "#Delta p_{T} distribution of e^{-}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__likemm = new TH1F("h_DeltaEta__likemm", "#Delta #eta distribution of e^{-}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__likemm = new TH1F("h_DeltaPhi__likemm", "#Delta #phi distribution of e^{-}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
-	h_DeltaPt__unlikeMixed = new TH1F("h_DeltaPt__unlikeMixed", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200, -1.0, 1.0);
+	h_DeltaPt__unlikeMixed = new TH1F("h_DeltaPt__unlikeMixed", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__unlikeMixed = new TH1F("h_DeltaEta__unlikeMixed", "#Delta #eta distribution of e^{+}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__unlikeMixed = new TH1F("h_DeltaPhi__unlikeMixed", "#Delta #phi distribution of e^{+}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
 	h_Phi__likemm_deltaPhi_0p2 = new TH1F("h_Phi__likemm_deltaPhi_0p2", "#phi distribution of e^{-}e^{-} with #Delta #phi < 0.2;#phi;counts", 640, -3.2, 3.2);
+	h_Eta__likemm_deltaPhi_0p2 = new TH1F("h_Eta__likemm_deltaPhi_0p2", "#eta distribution of e^{-}e^{-} with #Delta #phi < 0.2;#eta;counts", 500, -2.5, 2.5);
+	h_Pt__likemm_deltaPhi_0p2 = new TH1F("h_Pt__likemm_deltaPhi_0p2", "p_{T} distribution of e^{-}e^{-} with #Delta #phi < 0.2;p_{T} (GeV/c);counts", 500, 0., 0.2);
 	h_Phi__likepp_deltaPhi_0p2 = new TH1F("h_Phi__likepp_deltaPhi_0p2", "#phi distribution of e^{+}e^{+} with #Delta #phi < 0.2;#phi;counts", 640, -3.2, 3.2);
+	h_Eta__likepp_deltaPhi_0p2 = new TH1F("h_Eta__likepp_deltaPhi_0p2", "#eta distribution of e^{+}e^{+} with #Delta #phi < 0.2;#eta;counts", 500, -2.5, 2.5);
+	h_Pt__likepp_deltaPhi_0p2 = new TH1F("h_Pt__likepp_deltaPhi_0p2", "p_{T} distribution of e^{+}e^{+} with #Delta #phi < 0.2;p_{T} (GeV/c);counts", 500, 0., 0.2);
+
 	h_Phi__unlike_deltaPhi_0p2 = new TH1F("h_Phi__unlike_deltaPhi_0p2", "#phi distribution of e^{+}e^{-} with #Delta #phi > 3.0;#phi;counts", 640, -3.2, 3.2);
 	h_Phi__unlike_deltaPhi_3p0 = new TH1F("h_Phi__unlike_deltaPhi_3p0", "#phi distribution of e^{+}e^{-} with #Delta #phi > 3.0;#phi;counts", 640, -3.2, 3.2);
+	h_DeltaEta__likemm_deltaPhi_0p2 = new TH1F("h_DeltaEta__likemm_deltaPhi_0p2", "#Delta #eta distribution of e^{-}e^{-} with #Delta #phi < 0.2;#Delta #eta;counts", 500, -2.5, 2.5);
+	h_DeltaEta__likepp_deltaPhi_0p2 = new TH1F("h_DeltaEta__likepp_deltaPhi_0p2", "#Delta #eta distribution of e^{+}e^{+} with #Delta #phi < 0.2;#Delta #eta;counts", 500, -2.5, 2.5);
+	h_DeltaPt__likemm_deltaPhi_0p2 = new TH1F("h_DeltaPt__likemm_deltaPhi_0p2", "#Delta p_{T} distribution of e^{-}e^{-} with #Delta #phi < 0.2;#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
+	h_DeltaPt__likepp_deltaPhi_0p2 = new TH1F("h_DeltaPt__likepp_deltaPhi_0p2", "#Delta p_{T} distribution of e^{+}e^{+} with #Delta #phi < 0.2;#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_Mee__unlike_deltaPhi_3p0 = new TH1F("h_Mee__unlike_deltaPhi_3p0", "M_{ee} distribution of e^{+}e^{-} with #Delta #phi > 3.0;Mee;counts", 800, 0, 4);
 	h_Mee__likemm_deltaPhi_0p2 = new TH1F("h_Mee__likemm_deltaPhi_0p2", "M_{ee} distribution of e^{+}e^{-} with #Delta #phi < 0.2;Mee;counts", 800, 0, 4);
 	h_Mee__likepp_deltaPhi_0p2 = new TH1F("h_Mee__likepp_deltaPhi_0p2", "M_{ee} distribution of e^{+}e^{-} with #Delta #phi < 0.2;Mee;counts", 800, 0, 4);
-
-
 
 	h_Rapidity__unlikeSame = new TH1F("h_Rapidity__unlikeSame", "y distribution of e^{+}e^{-};y;counts", 800, -4, 4);
 	h_Mee_PhiV__unlikeSame = new TH2F("h_Mee_PhiV__unlikeSame", "Mee vs #phi_{V};Mee(GeV/c^{2});#phi_{V}", 800, 0, 4, 100, 0, 1);
@@ -922,11 +929,20 @@ Int_t StPicoDstarMixedMaker::Make()
 						if (fabs(deltaPhi) < 0.2)
 						{
 							h_Mee__likemm_deltaPhi_0p2->Fill(eepair.M());
+							h_DeltaEta__likemm_deltaPhi_0p2->Fill(electroninfo[x].eta-electroninfo[y].eta);
+							h_DeltaPt__likemm_deltaPhi_0p2->Fill(electroninfo[x].pt-electroninfo[y].pt);
 							if(!isElectronFilled[x]){
-								h_Phi__likemm_deltaPhi_0p2->Fill(electroninfo[x].phi);isElectronFilled[x]=kTRUE;
+								h_Phi__likemm_deltaPhi_0p2->Fill(electroninfo[x].phi);
+								h_Eta__likemm_deltaPhi_0p2->Fill(electroninfo[x].eta);
+								h_Pt__likemm_deltaPhi_0p2->Fill(electroninfo[x].pt);
+								isElectronFilled[x]=kTRUE;
+
 							}
 							if(!isElectronFilled[y]){
-								h_Phi__likemm_deltaPhi_0p2->Fill(electroninfo[y].phi);isElectronFilled[y]=kTRUE;
+								h_Phi__likemm_deltaPhi_0p2->Fill(electroninfo[y].phi);
+								h_Eta__likemm_deltaPhi_0p2->Fill(electroninfo[y].eta);
+								h_Pt__likemm_deltaPhi_0p2->Fill(electroninfo[y].pt);
+								isElectronFilled[y]=kTRUE;
 							}
 						}
 						// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
@@ -969,11 +985,19 @@ Int_t StPicoDstarMixedMaker::Make()
 						if (fabs(deltaPhi) < 0.2)
 						{
 							h_Mee__likepp_deltaPhi_0p2->Fill(eepair.M());
+							h_DeltaEta__likepp_deltaPhi_0p2->Fill(positroninfo[x].eta-positroninfo[y].eta);
+							h_DeltaPt__likepp_deltaPhi_0p2->Fill(positroninfo[x].pt-positroninfo[y].pt);
 							if(!isPositronFilled[x]){
-								h_Phi__likepp_deltaPhi_0p2->Fill(positroninfo[x].phi);isPositronFilled[x]=kTRUE;
+								h_Phi__likepp_deltaPhi_0p2->Fill(positroninfo[x].phi);
+								h_Eta__likepp_deltaPhi_0p2->Fill(positroninfo[x].eta);
+								h_Pt__likepp_deltaPhi_0p2->Fill(positroninfo[x].pt);
+								isPositronFilled[x]=kTRUE;
 							}
 							if(!isPositronFilled[y]){
-								h_Phi__likepp_deltaPhi_0p2->Fill(positroninfo[y].phi);isPositronFilled[y]=kTRUE;
+								h_Phi__likepp_deltaPhi_0p2->Fill(positroninfo[y].phi);
+								h_Eta__likepp_deltaPhi_0p2->Fill(positroninfo[y].eta);
+								h_Pt__likepp_deltaPhi_0p2->Fill(positroninfo[y].pt);
+								isPositronFilled[y]=kTRUE;
 							}
 						}
 						
@@ -1303,10 +1327,20 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_DeltaPt__unlikeMixed->Write();
 	h_DeltaEta__unlikeMixed->Write();
 	h_DeltaPhi__unlikeMixed->Write();
+
+	h_Pt__likemm_deltaPhi_0p2->Write();
+	h_Eta__likemm_deltaPhi_0p2->Write();
 	h_Phi__likemm_deltaPhi_0p2->Write();
+	h_Pt__likepp_deltaPhi_0p2->Write();
+	h_Eta__likepp_deltaPhi_0p2->Write();
 	h_Phi__likepp_deltaPhi_0p2->Write();
+
 	h_Phi__unlike_deltaPhi_0p2->Write();
 	h_Phi__unlike_deltaPhi_3p0->Write();
+	h_DeltaEta__likemm_deltaPhi_0p2->Write();
+	h_DeltaPt__likemm_deltaPhi_0p2->Write();
+	h_DeltaEta__likepp_deltaPhi_0p2->Write();
+	h_DeltaPt__likepp_deltaPhi_0p2->Write();
 	h_Mee__unlike_deltaPhi_3p0->Write();
 	h_Mee__likemm_deltaPhi_0p2->Write();
 	h_Mee__likepp_deltaPhi_0p2->Write();
