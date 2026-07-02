@@ -1,3 +1,19 @@
+void NegateBinContents(TH1F* hist) {
+	if (!hist) {
+		std::cerr << "Error: Null histogram pointer!" << std::endl;
+		return;
+	}
+
+	int nBinsX = hist->GetNbinsX();
+
+	for (int i = 0; i <= nBinsX + 1; ++i) {
+		double content = hist->GetBinContent(i);
+		double error = hist->GetBinError(i);
+
+		hist->SetBinContent(i, -content);
+		hist->SetBinError(i, std::abs(error));
+	}
+}
 //对直方图开根号，并计算误差
 template <typename H1>
 H1* SqrtHist(H1* h, const TString& newName = "h_new", Bool_t setError = kTRUE)
@@ -350,55 +366,75 @@ void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-5);
 	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-5);
 
-	TH1F *h_Pt_MeeBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionY("_px1", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeSame_Rebin); //h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionY("_px2", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__LikeSame_Rebin); //h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionY("_px3", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeMixed_Rebin); //h_Pt_MeeBin__unlikeMixed_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__rmLS_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin				 ->ProjectionY("_px4", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmLS_Rebin); //h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.1);
-	TH1F *h_Pt_MeeBin__rmUM_Rebin = (TH1F*)h_Mee_Pt_Cen__rmUM_Rebin			   ->ProjectionY("_px5", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__rmUM_Rebin); //h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);	
+	// Hybrid background: for Mee <= 0.4 use Like-Sign (rmLS).
+	// For Mee > 0.4, choose background by commenting/uncommenting below:
+	Float_t splitM = 0.4;
+	Int_t splitBin = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(splitM - 1e-5);
+
+	// Create combined signal 3D histogram
+	TH3F* h_Mee_Pt_Cen__rmCombined = (TH3F*)h_Mee_Pt_Cen__rmLS_Rebin->Clone("h_Mee_Pt_Cen__rmCombined");
+	h_Mee_Pt_Cen__rmCombined->Reset();
+	if (h_Mee_Pt_Cen__rmCombined->GetSumw2N() == 0) h_Mee_Pt_Cen__rmCombined->Sumw2("kTRUE");
+
+	for (int ix = 1; ix <= h_Mee_Pt_Cen__rmLS_Rebin->GetNbinsX(); ix++) {
+		for (int iy = 1; iy <= h_Mee_Pt_Cen__rmLS_Rebin->GetNbinsY(); iy++) {
+			for (int iz = 1; iz <= h_Mee_Pt_Cen__rmLS_Rebin->GetNbinsZ(); iz++) {
+				int bin = h_Mee_Pt_Cen__rmLS_Rebin->GetBin(ix, iy, iz);
+				double content, error;
+				if (ix <= splitBin) {
+					content = h_Mee_Pt_Cen__rmLS_Rebin->GetBinContent(bin);
+					error   = h_Mee_Pt_Cen__rmLS_Rebin->GetBinError(bin);
+				} else {
+					// Option 1: Mixed-Event (recommended for high mass)
+					//content = h_Mee_Pt_Cen__rmUM_Rebin->GetBinContent(bin);	error = h_Mee_Pt_Cen__rmUM_Rebin->GetBinError(bin);
+					// Option 2: Like-Sign
+					content = h_Mee_Pt_Cen__rmLS_Rebin->GetBinContent(bin); error = h_Mee_Pt_Cen__rmLS_Rebin->GetBinError(bin);
+				}
+				h_Mee_Pt_Cen__rmCombined->SetBinContent(bin, content);
+				h_Mee_Pt_Cen__rmCombined->SetBinError(bin, error);
+			}
+		}
+	}
+
+	TH1F *h_Pt_MeeBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionY("_px1", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeSame_Rebin);
+	TH1F *h_Pt_MeeBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionY("_px2", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__LikeSame_Rebin);
+	TH1F *h_Pt_MeeBin__unlikeMixed_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeMixed_Rebin->ProjectionY("_px3", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Pt_MeeBin__unlikeMixed_Rebin);
+	TH1F *h_Pt_MeeBin__rmCombined = (TH1F*)h_Mee_Pt_Cen__rmCombined->ProjectionY("_px_comb", Mee_bin_low, Mee_bin_up, Cen_bin_low, Cen_bin_up);
+	ResetBinContent(h_Pt_MeeBin__rmCombined);
+
 	h_Pt_MeeBin__unlikeSame_Rebin->SetLineColor(1);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerColor(1); 	h_Pt_MeeBin__unlikeSame_Rebin->SetMarkerSize(0.1);
 	h_Pt_MeeBin__LikeSame_Rebin->SetLineColor(2);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);	h_Pt_MeeBin__LikeSame_Rebin->SetMarkerColor(2);		h_Pt_MeeBin__LikeSame_Rebin->SetMarkerSize(0.1);
-	h_Pt_MeeBin__rmLS_Rebin->SetLineColor(6);		h_Pt_MeeBin__rmLS_Rebin->SetMarkerStyle(kOpenCross);		h_Pt_MeeBin__rmLS_Rebin->SetMarkerColor(6); 		h_Pt_MeeBin__rmLS_Rebin->SetMarkerSize(0.5);
-	//h_Pt_MeeBin__rmUM_Rebin->SetLineColor(3);		h_Pt_MeeBin__rmUM_Rebin->SetMarkerStyle(kOpenStar);			h_Pt_MeeBin__rmUM_Rebin->SetMarkerColor(3); 		h_Pt_MeeBin__rmUM_Rebin->SetMarkerSize(0.1);
+	h_Pt_MeeBin__rmCombined->SetLineColor(6);		h_Pt_MeeBin__rmCombined->SetMarkerStyle(kOpenCross);		h_Pt_MeeBin__rmCombined->SetMarkerColor(6); 		h_Pt_MeeBin__rmCombined->SetMarkerSize(0.5);
 	
 	if (option == "-") {
-		TH1F* h_Pt_MeeBin__rmLS_Rebin_Clone=(TH1F*)h_Pt_MeeBin__rmLS_Rebin->Clone("h_Pt_MeeBin__rmLS_Rebin_Clone");
-        for (Int_t i = 1; i <= h_Pt_MeeBin__rmLS_Rebin->GetNbinsX(); i++) {
-            Double_t cont = h_Pt_MeeBin__rmLS_Rebin->GetBinContent(i);
-            h_Pt_MeeBin__rmLS_Rebin_Clone->SetBinContent(i, -cont);
-        }
-		h_Pt_MeeBin__rmLS_Rebin_Clone->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);-dN/dp_{T} (GeV/c)^{-1}",x_low,x_up));
-		h_Pt_MeeBin__rmLS_Rebin_Clone->GetXaxis()->SetRangeUser(0,1);
-		h_Pt_MeeBin__rmLS_Rebin_Clone->GetXaxis()->SetNdivisions(405);
-		h_Pt_MeeBin__rmLS_Rebin_Clone->SetMaximum(1e8);
-		h_Pt_MeeBin__rmLS_Rebin_Clone->SetMinimum(1e0);
-		h_Pt_MeeBin__rmLS_Rebin_Clone->DrawClone("");
+		TH1F* h_Pt_MeeBin__rmCombined_Clone = (TH1F*)h_Pt_MeeBin__rmCombined->Clone("h_Pt_MeeBin__rmCombined_Clone");
+		NegateBinContents(h_Pt_MeeBin__rmCombined_Clone);
+		h_Pt_MeeBin__rmCombined_Clone->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);-dN/dp_{T} (GeV/c)^{-1}",x_low,x_up));
+		h_Pt_MeeBin__rmCombined_Clone->GetXaxis()->SetRangeUser(0,1);
+		h_Pt_MeeBin__rmCombined_Clone->GetXaxis()->SetNdivisions(405);
+		h_Pt_MeeBin__rmCombined_Clone->SetMaximum(1e8);
+		h_Pt_MeeBin__rmCombined_Clone->SetMinimum(1e0);
+		h_Pt_MeeBin__rmCombined_Clone->DrawClone("");
+		delete h_Mee_Pt_Cen__rmCombined;
 		return;
     }
 	
-	h_Pt_MeeBin__rmLS_Rebin->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);dN/dp_{T} (GeV/c^{2})^{-1}",x_low,x_up));
-	h_Pt_MeeBin__rmLS_Rebin->SetMaximum(1e8);
-	h_Pt_MeeBin__rmLS_Rebin->SetMinimum(1e0);
-	h_Pt_MeeBin__rmLS_Rebin->GetXaxis()->SetRangeUser(0,1);
-	h_Pt_MeeBin__rmLS_Rebin->GetXaxis()->SetNdivisions(405);
-	//h_Pt_MeeBin__unlikeSame_Rebin->DrawClone("");
-	//h_Pt_MeeBin__LikeSame_Rebin->DrawClone("same");
-	//h_Pt_MeeBin__unlikeMixed_Rebin->DrawClone("same");
-	h_Pt_MeeBin__rmLS_Rebin->DrawClone("");
-	//h_Pt_MeeBin__rmUM_Rebin->DrawClone("same");
+	h_Pt_MeeBin__rmCombined->SetTitle(Form("Raw yield of e^{+}e^{-};pair p_{T} (GeV/c);dN/dp_{T} (GeV/c^{2})^{-1}",x_low,x_up));
+	h_Pt_MeeBin__rmCombined->SetMaximum(1e8);
+	h_Pt_MeeBin__rmCombined->SetMinimum(1e0);
+	h_Pt_MeeBin__rmCombined->GetXaxis()->SetRangeUser(0,1);
+	h_Pt_MeeBin__rmCombined->GetXaxis()->SetNdivisions(405);
+	h_Pt_MeeBin__rmCombined->DrawClone("");
 
 	auto legend = new TLegend(0.63, 0.58, 0.88, 0.88);
 	legend->SetFillColor(0);legend->SetFillStyle(0); legend->SetBorderSize(0);
-	//legend->AddEntry(h_Pt_MeeBin__unlikeMixed_Rebin, "\t UM", "lp");
-	//legend->AddEntry(h_Pt_MeeBin__unlikeSame_Rebin, "\t US", "lp");
-	//legend->AddEntry(h_Pt_MeeBin__LikeSame_Rebin, "\t LS", "lp");
-	legend->AddEntry(h_Pt_MeeBin__rmLS_Rebin, "\t US - LS", "lp");
-	//legend->AddEntry(h_Pt_MeeBin__rmUM_Rebin, "\t US - UM", "lp");
+	legend->AddEntry(h_Pt_MeeBin__rmCombined, "\t US - BKG (hybrid)", "lp");
 	legend->SetMargin(0.20);
 	gStyle->SetLegendTextSize(0.032);
 	legend->DrawClone("same");
 
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
-	pt->SetFillColorAlpha(0, 0);   //
+	pt->SetFillColorAlpha(0, 0);
 	pt->SetFillStyle(0);
 	pt->SetBorderSize(0);
 	pt->SetTextFont(42);
@@ -406,6 +442,8 @@ void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	pt->SetTextAlign(12);
 	pt->AddText(Form("%.2f<M_{ee}<%.2f,Cen:%.0f~%.0f%%",x_low,x_up,80-5*z_up,80-5*z_low));
 	pt->DrawClone("same");
+
+	//delete h_Mee_Pt_Cen__rmCombined;
 }
 
 // Recalibrate.C
@@ -538,22 +576,6 @@ TH1F* Meanof2DAlongX(const TH2F* h2, const char* outputName = "h1_xmean")
 		h1_xmean->SetBinContent(iy, mean);
 	}
 	return h1_xmean;
-}
-void NegateBinContents(TH1F* hist) {
-	if (!hist) {
-		std::cerr << "Error: Null histogram pointer!" << std::endl;
-		return;
-	}
-
-	int nBinsX = hist->GetNbinsX();
-
-	for (int i = 0; i <= nBinsX + 1; ++i) {
-		double content = hist->GetBinContent(i);
-		double error = hist->GetBinError(i);
-
-		hist->SetBinContent(i, -content);
-		hist->SetBinError(i, std::abs(error));
-	}
 }
 void printHist2DSci(TH2* h) {
     if (!h) {

@@ -55,6 +55,8 @@ class ParticleInfo
 	Float_t p2;
 	Float_t p3;
 	Bool_t isPhotonicE;//isPhotonicE
+    Bool_t isCurlingE;
+    Bool_t isLikeDeltaPhiLess0p2E;
 	Bool_t isPureE;
 };
 
