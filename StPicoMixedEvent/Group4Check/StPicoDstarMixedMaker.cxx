@@ -248,32 +248,41 @@ void StPicoDstarMixedMaker::initHists()
 	h_pT__electrons_w_PhiV_Cut = new TH1F("h_pT__electrons_w_PhiV_Cut", "p_{T} of electrons with #phi_{V} cut;p_{T} (GeV/c)", 500, 0., 0.2); //"w"表示with, "wo"表示without
 	h_eta__electrons_w_PhiV_Cut = new TH1F("h_eta__electrons_w_PhiV_Cut", "#eta of electrons with #phi_{V} cut;#eta", 500, -2.5, 2.5);
 	h_phi__electrons_w_PhiV_Cut = new TH1F("h_phi__electrons_w_PhiV_Cut", "#phi of electrons with #phi_{V} cut;#phi", 64, -3.2, 3.2);
-	h_pT__positrons = new TH1F("h_pT__positrons", "p_{T} of positrons;p_{T} (GeV/c)", 500, 0, 5.);
+	h_pT__positrons = new TH1F("h_pT__positrons", "p_{T} of positrons;p_{T} (GeV/c)", 500, 0, 0.2);
 	h_eta__positrons = new TH1F("h_eta__positrons", "#eta of positrons;#eta", 500, -2.5, 2.5);
 	h_phi__positrons = new TH1F("h_phi__positrons", "#phi of positrons;#phi", 64, -3.2, 3.2);
 	h_pT__positrons_w_PhiV_Cut = new TH1F("h_pT__positrons_w_PhiV_Cut", "p_{T} of positrons with #phi_{V} cut;p_{T} (GeV/c)", 500, 0., 0.2); //"w"表示with, "wo"表示without
 	h_eta__positrons_w_PhiV_Cut = new TH1F("h_eta__positrons_w_PhiV_Cut", "#eta of positrons with #phi_{V} cut;#eta", 500, -2.5, 2.5);
 	h_phi__positrons_w_PhiV_Cut = new TH1F("h_phi__positrons_w_PhiV_Cut", "#phi of positrons with #phi_{V} cut;#phi", 64, -3.2, 3.2);
 	// pair 信息
-	h_Qinv__likemm = new TH1F("h_Qinv__likemm", "#Delta p of e^{-}e^{-} in same event;q (GeV/c^{2});counts", 1000, 0, 5);
-	h_Qinv__likepp = new TH1F("h_Qinv__likepp", "#Delta p of e^{+}e^{+} in same event;q (GeV/c^{2});counts", 1000, 0, 5);
-	h_Qinv__unlikeSame = new TH1F("h_Qinv__unlikeSame", "#Delta p of e^{+}e^{-} in same event;q (GeV/c^{2});counts", 1000, 0, 5);
-	h_Qinv__likemmMixed = new TH1F("h_Qinv__likemmMixed", "#Delta p of e^{-}e^{-} in mixed event;q (GeV/c^{2});counts", 1000, 0, 5);
-	h_Qinv__likeppMixed = new TH1F("h_Qinv__likeppMixed", "#Delta p of e^{+}e^{+} in mixed event;q (GeV/c^{2});counts", 1000, 0, 5);
-	h_Qinv__unlikeMixed = new TH1F("h_Qinv__unlikeMixed", "#Delta p of e^{+}e^{-} in mixed event;q (GeV/c^{2});counts", 1000, 0, 5);
+	h_Qinv__likemm = new TH1F("h_Qinv__likemm", "#Delta p of e^{-}e^{-} in same event;q (GeV/c^{2});counts", 1000, 0, 1);
+	h_Qinv__likepp = new TH1F("h_Qinv__likepp", "#Delta p of e^{+}e^{+} in same event;q (GeV/c^{2});counts", 1000, 0, 1);
+	h_Qinv__unlikeSame = new TH1F("h_Qinv__unlikeSame", "#Delta p of e^{+}e^{-} in same event;q (GeV/c^{2});counts", 1000, 0, 1);
+	h_Qinv__likemmMixed = new TH1F("h_Qinv__likemmMixed", "#Delta p of e^{-}e^{-} in mixed event;q (GeV/c^{2});counts", 1000, 0, 1);
+	h_Qinv__likeppMixed = new TH1F("h_Qinv__likeppMixed", "#Delta p of e^{+}e^{+} in mixed event;q (GeV/c^{2});counts", 1000, 0, 1);
+	h_Qinv__unlikeMixed = new TH1F("h_Qinv__unlikeMixed", "#Delta p of e^{+}e^{-} in mixed event;q (GeV/c^{2});counts", 1000, 0, 1);
 
 	h_DeltaPt__unlikeSame = new TH1F("h_DeltaPt__unlikeSame", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
+	h_SumEta__unlikeSame = new TH1F("h_SumEta__unlikeSame", "Sum #eta distribution of e^{+}e^{-};#eta;counts", 500, -2.5, 2.5);
 	h_DeltaEta__unlikeSame = new TH1F("h_DeltaEta__unlikeSame", "#Delta #eta distribution of e^{+}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__unlikeSame = new TH1F("h_DeltaPhi__unlikeSame", "#Delta #phi distribution of e^{+}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
+	h_DeltaR__unlikeSame = new TH1F("h_DeltaR__unlikeSame", "#Delta R distribution of e^{+}e^{-};#Delta R;counts", 4000, 0, 4);
 	h_DeltaPt__likepp = new TH1F("h_DeltaPt__likepp", "#Delta p_{T} distribution of e^{+}e^{+};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__likepp = new TH1F("h_DeltaEta__likepp", "#Delta #eta distribution of e^{+}e^{+};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__likepp = new TH1F("h_DeltaPhi__likepp", "#Delta #phi distribution of e^{+}e^{+};#Delta #phi;counts", 640, -3.2, 3.2);
+	h_DeltaR__likepp = new TH1F("h_DeltaR__likepp", "#Delta R distribution of e^{+}e^{+};#Delta R;counts", 4000, 0, 4);
 	h_DeltaPt__likemm = new TH1F("h_DeltaPt__likemm", "#Delta p_{T} distribution of e^{-}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__likemm = new TH1F("h_DeltaEta__likemm", "#Delta #eta distribution of e^{-}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__likemm = new TH1F("h_DeltaPhi__likemm", "#Delta #phi distribution of e^{-}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
+	h_DeltaEta_DeltaPhi__likemm = new TH2F("h_DeltaEta_DeltaPhi__likemm", "#Delta #eta vs #Delta #phi of e^{-}e^{-};#Delta #eta;#Delta #phi", 500, -2.5, 2.5, 640, -3.2, 3.2);
+	h_DeltaEta_DeltaPhi__likepp = new TH2F("h_DeltaEta_DeltaPhi__likepp", "#Delta #eta vs #Delta #phi of e^{+}e^{+};#Delta #eta;#Delta #phi", 500, -2.5, 2.5, 640, -3.2, 3.2);
+	h_DeltaR__likemm = new TH1F("h_DeltaR__likemm", "#Delta R distribution of e^{-}e^{-};#Delta R;counts", 4000, 0, 4);
 	h_DeltaPt__unlikeMixed = new TH1F("h_DeltaPt__unlikeMixed", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__unlikeMixed = new TH1F("h_DeltaEta__unlikeMixed", "#Delta #eta distribution of e^{+}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__unlikeMixed = new TH1F("h_DeltaPhi__unlikeMixed", "#Delta #phi distribution of e^{+}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
+	h_DeltaR__unlikeMixed = new TH1F("h_DeltaR__unlikeMixed", "#Delta R distribution of e^{+}e^{-};#Delta R;counts", 800, 0, 4);
+	h_DeltaR__likeppMixed = new TH1F("h_DeltaR__likeppMixed", "#Delta R distribution of e^{+}e^{+} in mixed event;#Delta R;counts", 800, 0, 4);
+	h_DeltaR__likemmMixed = new TH1F("h_DeltaR__likemmMixed", "#Delta R distribution of e^{-}e^{-} in mixed event;#Delta R;counts", 800, 0, 4);
 	h_Phi__likemm_deltaPhi_0p2 = new TH1F("h_Phi__likemm_deltaPhi_0p2", "#phi distribution of e^{-}e^{-} with #Delta #phi < 0.2;#phi;counts", 640, -3.2, 3.2);
 	h_Eta__likemm_deltaPhi_0p2 = new TH1F("h_Eta__likemm_deltaPhi_0p2", "#eta distribution of e^{-}e^{-} with #Delta #phi < 0.2;#eta;counts", 500, -2.5, 2.5);
 	h_Pt__likemm_deltaPhi_0p2 = new TH1F("h_Pt__likemm_deltaPhi_0p2", "p_{T} distribution of e^{-}e^{-} with #Delta #phi < 0.2;p_{T} (GeV/c);counts", 500, 0., 0.2);
@@ -281,12 +290,12 @@ void StPicoDstarMixedMaker::initHists()
 	h_Eta__likepp_deltaPhi_0p2 = new TH1F("h_Eta__likepp_deltaPhi_0p2", "#eta distribution of e^{+}e^{+} with #Delta #phi < 0.2;#eta;counts", 500, -2.5, 2.5);
 	h_Pt__likepp_deltaPhi_0p2 = new TH1F("h_Pt__likepp_deltaPhi_0p2", "p_{T} distribution of e^{+}e^{+} with #Delta #phi < 0.2;p_{T} (GeV/c);counts", 500, 0., 0.2);
 
-	h_Phi__unlike_deltaPhi_0p2 = new TH1F("h_Phi__unlike_deltaPhi_0p2", "#phi distribution of e^{+}e^{-} with #Delta #phi > 3.0;#phi;counts", 640, -3.2, 3.2);
 	h_Phi__unlike_deltaPhi_3p0 = new TH1F("h_Phi__unlike_deltaPhi_3p0", "#phi distribution of e^{+}e^{-} with #Delta #phi > 3.0;#phi;counts", 640, -3.2, 3.2);
+	h_Eta__unlike_deltaPhi_3p0 = new TH1F("h_Eta__unlike_deltaPhi_3p0", "#eta distribution of e^{+}e^{-} with #Delta #phi > 3.0;#eta;counts", 500, -2.5, 2.5);
 	h_DeltaEta__likemm_deltaPhi_0p2 = new TH1F("h_DeltaEta__likemm_deltaPhi_0p2", "#Delta #eta distribution of e^{-}e^{-} with #Delta #phi < 0.2;#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaEta__likepp_deltaPhi_0p2 = new TH1F("h_DeltaEta__likepp_deltaPhi_0p2", "#Delta #eta distribution of e^{+}e^{+} with #Delta #phi < 0.2;#Delta #eta;counts", 500, -2.5, 2.5);
-	h_DeltaPt__likemm_deltaPhi_0p2 = new TH1F("h_DeltaPt__likemm_deltaPhi_0p2", "#Delta p_{T} distribution of e^{-}e^{-} with #Delta #phi < 0.2;#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
-	h_DeltaPt__likepp_deltaPhi_0p2 = new TH1F("h_DeltaPt__likepp_deltaPhi_0p2", "#Delta p_{T} distribution of e^{+}e^{+} with #Delta #phi < 0.2;#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
+	h_DeltaPt__likemm_deltaPhi_0p2 = new TH1F("h_DeltaPt__likemm_deltaPhi_0p2", "#Delta p_{T} distribution of e^{-}e^{-} with #Delta #phi < 0.2;#Delta p_{T} (GeV/c);counts", 201,  -0.201, 0.201);
+	h_DeltaPt__likepp_deltaPhi_0p2 = new TH1F("h_DeltaPt__likepp_deltaPhi_0p2", "#Delta p_{T} distribution of e^{+}e^{+} with #Delta #phi < 0.2;#Delta p_{T} (GeV/c);counts", 201,  -0.201, 0.201);
 	h_Mee__unlike_deltaPhi_3p0 = new TH1F("h_Mee__unlike_deltaPhi_3p0", "M_{ee} distribution of e^{+}e^{-} with #Delta #phi > 3.0;Mee;counts", 800, 0, 4);
 	h_Mee__likemm_deltaPhi_0p2 = new TH1F("h_Mee__likemm_deltaPhi_0p2", "M_{ee} distribution of e^{+}e^{-} with #Delta #phi < 0.2;Mee;counts", 800, 0, 4);
 	h_Mee__likepp_deltaPhi_0p2 = new TH1F("h_Mee__likepp_deltaPhi_0p2", "M_{ee} distribution of e^{+}e^{-} with #Delta #phi < 0.2;Mee;counts", 800, 0, 4);
@@ -527,9 +536,7 @@ Int_t StPicoDstarMixedMaker::Make()
 				Bool_t isTPCKaon__3 = kTRUE;
 				Bool_t isTPCElectron__3 = kFALSE;
 				Bool_t isLowPElectron__3 = kFALSE;
-				Bool_t isSomePhiElectron__3 = kFALSE;
 				Bool_t isLowEtaElectron__3 = kFALSE;
-				Bool_t isValidElectron__lowP_3 = kTRUE;
 
 				Bool_t isElectronRegion1 = kFALSE;
 				Bool_t isElectronRegion2 = kFALSE;
@@ -672,7 +679,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						particleinfo.isPhotonicE = kFALSE;
 						particleinfo.isPureE = kFALSE;
 						particleinfo.isCurlingE = kFALSE;
-						particleinfo.isLikeDeltaPhiLess0p2E = kFALSE;
+						particleinfo.isCloneE = kFALSE;
 						electroninfo.push_back(particleinfo);
 
 						// current_electron[current_nElectron].SetPx(mom.X());
@@ -698,7 +705,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						particleinfo.isPhotonicE = kFALSE;
 						particleinfo.isPureE = kFALSE;
 						particleinfo.isCurlingE = kFALSE;
-						particleinfo.isLikeDeltaPhiLess0p2E = kFALSE;
+						particleinfo.isCloneE = kFALSE;
 						positroninfo.push_back(particleinfo);
 
 						// current_positron[current_nPositron].SetPx(mom.X());
@@ -720,8 +727,11 @@ Int_t StPicoDstarMixedMaker::Make()
 			TLorentzVector particle1_4V_Ro(0, 0, 0, 0);
 			TLorentzVector particle2_4V_Ro(0, 0, 0, 0);
 
-			// Pure electron; Photonic electron; Curling electron 
+			// 1. Extract High Purity E samples. 2. Remove photonic, curling, and clone electrons
 			if(1){
+				Bool_t rmPhotonicE = kTRUE;
+				Bool_t rmCurlingE =kFALSE;//kFALSE;kTRUE
+				Bool_t rmCloneE = kFALSE;
 				// +- Pure electron; Photonic electron; Curling electron
 				for (x = 0; x < num_positron; x++)
 				{
@@ -745,19 +755,19 @@ Int_t StPicoDstarMixedMaker::Make()
 						Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1); // 注意参数1、-1的选取要求
 						Double_t angleVcut = fphiVcut->Eval(eepair.M());				   // 根据fphiVcut关于pair-M的函数取值
 						if (fabs(eepair.Rapidity()) <= 1)h_Mee_PhiV__unlikeSame->Fill(eepair.M(), angleV);
-						if (eepair.M() < anaCuts::PhiVCutMRange && angleV < angleVcut){
+						if (eepair.M() < anaCuts::PhiVCutMRange && angleV < angleVcut && rmPhotonicE){
 							positroninfo[x].isPhotonicE = kTRUE;
 							electroninfo[y].isPhotonicE = kTRUE;
 						}
 						//isCurlingE
 						Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
-						if (fabs(deltaPhi) > 3.0){
-							positroninfo[x].isCurlingE = kTRUE;
-							electroninfo[y].isCurlingE = kTRUE;
+						if (fabs(deltaPhi) > 3.0 && rmCurlingE){
+							positroninfo[x].isCurlingE = kTRUE;//kFALSE;kTRUE
+							electroninfo[y].isCurlingE = kTRUE;//kFALSE;kTRUE
 						}
 					}
 				}
-				// ++ Curling electron
+				// ++ Clone positron
 				for (x = 0; x < num_positron; x++)
 				{
 					for (y = x + 1; y < num_positron; y++) // 从x+1开始，避免自组合和重复组合
@@ -773,10 +783,10 @@ Int_t StPicoDstarMixedMaker::Make()
 						particle2_4V.SetE(positroninfo[y].energy);
 
 						Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
-						if (fabs(deltaPhi) < 0.2)
+						if (fabs(deltaPhi) < 0.2 && rmCloneE)
 						{
-							positroninfo[x].isLikeDeltaPhiLess0p2E = kTRUE;
-							positroninfo[y].isLikeDeltaPhiLess0p2E = kTRUE;
+							positroninfo[x].isCloneE = kTRUE;//kFALSE;kTRUE
+							positroninfo[y].isCloneE = kTRUE;//kFALSE;kTRUE
 						}
 						// // phiV cut
 						// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, 1); // 注意参数1、-1的选取要求
@@ -787,7 +797,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						// }
 					}
 				}
-				// -- Curling electron
+				// -- Clone electron
 				for (x = 0; x < num_electron; x++)
 				{
 					for (y = x + 1; y < num_electron; y++) // 从x+1开始，避免自组合和重复组合
@@ -803,10 +813,10 @@ Int_t StPicoDstarMixedMaker::Make()
 						particle2_4V.SetE(electroninfo[y].energy);
 
 						Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
-						if (fabs(deltaPhi) < 0.2)
+						if (fabs(deltaPhi) < 0.2 && rmCloneE)
 						{
-							electroninfo[x].isLikeDeltaPhiLess0p2E = kTRUE;
-							electroninfo[y].isLikeDeltaPhiLess0p2E = kTRUE;
+							electroninfo[x].isCloneE = kTRUE;//kFALSE;kTRUE
+							electroninfo[y].isCloneE = kTRUE;//kFALSE;kTRUE
 						}
 						// // phiV cut
 						// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, -1, -1); // 注意参数1、-1的选取要求
@@ -868,7 +878,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					h_pT__positrons->Fill(positroninfo[x].pt);
 					h_eta__positrons->Fill(positroninfo[x].eta);
 					h_phi__positrons->Fill(positroninfo[x].phi);
-					if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE)
+					if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE && !positroninfo[x].isCloneE)
 					{
 						h_pT__positrons_w_PhiV_Cut->Fill(positroninfo[x].pt);
 						h_eta__positrons_w_PhiV_Cut->Fill(positroninfo[x].eta);
@@ -880,7 +890,7 @@ Int_t StPicoDstarMixedMaker::Make()
 					h_pT__electrons->Fill(electroninfo[y].pt);
 					h_eta__electrons->Fill(electroninfo[y].eta);
 					h_phi__electrons->Fill(electroninfo[y].phi);
-					if (!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE)
+					if (!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE && !electroninfo[y].isCloneE)
 					{
 						h_pT__electrons_w_PhiV_Cut->Fill(electroninfo[y].pt);
 						h_eta__electrons_w_PhiV_Cut->Fill(electroninfo[y].eta);
@@ -912,37 +922,34 @@ Int_t StPicoDstarMixedMaker::Make()
 						// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
 						// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 						// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
-						if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE &&
-							!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE) // 排除光子电子和卷曲电子
+						if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE && !positroninfo[x].isCloneE &&
+							!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE && !electroninfo[y].isCloneE) // 排除photonicE, loopers, clones
 						{
 							eepair = particle1_4V - particle2_4V;
 							h_Qinv__unlikeSame->Fill(sqrt(-eepair.M2()));
 							
 							eepair = particle1_4V + particle2_4V;
 							h_DeltaPt__unlikeSame->Fill(particle1_4V.Pt() - particle2_4V.Pt());
+							h_SumEta__unlikeSame->Fill(particle1_4V.Eta() + particle2_4V.Eta());
 							h_DeltaEta__unlikeSame->Fill(particle1_4V.Eta() - particle2_4V.Eta());
 							Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
 							h_DeltaPhi__unlikeSame->Fill(deltaPhi);
+							h_DeltaR__unlikeSame->Fill(sqrt(pow(particle1_4V.Eta() - particle2_4V.Eta(), 2) + pow(deltaPhi, 2)));
 							if (fabs(deltaPhi) < 0.2)
 							{
-								if(!isPositronFilled[x]){
-									h_Phi__unlike_deltaPhi_0p2->Fill(positroninfo[x].phi);
-									isPositronFilled[x]=kTRUE;
-								}
-								if(!isElectronFilled[y]){
-									h_Phi__unlike_deltaPhi_0p2->Fill(electroninfo[y].phi);
-									isElectronFilled[y]=kTRUE;
-								}
+
 							}
 							if (fabs(deltaPhi) > 3.0)
 							{
 								h_Mee__unlike_deltaPhi_3p0->Fill(eepair.M());
 								if(!isPositronFilled[x]){
 									h_Phi__unlike_deltaPhi_3p0->Fill(positroninfo[x].phi);
+									h_Eta__unlike_deltaPhi_3p0->Fill(positroninfo[x].eta);
 									isPositronFilled[x]=kTRUE;
 								}
 								if(!isElectronFilled[y]){
 									h_Phi__unlike_deltaPhi_3p0->Fill(electroninfo[y].phi);
+									h_Eta__unlike_deltaPhi_3p0->Fill(electroninfo[y].eta);
 									isElectronFilled[y]=kTRUE;
 								}
 							}
@@ -970,8 +977,8 @@ Int_t StPicoDstarMixedMaker::Make()
 						particle2_4V.SetPy(electroninfo[y].p2);
 						particle2_4V.SetPz(electroninfo[y].p3);
 						particle2_4V.SetE(electroninfo[y].energy);
-						if (!electroninfo[x].isPhotonicE && !electroninfo[x].isCurlingE &&
-							!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE) // 排除光子电子和卷曲电子
+						if (!electroninfo[x].isPhotonicE && !electroninfo[x].isCurlingE && !electroninfo[x].isCloneE &&	
+							!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE && !electroninfo[y].isCloneE) // 排除photonicE, loopers, clones
 						{
 							eepair = particle1_4V - particle2_4V;
 							h_Qinv__likemm->Fill(sqrt(-eepair.M2()));//基于HBT效应，通过计算C(Qinv)=N(Qinv)/B(Qinv),得到关联水平。
@@ -981,6 +988,8 @@ Int_t StPicoDstarMixedMaker::Make()
 							h_DeltaEta__likemm->Fill(particle1_4V.Eta() - particle2_4V.Eta());
 							Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
 							h_DeltaPhi__likemm->Fill(deltaPhi);
+							h_DeltaEta_DeltaPhi__likemm->Fill(particle1_4V.Eta() - particle2_4V.Eta(), deltaPhi);
+							h_DeltaR__likemm->Fill(sqrt(pow(particle1_4V.Eta() - particle2_4V.Eta(), 2) + pow(deltaPhi, 2)));
 							if (fabs(deltaPhi) < 0.2)
 							{
 								h_Mee__likemm_deltaPhi_0p2->Fill(eepair.M());
@@ -1000,7 +1009,7 @@ Int_t StPicoDstarMixedMaker::Make()
 									isElectronFilled[y]=kTRUE;
 								}
 							}
-							// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
+							// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, -1, -1);// 注意参数1、-1的选取要求
 							// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 							// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 
@@ -1026,8 +1035,8 @@ Int_t StPicoDstarMixedMaker::Make()
 						particle2_4V.SetPy(positroninfo[y].p2);
 						particle2_4V.SetPz(positroninfo[y].p3);
 						particle2_4V.SetE(positroninfo[y].energy);
-						if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE &&
-							!positroninfo[y].isPhotonicE && !positroninfo[y].isCurlingE) // 排除光子电子和卷曲电子
+						if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE && !positroninfo[x].isCloneE &&
+							!positroninfo[y].isPhotonicE && !positroninfo[y].isCurlingE && !positroninfo[y].isCloneE) // 排除photonicE, loopers, clones
 						{
 							eepair = particle1_4V - particle2_4V;
 							h_Qinv__likepp->Fill(sqrt(-eepair.M2()));//基于HBT效应，通过计算C(Qinv)=N(Qinv)/B(Qinv),得到关联水平。
@@ -1037,6 +1046,8 @@ Int_t StPicoDstarMixedMaker::Make()
 							h_DeltaEta__likepp->Fill(particle1_4V.Eta() - particle2_4V.Eta());
 							Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
 							h_DeltaPhi__likepp->Fill(deltaPhi);
+							h_DeltaEta_DeltaPhi__likepp->Fill(particle1_4V.Eta() - particle2_4V.Eta(), deltaPhi);
+							h_DeltaR__likepp->Fill(sqrt(pow(particle1_4V.Eta() - particle2_4V.Eta(), 2) + pow(deltaPhi, 2)));
 							if (fabs(deltaPhi) < 0.2)
 							{
 								h_Mee__likepp_deltaPhi_0p2->Fill(eepair.M());
@@ -1056,7 +1067,7 @@ Int_t StPicoDstarMixedMaker::Make()
 								}
 							}
 							
-							// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, -1);// 注意参数1、-1的选取要求
+							// Double_t angleV = getPhiVAngle(particle1_4V, particle2_4V, 1, 1);// 注意参数1、-1的选取要求
 							// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 							// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
 
@@ -1151,7 +1162,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			}
 
 			// Event Mixing
-			if(0){
+			if(1){
 				for (Int_t iBufferEvent = 0; iBufferEvent < nEventsInBuffer[magBufferIndex][cenBufferIndex][vzBufferIndex]; iBufferEvent++)
 				{
 					for (x = 0; x < current_nPositron; x++) // unlike-sign +-
@@ -1165,6 +1176,7 @@ Int_t StPicoDstarMixedMaker::Make()
 							h_DeltaPt__unlikeMixed->Fill(current_positron[x].Pt() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Pt());
 							h_DeltaEta__unlikeMixed->Fill(current_positron[x].Eta() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Eta());
 							h_DeltaPhi__unlikeMixed->Fill(std::remainder(current_positron[x].Phi() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Phi(),2*M_PI));
+							h_DeltaR__unlikeMixed->Fill(sqrt(pow(current_positron[x].Eta() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Eta(), 2) + pow(std::remainder(current_positron[x].Phi() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Phi(),2*M_PI), 2)));
 							// Double_t angleV = getPhiVAngle(current_positron[x], buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, -1);// 注意参数1、-1的选取要求
 							// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 							// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
@@ -1184,6 +1196,10 @@ Int_t StPicoDstarMixedMaker::Make()
 							h_Qinv__unlikeMixed->Fill(sqrt(-eepair.M2()));
 
 							eepair = current_electron[x] + buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
+							h_DeltaPt__unlikeMixed->Fill(current_electron[x].Pt() - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Pt());
+							h_DeltaEta__unlikeMixed->Fill(current_electron[x].Eta() - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Eta());
+							h_DeltaPhi__unlikeMixed->Fill(std::remainder(current_electron[x].Phi() - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Phi(),2*M_PI));
+							h_DeltaR__unlikeMixed->Fill(sqrt(pow(current_electron[x].Eta() - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Eta(), 2) + pow(std::remainder(current_electron[x].Phi() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Phi(),2*M_PI), 2)));
 							// Double_t angleV = getPhiVAngle(current_electron[x], buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], -1, 1);// 注意参数1、-1的选取要求
 							// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 							// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
@@ -1202,6 +1218,7 @@ Int_t StPicoDstarMixedMaker::Make()
 							eepair = current_positron[x] - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
 							h_Qinv__likeppMixed->Fill(sqrt(-eepair.M2()));//基于HBT效应，通过计算C(Qinv)=N(Qinv)/B(Qinv),得到关联水平。
 							eepair = current_positron[x] + buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
+							h_DeltaR__likeppMixed->Fill(sqrt(pow(current_positron[x].Eta() - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Eta(), 2) + pow(std::remainder(current_positron[x].Phi() - buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Phi(),2*M_PI), 2)));
 							// Double_t angleV = getPhiVAngle(current_positron[x], buffer_ePlus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], 1, 1);// 注意参数1、-1的选取要求
 							// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 							// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
@@ -1220,6 +1237,7 @@ Int_t StPicoDstarMixedMaker::Make()
 							eepair = current_electron[x] - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
 							h_Qinv__likemmMixed->Fill(sqrt(-eepair.M2()));//基于HBT效应，通过计算C(Qinv)=N(Qinv)/B(Qinv),得到关联水平。
 							eepair = current_electron[x] + buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y];
+							h_DeltaR__likemmMixed->Fill(sqrt(pow(current_electron[x].Eta() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Eta(), 2) + pow(std::remainder(current_electron[x].Phi() - buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y].Phi(),2*M_PI), 2)));
 							// Double_t angleV = getPhiVAngle(current_electron[x], buffer_eMinus[magBufferIndex][cenBufferIndex][vzBufferIndex][iBufferEvent][y], -1, -1);// 注意参数1、-1的选取要求
 							// Double_t angleVcut = fphiVcut->Eval(eepair.M()); // 根据fphiVcut关于pair-M的函数取值
 							// if (eepair.M() > anaCuts::PhiVCutMRange || angleV > angleVcut)
@@ -1343,44 +1361,53 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_phi__electrons_w_PhiV_Cut->Write();
 
 	// pair
-	h_Qinv__likemm->Write();
-	h_Qinv__likepp->Write();
 	h_Qinv__unlikeSame->Write();
-	h_Qinv__likemmMixed->Write();
-	h_Qinv__likeppMixed->Write();
-	h_Qinv__unlikeMixed->Write();
-
 	h_DeltaPt__unlikeSame->Write();
+	h_SumEta__unlikeSame->Write();
 	h_DeltaEta__unlikeSame->Write();
 	h_DeltaPhi__unlikeSame->Write();
-	h_DeltaPt__likepp->Write();
-	h_DeltaEta__likepp->Write();
-	h_DeltaPhi__likepp->Write();
+	h_DeltaR__unlikeSame->Write();
+	h_Phi__unlike_deltaPhi_3p0->Write();
+	h_Eta__unlike_deltaPhi_3p0->Write();
+	h_Mee__unlike_deltaPhi_3p0->Write();
+
+	h_Qinv__likemm->Write();
 	h_DeltaPt__likemm->Write();
 	h_DeltaEta__likemm->Write();
 	h_DeltaPhi__likemm->Write();
-	h_DeltaPt__unlikeMixed->Write();
-	h_DeltaEta__unlikeMixed->Write();
-	h_DeltaPhi__unlikeMixed->Write();
-
+	h_DeltaEta_DeltaPhi__likemm->Write();
+	h_DeltaEta_DeltaPhi__likepp->Write();
+	h_DeltaR__likemm->Write();
 	h_Pt__likemm_deltaPhi_0p2->Write();
 	h_Eta__likemm_deltaPhi_0p2->Write();
 	h_Phi__likemm_deltaPhi_0p2->Write();
+	h_DeltaEta__likemm_deltaPhi_0p2->Write();
+	h_DeltaPt__likemm_deltaPhi_0p2->Write();
+	h_Mee__likemm_deltaPhi_0p2->Write();
+
+	h_Qinv__likepp->Write();
+	h_DeltaPt__likepp->Write();
+	h_DeltaEta__likepp->Write();
+	h_DeltaPhi__likepp->Write();
+	h_DeltaR__likepp->Write();
 	h_Pt__likepp_deltaPhi_0p2->Write();
 	h_Eta__likepp_deltaPhi_0p2->Write();
 	h_Phi__likepp_deltaPhi_0p2->Write();
-
-	h_Phi__unlike_deltaPhi_0p2->Write();
-	h_Phi__unlike_deltaPhi_3p0->Write();
-	h_DeltaEta__likemm_deltaPhi_0p2->Write();
-	h_DeltaPt__likemm_deltaPhi_0p2->Write();
 	h_DeltaEta__likepp_deltaPhi_0p2->Write();
 	h_DeltaPt__likepp_deltaPhi_0p2->Write();
-	h_Mee__unlike_deltaPhi_3p0->Write();
-	h_Mee__likemm_deltaPhi_0p2->Write();
 	h_Mee__likepp_deltaPhi_0p2->Write();
 
+	h_Qinv__likemmMixed->Write();
+	h_Qinv__likeppMixed->Write();
+	h_Qinv__unlikeMixed->Write();
+	h_DeltaPt__unlikeMixed->Write();
+	h_DeltaEta__unlikeMixed->Write();
+	h_DeltaPhi__unlikeMixed->Write();
+	h_DeltaR__unlikeMixed->Write();
+	h_DeltaR__likeppMixed->Write();
+	h_DeltaR__likemmMixed->Write();
 
+	// pair mass
 	h_Rapidity__unlikeSame->Write();
 	h_Mee_PhiV__unlikeSame->Write();
 	h_Mee__unlikeSame->Write();

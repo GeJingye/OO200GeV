@@ -1,7 +1,8 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"
+#include "./StPicoMixedEvent/StAnaCuts.h"
 // 16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/62_20260603_OO_iTPC44_PureE_mb.root", Int_t number = 62) //
+void DrawNSigmaEPiKP(TString inFilename = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_t number = 61) //
 {
 	// 从root文件中导入待拟合的直方图
 	TFile *inFile = new TFile(inFilename);
@@ -101,104 +102,104 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/62_20260603_OO_iTPC44_PureE_mb.
 		// 误差条，设置Marker形状颜色，设置线条颜色，设置图例，设置坐标轴标题，设置对数Y坐标）
 		//h_Vx_Vy->SetTitle("V_{z} vs V_{x};V_{x} (cm);V_{z} (cm)");
 		//h_VpdVz_Vz->SetTitle("V_{z}(TPC) vs V_{z}(VPD);V_{z}(VPD) (cm);V_{z}(TPC) (cm)");
-		TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 900, 800);
-		c_temp->Divide(4, 4);
+		TCanvas *c_temp = new TCanvas("c_temp", "c_temp", 1200, 400);
+		c_temp->Divide(3);
+
+		// c_temp->cd(1);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_ppTc_pPhi->GetXaxis()->SetRangeUser(0.0, 5.0);
+		// h_ppTc_pPhi->DrawClone("col z");
+
+		// c_temp->cd(2);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_ppTc_pPhi->GetXaxis()->SetRangeUser(-5.0, 0.0);
+		// h_ppTc_pPhi->DrawClone("col z");
+
+		// c_temp->cd(3);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_Vz->DrawClone("HIST");
+
+		// c_temp->cd(4);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_VpdVzmVz->DrawClone("HIST");
+
+		// c_temp->cd(5);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_Vx_Vy->DrawClone("col z");
+
+		// c_temp->cd(6);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_VpdVz_Vz->GetYaxis()->SetTitleOffset(1.5);
+		// h_Vr->DrawClone("HIST");
+
+		// c_temp->cd(7);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_passEvtcut->SetMaximum(5.5e8);
+		// h_passEvtcut->DrawClone("HIST TEXT");
+		// h_passEvtcut->DrawClone("same");
+
+		// c_temp->cd(8);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_passTrkcut->DrawClone("HIST TEXT0");
+		// h_passTrkcut->DrawClone("same");
+
+		// c_temp->cd(9);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_nHitsFit_Pt->SetTitle("nHitsFit vs p_{T}");
+		// h_nHitsFit_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
+		// h_nHitsFit_Pt->DrawClone("col z");
+
+		// c_temp->cd(10);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_nHitsDEdx_Pt->SetTitle("nHitsDEdx vs p_{T}");
+		// h_nHitsDEdx_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
+		// h_nHitsDEdx_Pt->DrawClone("col z");
+
+		// c_temp->cd(11);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_pDca_Pt->SetTitle("DCA vs p_{T}");
+		// h_pDca_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
+		// h_pDca_Pt->DrawClone("col z");
+
+		// c_temp->cd(12);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_nTofMat_RefMul->DrawClone("col z");
 
 		c_temp->cd(1);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_ppTc_pPhi->GetXaxis()->SetRangeUser(0.0, 5.0);
-		h_ppTc_pPhi->DrawClone("col z");
-
-		c_temp->cd(2);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_ppTc_pPhi->GetXaxis()->SetRangeUser(-5.0, 0.0);
-		h_ppTc_pPhi->DrawClone("col z");
-
-		c_temp->cd(3);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_Vz->DrawClone("HIST");
-
-		c_temp->cd(4);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_VpdVzmVz->DrawClone("HIST");
-
-		c_temp->cd(5);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_Vx_Vy->DrawClone("col z");
-
-		c_temp->cd(6);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_VpdVz_Vz->GetYaxis()->SetTitleOffset(1.5);
-		h_Vr->DrawClone("HIST");
-
-		c_temp->cd(7);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_passEvtcut->SetMaximum(5.5e8);
-		h_passEvtcut->DrawClone("HIST TEXT");
-		h_passEvtcut->DrawClone("same");
-
-		c_temp->cd(8);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_passTrkcut->DrawClone("HIST TEXT0");
-		h_passTrkcut->DrawClone("same");
-
-		c_temp->cd(9);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_nHitsFit_Pt->SetTitle("nHitsFit vs p_{T}");
-		h_nHitsFit_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
-		h_nHitsFit_Pt->DrawClone("col z");
-
-		c_temp->cd(10);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_nHitsDEdx_Pt->SetTitle("nHitsDEdx vs p_{T}");
-		h_nHitsDEdx_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
-		h_nHitsDEdx_Pt->DrawClone("col z");
-
-		c_temp->cd(11);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_pDca_Pt->SetTitle("DCA vs p_{T}");
-		h_pDca_Pt->GetXaxis()->SetRangeUser(0.0, 3.0);
-		h_pDca_Pt->DrawClone("col z");
-
-		c_temp->cd(12);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_nTofMat_RefMul->DrawClone("col z");
-
-		c_temp->cd(13);
 		gPad->SetLogz(1);
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
@@ -209,12 +210,15 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/62_20260603_OO_iTPC44_PureE_mb.
 		TLine *line_Fit1 = new TLine(0.15, 40, 0.3, 40);
 		line_Fit1->SetLineColor(kRed);
 		line_Fit1->Draw("same");
-		TLine *line_Fit2 = new TLine(0.0, 6, 0.15, 40);
+		TLine *line_Fit2 = new TLine(0.0, 20, 0.15, 20);//0.0, 6, 0.15, 40
 		line_Fit2->SetLineColor(kRed);
 		line_Fit2->Draw("same");
+		TLine *line_Fit3 = new TLine(0.15, 20, 0.15, 40);//0.0, 6, 0.15, 40
+		line_Fit3->SetLineColor(kRed);
+		line_Fit3->Draw("same");
 
 
-		c_temp->cd(14);
+		c_temp->cd(2);
 		gPad->SetLogz(1);
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
@@ -225,16 +229,19 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/62_20260603_OO_iTPC44_PureE_mb.
 		TLine *line_DEdx1 = new TLine(0.15, 30, 0.3, 30);
 		line_DEdx1->SetLineColor(kRed);
 		line_DEdx1->Draw("same");
-		TLine *line_DEdx2 = new TLine(0.0, 6, 0.15, 30);
+		TLine *line_DEdx2 = new TLine(0.0, 14, 0.15, 14);//0.0, 6, 0.15, 30
 		line_DEdx2->SetLineColor(kRed);
 		line_DEdx2->Draw("same");
+		TLine *line_DEdx3 = new TLine(0.15, 14, 0.15, 30);//0.0, 6, 0.15, 30
+		line_DEdx3->SetLineColor(kRed);
+		line_DEdx3->Draw("same");
 
-		c_temp->cd(15);
+		c_temp->cd(3);
 		gPad->SetLogz(1);
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
-		h_pDca_Pt->SetTitle("DCA vs p_{T}");
+		h_pDca_Pt->SetTitle("DCA vs p_{T};p_{T} (GeV/c);DCA (cm)");
 		h_pDca_Pt->GetXaxis()->SetRangeUser(0.0, 0.3);
 		h_pDca_Pt->DrawClone("col z");
 		TLine *line_DCA1 = new TLine(0.15, 1, 0.3, 1);
@@ -247,14 +254,14 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/62_20260603_OO_iTPC44_PureE_mb.
 		line_DCA3->SetLineColor(kRed);
 		line_DCA3->Draw("same");
 
-		c_temp->cd(16);
-		gPad->SetLogz(1);
-		gPad->SetLeftMargin(0.12);
-		gPad->SetRightMargin(0.12);
-		gStyle->SetOptStat(0);
-		h_cen__reWeight->DrawClone("HIST");
+		// c_temp->cd(16);
+		// gPad->SetLogz(1);
+		// gPad->SetLeftMargin(0.12);
+		// gPad->SetRightMargin(0.12);
+		// gStyle->SetOptStat(0);
+		// h_cen__reWeight->DrawClone("HIST");
 
-		c_temp->SaveAs(Form("roots/%d_Track_and_Event_Check.png", number));
+		//c_temp->SaveAs(Form("roots/%d_Track_and_Event_Check.png", number));
 	}
 	if (0) // track QA and TOF track check
 	{

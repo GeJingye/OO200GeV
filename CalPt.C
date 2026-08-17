@@ -272,8 +272,8 @@ void CalPt(TString inFileName = "roots/59_20260604_OO_iTPC11_PureE_mb.root", Int
 
 		c2->SaveAs(Form("roots/%d_Pt.png", number));
 	}
-	
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布（与Draw_Pt_Meeslice背景选择一致）
+	Float_t pt_low = 0.2, eta_up = 0.9;
+	if (0)// 60-80%,0-0.4，0.4-0.76，0.76-1.2，1.2-2.6 GeV/c2
 	{
 		int Mee_bin_1 = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(0.4-1e-5);
 		int Mee_bin_2 = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(0.76-1e-5);
@@ -323,12 +323,12 @@ void CalPt(TString inFileName = "roots/59_20260604_OO_iTPC11_PureE_mb.root", Int
 		ptmee->SetFillStyle(0);ptmee->SetBorderSize(0);
 		ptmee->SetTextFont(42);ptmee->SetTextSize(0.03);ptmee->SetTextAlign(12);
 		ptmee->AddText("O+O@ 200Gev");
-		ptmee->AddText("p_{T}^{e}>0.2 GeV/c,|#eta|<0.9");
+		ptmee->AddText(Form("p_{T}^{e}>%.1f GeV/c,|#eta|<%.1f", pt_low, eta_up));
 		ptmee->AddText(Form("Cen:%.0f~%.0f%%",80-5*z_up,80-5*z_low));
 		ptmee->DrawClone("same");
 		c_mee1->SaveAs(Form("roots/%d_RawYield_MeeBins_Cen_%.0f_%.0f_UM.png", number,80-5*z_up,80-5*z_low));
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布（与Draw_Pt_Meeslice背景选择一致）
+	if (1)// 40-80%,0-0.4，0.4-0.76，0.76-1.2，1.2-2.6 GeV/c2
 	{
 		int Mee_bin_1 = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(0.4-1e-5);
 		int Mee_bin_2 = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(0.76-1e-5);
@@ -348,13 +348,14 @@ void CalPt(TString inFileName = "roots/59_20260604_OO_iTPC11_PureE_mb.root", Int
 		h_Pt_MeeBin__1->SetMarkerColor(kRed);    h_Pt_MeeBin__1->SetLineColor(kRed);    h_Pt_MeeBin__1->SetMarkerStyle(20);
 		h_Pt_MeeBin__2->SetMarkerColor(kBlue);   h_Pt_MeeBin__2->SetLineColor(kBlue);   h_Pt_MeeBin__2->SetMarkerStyle(21);
 		h_Pt_MeeBin__3->SetMarkerColor(kGreen);  h_Pt_MeeBin__3->SetLineColor(kGreen);  h_Pt_MeeBin__3->SetMarkerStyle(23);
-		h_Pt_MeeBin__4->SetMarkerColor(kGreen+2);h_Pt_MeeBin__4->SetLineColor(kGreen+2);h_Pt_MeeBin__4->SetMarkerStyle(22);
+		h_Pt_MeeBin__4->SetMarkerColor(kBlack);  h_Pt_MeeBin__4->SetLineColor(kBlack);  h_Pt_MeeBin__4->SetMarkerStyle(22);
     
 		//画图
 		TCanvas *c_mee2 = new TCanvas("c_mee2", "c_mee2", 900, 800);
 		c_mee2->Divide(1);
 		c_mee2->cd(1);
 		gPad->SetLogy(1);
+		gPad->SetLeftMargin(0.12);
 		gStyle->SetOptStat(0);
 		h_Pt_MeeBin__1->SetTitle(";p_{T} (GeV/c);dN/dp_{T} (GeV/c)^{-1}");
 		h_Pt_MeeBin__1->Scale(1);
@@ -378,12 +379,12 @@ void CalPt(TString inFileName = "roots/59_20260604_OO_iTPC11_PureE_mb.root", Int
 		ptmee->SetFillStyle(0);ptmee->SetBorderSize(0);
 		ptmee->SetTextFont(42);ptmee->SetTextSize(0.03);ptmee->SetTextAlign(12);
 		ptmee->AddText("O+O@ 200Gev");
-		ptmee->AddText("p_{T}^{e}>0.2 GeV/c,|#eta|<0.9");
+		ptmee->AddText(Form("p_{T}^{e}>%.1f GeV/c,|#eta|<%.1f", pt_low, eta_up));
 		ptmee->AddText(Form("Cen:%.0f~%.0f%%",80-5*z_up,80-5*z_low));
 		ptmee->DrawClone("same");
 		c_mee2->SaveAs(Form("roots/%d_RawYield_MeeBins_Cen_%.0f_%.0f_UM.png", number,80-5*z_up,80-5*z_low));
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布（与Draw_Pt_Meeslice背景选择一致）
+	if (0)// 0-80%,0-0.4，0.4-0.76，0.76-1.2，1.2-2.6 GeV/c2
 	{
 		int Mee_bin_1 = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(0.4-1e-5);
 		int Mee_bin_2 = h_Mee_Pt_Cen__unlikeSame_Rebin->GetXaxis()->FindBin(0.76-1e-5);
@@ -433,13 +434,13 @@ void CalPt(TString inFileName = "roots/59_20260604_OO_iTPC11_PureE_mb.root", Int
 		ptmee->SetFillStyle(0);ptmee->SetBorderSize(0);
 		ptmee->SetTextFont(42);ptmee->SetTextSize(0.03);ptmee->SetTextAlign(12);
 		ptmee->AddText("O+O@ 200Gev");
-		ptmee->AddText("p_{T}^{e}>0.2 GeV/c,|#eta|<0.9");
+		ptmee->AddText(Form("p_{T}^{e}>%.1f GeV/c,|#eta|<%.1f", pt_low, eta_up));
 		ptmee->AddText(Form("Cen:%.0f~%.0f%%",80-5*z_up,80-5*z_low));
 		ptmee->DrawClone("same");
 		c_mee3->SaveAs(Form("roots/%d_RawYield_MeeBins_Cen_%.0f_%.0f_UM.png", number,80-5*z_up,80-5*z_low));
 	}
 
-	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// 0-0.4，0.4-0.76，0.76-1.2，1.2-2.6 GeV/c2
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); //h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); //h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);

@@ -56,7 +56,7 @@ class ParticleInfo
 	Float_t p3;
 	Bool_t isPhotonicE;//isPhotonicE
     Bool_t isCurlingE;
-    Bool_t isLikeDeltaPhiLess0p2E;
+    Bool_t isCloneE;
 	Bool_t isPureE;
 };
 
@@ -243,13 +243,22 @@ class StPicoDstarMixedMaker : public StMaker
 	TH1F* h_Qinv__unlikeMixed;
 	TH1F* h_DeltaPt__unlikeSame;
 	TH1F* h_DeltaEta__unlikeSame;
+    TH1F* h_SumEta__unlikeSame;
 	TH1F* h_DeltaPhi__unlikeSame;
+    TH1F* h_DeltaR__unlikeSame;
 	TH1F* h_DeltaPt__likepp;
 	TH1F* h_DeltaEta__likepp;
 	TH1F* h_DeltaPhi__likepp;
+    TH1F* h_DeltaR__likepp;
 	TH1F* h_DeltaPt__likemm;
 	TH1F* h_DeltaEta__likemm;
 	TH1F* h_DeltaPhi__likemm;
+	TH2F* h_DeltaEta_DeltaPhi__likemm;
+	TH2F* h_DeltaEta_DeltaPhi__likepp;
+    TH1F* h_DeltaR__likemm;
+    TH1F* h_DeltaR__unlikeMixed;
+    TH1F* h_DeltaR__likeppMixed;
+    TH1F* h_DeltaR__likemmMixed;
 	TH1F* h_DeltaPt__unlikeMixed;
 	TH1F* h_DeltaEta__unlikeMixed;
 	TH1F* h_DeltaPhi__unlikeMixed;
@@ -259,8 +268,8 @@ class StPicoDstarMixedMaker : public StMaker
     TH1F* h_Phi__likepp_deltaPhi_0p2;
     TH1F* h_Eta__likepp_deltaPhi_0p2;
     TH1F* h_Pt__likepp_deltaPhi_0p2;
-    TH1F* h_Phi__unlike_deltaPhi_0p2;
     TH1F* h_Phi__unlike_deltaPhi_3p0;
+    TH1F* h_Eta__unlike_deltaPhi_3p0;
     TH1F* h_DeltaEta__likemm_deltaPhi_0p2;
     TH1F* h_DeltaPt__likemm_deltaPhi_0p2;
     TH1F* h_DeltaEta__likepp_deltaPhi_0p2;

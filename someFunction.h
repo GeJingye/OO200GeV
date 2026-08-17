@@ -121,8 +121,8 @@ template <typename H5>
 void SetHistXRangeZero(H5* h, Double_t x_low, Double_t x_up)
 {
 	//NOTE: x_low and x_up must be bordor of bin.
-	x_low = x_low + 1e-3;
-	x_up = x_up - 1e-3;
+	x_low = x_low + 1e-6;
+	x_up = x_up - 1e-6;
 	int bin_low = h->GetXaxis()->FindBin(x_low);
 	int bin_up = h->GetXaxis()->FindBin(x_up);
 	for (int ix = 1; ix <= h->GetNbinsX(); ++ix)
@@ -157,8 +157,8 @@ std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance
     }
 
     // 有效边界查找
-    Int_t bin_low = h_N->GetXaxis()->FindBin(x_low + 1e-3);
-	Int_t bin_up  = h_N->GetXaxis()->FindBin(x_up  - 1e-3);
+    Int_t bin_low = h_N->GetXaxis()->FindBin(x_low + 1e-6);
+	Int_t bin_up  = h_N->GetXaxis()->FindBin(x_up  - 1e-6);
     bin_low = std::max(1, bin_low);
     bin_up  = std::min(h_N->GetNbinsX(), bin_up);
     if (bin_low > bin_up) {
@@ -280,10 +280,10 @@ TH1F* myProject3D2x(TH3* h3, const TString& outName = "h_xproj")
 //计算不同pT和中心度范围内的Mee分布，并计算信号显著性
 void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float y_low,float y_up,float z_low,float z_up,TString option = "+")
 {
-	int pT_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_low+1e-3);
-	int pT_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_up-1e-3);
-	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-3);
-	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-3);
+	int pT_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_low+1e-6);
+	int pT_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetYaxis()->FindBin(y_up-1e-6);
+	int Cen_bin_low = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_low+1e-6);
+	int Cen_bin_up = h_Mee_Pt_Cen__unlikeSame_Rebin->GetZaxis()->FindBin(z_up-1e-6);
 
 	TH1F *h_Mee_PtBin__unlikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__unlikeSame_Rebin  ->ProjectionX("_px1", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__unlikeSame_Rebin); h_Mee_PtBin__unlikeSame_Rebin->SetMarkerSize(0.1);
 	TH1F *h_Mee_PtBin__LikeSame_Rebin = (TH1F*)h_Mee_Pt_Cen__LikeSame_Rebin	     ->ProjectionX("_px2", pT_bin_low, pT_bin_up, Cen_bin_low, Cen_bin_up);	ResetBinContent(h_Mee_PtBin__LikeSame_Rebin); h_Mee_PtBin__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -311,7 +311,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	h_Mee_PtBin__rmLS_Rebin->DrawClone("same");
 	//h_Mee_PtBin__rmUM_Rebin->DrawClone("same");
 
-	auto legend = new TLegend(0.63, 0.58, 0.88, 0.88);
+	auto legend = new TLegend(0.63, 0.28, 0.88, 0.58);
 	legend->SetFillColor(0); legend->SetBorderSize(0);
 	//legend->AddEntry(h_Mee_PtBin__unlikeMixed_Rebin, "\t UM", "lp");
 	legend->AddEntry(h_Mee_PtBin__unlikeSame_Rebin, "\t US", "lp");
@@ -330,6 +330,8 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	auto[signif_LS2, signif_err2_LS3, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS2, x_up_LS2);
 	Float_t x_low_LS3 = 1.2, x_up_LS3 = 2.6;
 	auto[signif_LS3, signif_err2_LS4, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS3, x_up_LS3);
+	// Float_t x_low_LS4 = 1.1, x_up_LS4 = 1.2;
+	// auto[signif_LS4, signif_err2_LS5, N_LS4, N_error2_LS4, B_LS4, B_error2_LS4] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS4, x_up_LS4);
 
 	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
 	pt->SetFillColorAlpha(0, 0);   //
@@ -342,7 +344,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	//pt->AddText(Form("%.0f~%.0f\%",80-5*z_up,80-5*z_low));
 	pt->DrawClone("same");
 
-	TPaveText *pt2 = new TPaveText(0.2, 0.45, 0.4, 0.75, "NDC NB");
+	TPaveText *pt2 = new TPaveText(0.2, 0.5, 0.4, 0.75, "NDC NB");
 	pt2->SetFillColorAlpha(0, 0);   //
 	pt2->SetFillStyle(0);
 	pt2->SetBorderSize(0);
@@ -357,6 +359,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS1, x_up_LS1, signif_LS1, sqrt(signif_err2_LS2), N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
 	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS2, x_up_LS2, signif_LS2, sqrt(signif_err2_LS3), N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
 	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS3, x_up_LS3, signif_LS3, sqrt(signif_err2_LS4), N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
+	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS4, x_up_LS4, signif_LS4, sqrt(signif_err2_LS5), N_LS4-B_LS4, (N_LS4-B_LS4)/B_LS4));
 	pt2->DrawClone("same");
 }
 void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float x_low,float x_up,float z_low,float z_up,TString option = "+")
@@ -628,12 +631,7 @@ void printHist2DSci(TH2* h) {
     printf("Proportion   : %6.4f \n", ratio2);
 }
 //计算mixed event的scale factor
-Float_t ComputeMixEventScale( TH3* h_likepp_Rebin,		TH3* h_likemm_Rebin,
-                              TH3* h_likeppMixed_Rebin, TH3* h_likemmMixed_Rebin,
-                              TH3* h_unlikeMixed_Rebin,
-                              Float_t NR_low_M, Float_t NR_up_M,
-                              Float_t NR_low_pt, Float_t NR_up_pt,
-                              Float_t cen_low, Float_t cen_up)
+Float_t ComputeMixEventScale( TH3* h_likepp_Rebin, TH3* h_likemm_Rebin, TH3* h_likeppMixed_Rebin, TH3* h_likemmMixed_Rebin, TH3* h_unlikeMixed_Rebin, Float_t NR_low_M, Float_t NR_up_M, Float_t NR_low_pt, Float_t NR_up_pt, Float_t cen_low, Float_t cen_up)
 {
     // 指针有效性检查
     if (!h_likepp_Rebin || !h_likeppMixed_Rebin || !h_likemm_Rebin || !h_likemmMixed_Rebin || !h_unlikeMixed_Rebin) {
@@ -645,12 +643,12 @@ Float_t ComputeMixEventScale( TH3* h_likepp_Rebin,		TH3* h_likemm_Rebin,
     Int_t nCenBins = h_likepp_Rebin->GetZaxis()->GetNbins();
 
     // 查找归一化区域对应的 bin 范围（加微小偏移避免边界浮点误差）
-    Int_t bin_low_M  = h_likepp_Rebin->GetXaxis()->FindBin(NR_low_M  + 1e-3);
-    Int_t bin_up_M   = h_likepp_Rebin->GetXaxis()->FindBin(NR_up_M   - 1e-3);
-    Int_t bin_low_pt = h_likepp_Rebin->GetYaxis()->FindBin(NR_low_pt + 1e-3);
-    Int_t bin_up_pt  = h_likepp_Rebin->GetYaxis()->FindBin(NR_up_pt  - 1e-3);
-	Int_t bin_low_cen = h_likepp_Rebin->GetZaxis()->FindBin(cen_low + 1e-3);
-    Int_t bin_up_cen  = h_likepp_Rebin->GetZaxis()->FindBin(cen_up - 1e-3);
+    Int_t bin_low_M  = h_likepp_Rebin->GetXaxis()->FindBin(NR_low_M  + 1e-6);
+    Int_t bin_up_M   = h_likepp_Rebin->GetXaxis()->FindBin(NR_up_M   - 1e-6);
+    Int_t bin_low_pt = h_likepp_Rebin->GetYaxis()->FindBin(NR_low_pt + 1e-6);
+    Int_t bin_up_pt  = h_likepp_Rebin->GetYaxis()->FindBin(NR_up_pt  - 1e-6);
+	Int_t bin_low_cen = h_likepp_Rebin->GetZaxis()->FindBin(cen_low + 1e-6);
+    Int_t bin_up_cen  = h_likepp_Rebin->GetZaxis()->FindBin(cen_up - 1e-6);
     // 在归一化区域内积分（对 Z 轴所有中心度 bin 积分）
     Double_t int_likepp_Rebin  = h_likepp_Rebin->Integral(bin_low_M, bin_up_M, bin_low_pt, bin_up_pt, bin_low_cen, bin_up_cen, "");
     Double_t int_likeppMixed   = h_likeppMixed_Rebin->Integral(bin_low_M, bin_up_M, bin_low_pt, bin_up_pt, bin_low_cen, bin_up_cen, "");
@@ -683,4 +681,47 @@ void RebinXCen(TH3F* h3)
 {
 	h3->RebinX(10);
 	h3->RebinY(2);
+}
+
+/**
+ * 对三维直方图进行统计意义上的缩放
+ * 
+ * 功能：内容乘以 x，误差乘以 sqrt(x)
+ * 
+ * @param h_in   输入的三维直方图（const，只读）
+ * @param x      缩放因子（必须 > 0）
+ * @return TH3F*  新创建的三维直方图（调用者负责 delete）
+ */
+TH3F* ScaleHistogramWithStatError(const TH3F* h_in, double x) {
+    // 参数检查
+    if (!h_in) {
+        std::cerr << "Error: Input histogram is nullptr." << std::endl;
+        return nullptr;
+    }
+    if (x <= 0) {
+        std::cerr << "Error: Scale factor x must be positive." << std::endl;
+        return nullptr;
+    }
+
+    // 1. 深度克隆输入直方图（复制所有内容和误差）
+    TH3F* h_out = static_cast<TH3F*>(h_in->Clone());
+    // 为输出直方图设置名称，避免与原图冲突
+    h_out->SetName(Form("%s_scaled", h_in->GetName()));
+
+    // 2. 内容乘以 x（ROOT 的 Scale 会同时将误差乘以 x）
+    h_out->Scale(x);
+
+    // 3. 手动修正误差：将误差除以 sqrt(x)，最终误差变为原来的 sqrt(x) 倍
+    //    （因为 Scale 已将其变为 x 倍，除以 sqrt(x) 后变为 sqrt(x) 倍）
+    double inv_sqrt_x = 1.0 / std::sqrt(x);
+    for (int i = 1; i <= h_out->GetNbinsX(); ++i) {
+        for (int j = 1; j <= h_out->GetNbinsY(); ++j) {
+            for (int k = 1; k <= h_out->GetNbinsZ(); ++k) {
+                double err = h_out->GetBinError(i, j, k);
+                h_out->SetBinError(i, j, k, err * inv_sqrt_x);
+            }
+        }
+    }
+
+    return h_out;
 }
