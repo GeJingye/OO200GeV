@@ -312,7 +312,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	//h_Mee_PtBin__rmUM_Rebin->DrawClone("same");
 
 	auto legend = new TLegend(0.63, 0.28, 0.88, 0.58);
-	legend->SetFillColor(0); legend->SetBorderSize(0);
+	legend->SetFillColor(0); legend->SetBorderSize(0); legend->SetFillStyle(0); legend->SetTextFont(42);
 	//legend->AddEntry(h_Mee_PtBin__unlikeMixed_Rebin, "\t UM", "lp");
 	legend->AddEntry(h_Mee_PtBin__unlikeSame_Rebin, "\t US", "lp");
 	legend->AddEntry(h_Mee_PtBin__LikeSame_Rebin, "\t LS", "lp");
@@ -354,12 +354,12 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	//pt2->AddText("Au+Au@200GeV");
 	//pt2->AddText("Cen:0~80%");
 	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
-	pt2->AddText(Form("Mass, significance,Sigerr S, S/B:"));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS, x_up_LS, signif_LS, sqrt(signif_err2_LS), N_LS-B_LS, (N_LS-B_LS)/B_LS));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS1, x_up_LS1, signif_LS1, sqrt(signif_err2_LS2), N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS2, x_up_LS2, signif_LS2, sqrt(signif_err2_LS3), N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
-	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS3, x_up_LS3, signif_LS3, sqrt(signif_err2_LS4), N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
-	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-8.4f%-6.0f%-6.3f", x_low_LS4, x_up_LS4, signif_LS4, sqrt(signif_err2_LS5), N_LS4-B_LS4, (N_LS4-B_LS4)/B_LS4));
+	pt2->AddText(Form("Mass, significance, S, S/B:"));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS, x_up_LS, signif_LS, N_LS-B_LS, (N_LS-B_LS)/B_LS));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS1, x_up_LS1, signif_LS1, N_LS1-B_LS1, (N_LS1-B_LS1)/B_LS1));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS2, x_up_LS2, signif_LS2, N_LS2-B_LS2, (N_LS2-B_LS2)/B_LS2));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS3, x_up_LS3, signif_LS3, N_LS3-B_LS3, (N_LS3-B_LS3)/B_LS3));
+	// pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS4, x_up_LS4, signif_LS4, sqrt(signif_err2_LS5), N_LS4-B_LS4, (N_LS4-B_LS4)/B_LS4));
 	pt2->DrawClone("same");
 }
 void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__LikeSame_Rebin,TH3F* h_Mee_Pt_Cen__unlikeMixed_Rebin,TH3F* h_Mee_Pt_Cen__rmLS_Rebin,TH3F* h_Mee_Pt_Cen__rmUM_Rebin,float x_low,float x_up,float z_low,float z_up,TString option = "+")

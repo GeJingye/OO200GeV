@@ -658,8 +658,8 @@ Int_t StPicoDstarMixedMaker::Make()
 				}
 				//if (isElectronRegion1)//model 1
 				//if (isElectronRegion2)//model 2
-				if (isElectronRegion4)//model 4
 				//if (isElectronRegion1 || isElectronRegion2 || isElectronRegion3)// || isElectronRegion4)//model 1+2+3
+				if (isElectronRegion4)//model 4
 				{
 					h_nSigmaElectron_P__EIDcut_total->Fill(mom.Mag(), nSigmaE);
 					if (trk->charge() < 0) // electron
@@ -730,7 +730,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			// 1. Extract High Purity E samples. 2. Remove photonic, curling, and clone electrons
 			if(1){
 				Bool_t rmPhotonicE = kTRUE;
-				Bool_t rmCurlingE =kFALSE;//kFALSE;kTRUE
+				Bool_t rmCurlingE = kTRUE;//kFALSE;kTRUE
 				Bool_t rmCloneE = kFALSE;
 				// +- Pure electron; Photonic electron; Curling electron
 				for (x = 0; x < num_positron; x++)
@@ -843,7 +843,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						h_Eta_Cen_nSigmaEcorr->Fill(positroninfo[x].eta, mCen16, positroninfo[x].nSigmaEcorr, reWeight);
 						h_Phi_Cen_nSigmaEcorr->Fill(positroninfo[x].phi, mCen16, positroninfo[x].nSigmaEcorr, reWeight);
 					}
-					if (!positroninfo[x].isPhotonicE)
+					if (!positroninfo[x].isPhotonicE && !positroninfo[x].isCurlingE && !positroninfo[x].isCloneE)
 					{
 						current_positron[current_nPositron].SetPx(positroninfo[x].p1);
 						current_positron[current_nPositron].SetPy(positroninfo[x].p2);
@@ -863,7 +863,7 @@ Int_t StPicoDstarMixedMaker::Make()
 						h_Eta_Cen_nSigmaEcorr->Fill(electroninfo[x].eta, mCen16, electroninfo[x].nSigmaEcorr, reWeight);
 						h_Phi_Cen_nSigmaEcorr->Fill(electroninfo[x].phi, mCen16, electroninfo[x].nSigmaEcorr, reWeight);
 					}
-					if (!electroninfo[x].isPhotonicE)
+					if (!electroninfo[x].isPhotonicE && !electroninfo[x].isCurlingE && !electroninfo[x].isCloneE)
 					{
 						current_electron[current_nElectron].SetPx(electroninfo[x].p1);
 						current_electron[current_nElectron].SetPy(electroninfo[x].p2);
@@ -885,16 +885,16 @@ Int_t StPicoDstarMixedMaker::Make()
 						h_phi__positrons_w_PhiV_Cut->Fill(positroninfo[x].phi);
 					}
 				} // end: for(x=0;x<num_positron;x++)
-				for (y = 0; y < num_electron; y++)
+				for (x = 0; x < num_electron; x++)
 				{
-					h_pT__electrons->Fill(electroninfo[y].pt);
-					h_eta__electrons->Fill(electroninfo[y].eta);
-					h_phi__electrons->Fill(electroninfo[y].phi);
-					if (!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE && !electroninfo[y].isCloneE)
+					h_pT__electrons->Fill(electroninfo[x].pt);
+					h_eta__electrons->Fill(electroninfo[x].eta);
+					h_phi__electrons->Fill(electroninfo[x].phi);
+					if (!electroninfo[x].isPhotonicE && !electroninfo[x].isCurlingE && !electroninfo[x].isCloneE)
 					{
-						h_pT__electrons_w_PhiV_Cut->Fill(electroninfo[y].pt);
-						h_eta__electrons_w_PhiV_Cut->Fill(electroninfo[y].eta);
-						h_phi__electrons_w_PhiV_Cut->Fill(electroninfo[y].phi);
+						h_pT__electrons_w_PhiV_Cut->Fill(electroninfo[x].pt);
+						h_eta__electrons_w_PhiV_Cut->Fill(electroninfo[x].eta);
+						h_phi__electrons_w_PhiV_Cut->Fill(electroninfo[x].phi);
 					}
 				} //
 			}
@@ -935,10 +935,7 @@ Int_t StPicoDstarMixedMaker::Make()
 							Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
 							h_DeltaPhi__unlikeSame->Fill(deltaPhi);
 							h_DeltaR__unlikeSame->Fill(sqrt(pow(particle1_4V.Eta() - particle2_4V.Eta(), 2) + pow(deltaPhi, 2)));
-							if (fabs(deltaPhi) < 0.2)
-							{
 
-							}
 							if (fabs(deltaPhi) > 3.0)
 							{
 								h_Mee__unlike_deltaPhi_3p0->Fill(eepair.M());
@@ -1616,39 +1613,39 @@ Double_t StPicoDstarMixedMaker::getNSigmaECorr(TVector3 mom) const
 }
 Double_t StPicoDstarMixedMaker::getNSigmaPiKPCorr(Int_t num_variable, TVector3 mom) const // P24ia
 {
-//	Int_t n_cen = 0;
-//	if (mCen16 == 15 || mCen16 == 14) n_cen = 0;//0:0~10%, 1:10~20%, 2:20~40%, 3:40~60%, 4:60~80%
-//	if (mCen16 == 13 || mCen16 == 12) n_cen = 1;
-//	if (mCen16 == 11 || mCen16 == 10 || mCen16 == 9 || mCen16 == 8) n_cen = 2;
-//	if (mCen16 == 7  || mCen16 == 6  || mCen16 == 5 || mCen16 == 4) n_cen = 3;
-//	if (mCen16 == 3  || mCen16 == 2  || mCen16 == 1 || mCen16 == 0) n_cen = 4;
-//
-//	Float_t eta = mom.Eta();
-//	Float_t pt = mom.Perp();
-//	const Int_t n_points_num_variable = 6;
-//	Float_t num_variable_min = -3.3, num_variable_max = 3.3, d_num_variable = (num_variable_max - num_variable_min) / n_points_num_variable;
-//
-//	const Int_t n_points_n_cen = 5;
-//	Float_t n_cen_min = -0.5, n_cen_max = 4.5, d_n_cen = (n_cen_max - n_cen_min) / n_points_n_cen;
-//
-//	Float_t eta_low_min = -1, eta_up_max = 1, d_eta = 0.1;
-//	const Int_t n_points_eta = Int_t((eta_up_max - eta_low_min) / d_eta + 1e-4);
-//
-//	Float_t pt_low_min = 0.2, pt_up_max = 2.0, d_pt = 0.1;
-//	const Int_t n_points_pt = Int_t((pt_up_max - pt_low_min) / d_pt + 1e-4);
-//
-//
-//	Int_t n_bin_num_variable = Int_t((num_variable - num_variable_min) / d_num_variable) + 1;//判断属于第几个bin
-//	Int_t n_bin_n_cen = Int_t((n_cen - n_cen_min) / d_n_cen) + 1;
-//	Int_t n_bin_eta = Int_t((eta - eta_low_min) / d_eta) + 1;
-//	Int_t n_bin_pt = Int_t((pt - pt_low_min) / d_pt) + 1;
-//	Int_t index = (n_bin_num_variable - 1)*(n_points_n_cen*n_points_eta*n_points_pt) + (n_bin_n_cen - 1)*(n_points_eta*n_points_pt) + (n_bin_eta - 1)*(n_points_pt)+(n_bin_pt - 1);
-//
-//	Bool_t within_range = (num_variable >= num_variable_min) && (num_variable <= num_variable_max) && (n_cen >= n_cen_min) && (n_cen <= n_cen_max) && (eta >= eta_low_min) && (eta <= eta_up_max) && (pt >= pt_low_min) && (pt <= pt_up_max);
-//
-//	if (within_range) return (*(anaCuts::mean_nsigma_1d_array_from_txt + index));
-//	else return 0;
 	return 0;
+	// Int_t n_cen = 0;
+	// if (mCen16 == 15 || mCen16 == 14) n_cen = 0;//0:0~10%, 1:10~20%, 2:20~40%, 3:40~60%, 4:60~80%
+	// if (mCen16 == 13 || mCen16 == 12) n_cen = 1;
+	// if (mCen16 == 11 || mCen16 == 10 || mCen16 == 9 || mCen16 == 8) n_cen = 2;
+	// if (mCen16 == 7  || mCen16 == 6  || mCen16 == 5 || mCen16 == 4) n_cen = 3;
+	// if (mCen16 == 3  || mCen16 == 2  || mCen16 == 1 || mCen16 == 0) n_cen = 4;
+
+	// Float_t eta = mom.Eta();
+	// Float_t pt = mom.Perp();
+	// const Int_t n_points_num_variable = 6;
+	// Float_t num_variable_min = -3.3, num_variable_max = 3.3, d_num_variable = (num_variable_max - num_variable_min) / n_points_num_variable;
+
+	// const Int_t n_points_n_cen = 5;
+	// Float_t n_cen_min = -0.5, n_cen_max = 4.5, d_n_cen = (n_cen_max - n_cen_min) / n_points_n_cen;
+
+	// Float_t eta_low_min = -1, eta_up_max = 1, d_eta = 0.1;
+	// const Int_t n_points_eta = Int_t((eta_up_max - eta_low_min) / d_eta + 1e-4);
+
+	// Float_t pt_low_min = 0.2, pt_up_max = 2.0, d_pt = 0.1;
+	// const Int_t n_points_pt = Int_t((pt_up_max - pt_low_min) / d_pt + 1e-4);
+
+
+	// Int_t n_bin_num_variable = Int_t((num_variable - num_variable_min) / d_num_variable) + 1;//判断属于第几个bin
+	// Int_t n_bin_n_cen = Int_t((n_cen - n_cen_min) / d_n_cen) + 1;
+	// Int_t n_bin_eta = Int_t((eta - eta_low_min) / d_eta) + 1;
+	// Int_t n_bin_pt = Int_t((pt - pt_low_min) / d_pt) + 1;
+	// Int_t index = (n_bin_num_variable - 1)*(n_points_n_cen*n_points_eta*n_points_pt) + (n_bin_n_cen - 1)*(n_points_eta*n_points_pt) + (n_bin_eta - 1)*(n_points_pt)+(n_bin_pt - 1);
+
+	// Bool_t within_range = (num_variable >= num_variable_min) && (num_variable <= num_variable_max) && (n_cen >= n_cen_min) && (n_cen <= n_cen_max) && (eta >= eta_low_min) && (eta <= eta_up_max) && (pt >= pt_low_min) && (pt <= pt_up_max);
+
+	// if (within_range) return (*(anaCuts::mean_nsigma_1d_array_from_txt + index));
+	// else return 0;
 }
 
 void StPicoDstarMixedMaker::copyCurrentToBuffer()

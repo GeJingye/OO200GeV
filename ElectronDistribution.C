@@ -1,6 +1,6 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加---------------------
 #include "someFunction.h"
-void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_etagap0p2_no_no.root") //
+void ElectronDistribution(TString inFilename = "roots/group4/20_20260902_hadd_1p2p3p4.root") //
 {
 	// Extract number from filename for output naming
 	TString basename = inFilename;
@@ -449,9 +449,9 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 	
 	if (10) // Mee distribution
 	{
-		TH1F* h_Mee__unlike_deltaPhi_3p0 = (TH1F *)inFile->Get("h_Mee__unlike_deltaPhi_3p0");
-		TH1F* h_Mee__likemm_deltaPhi_0p2 = (TH1F *)inFile->Get("h_Mee__likemm_deltaPhi_0p2");
-		TH1F* h_Mee__likepp_deltaPhi_0p2 = (TH1F *)inFile->Get("h_Mee__likepp_deltaPhi_0p2");
+		// TH1F* h_Mee__unlike_deltaPhi_3p0 = (TH1F *)inFile->Get("h_Mee__unlike_deltaPhi_3p0");
+		// TH1F* h_Mee__likemm_deltaPhi_0p2 = (TH1F *)inFile->Get("h_Mee__likemm_deltaPhi_0p2");
+		// TH1F* h_Mee__likepp_deltaPhi_0p2 = (TH1F *)inFile->Get("h_Mee__likepp_deltaPhi_0p2");
 		TH1F* h_Mee__unlikeSame 		    = (TH1F *)inFile->Get("h_Mee__unlikeSame");
 		TH1F* h_Mee__unlikeSame__w_PhiV_Cut = (TH1F *)inFile->Get("h_Mee__unlikeSame__w_PhiV_Cut");
 					TH3F* h_Mee_Pt_Cen__likemm = (TH3F *)inFile->Get("h_Mee_Pt_Cen__likemm");
@@ -527,6 +527,7 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 			h_Mee_Signal_Corrected->SetLineColor(kMagenta);
 			h_Mee_Signal_Corrected->SetMarkerStyle(23);
 			h_Mee_Signal_Corrected->SetMarkerColor(kMagenta);
+			h_Mee_Signal_Corrected->SetMarkerSize(0.1);
 			
 			cout << "PSAC correction applied." << endl;
 		} else {
@@ -563,7 +564,7 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 
 		//计算h_Ratio=h_Mee__likemm/h_Mee__likepp
 		TH1F* h_Mee_Ratio = (TH1F *)h_Mee__likemm->Clone("h_Mee_Ratio");if (h_Mee_Ratio->GetSumw2N() == 0) h_Mee_Ratio->Sumw2("kTRUE");h_Mee_Ratio->Divide(h_Mee__likepp);
-		Float_t ymax = 0.45e-3; // 100000 / Nevents
+		Float_t ymax = 1e-3; // 100000 / Nevents
 		Float_t ymin = -0.2e-3; // -40000 / Nevents
 
 		// Calculate integral of h_Mee_Signal from 0 to 0.15
@@ -677,12 +678,17 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 		h_Mee__unlikeSame__w_PhiV_Cut->SetLineColor(kBlack);
 		h_Mee__unlikeSame__w_PhiV_Cut->SetMarkerStyle(20);
 		h_Mee__unlikeSame__w_PhiV_Cut->SetMarkerColor(kBlack);
+		h_Mee__unlikeSame__w_PhiV_Cut->SetMarkerSize(0.1);
+
 		h_Mee_Background->SetLineColor(kRed);
 		h_Mee_Background->SetMarkerStyle(21);
 		h_Mee_Background->SetMarkerColor(kRed);
+		h_Mee_Background->SetMarkerSize(0.1);
+
 		h_Mee_Signal->SetLineColor(kBlue);
 		h_Mee_Signal->SetMarkerStyle(22);
 		h_Mee_Signal->SetMarkerColor(kBlue);
+		h_Mee_Signal->SetMarkerSize(0.1);
 
 		// Canvas with 2 rows, 2 columns
 		TCanvas *c_Mee3 = new TCanvas("c_Mee3", "c_Mee3", 1000, 900);
@@ -690,11 +696,11 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 
 		// ---- Top-left: Mee distributions ----
 		c_Mee3->cd(1);
-		gPad->SetLogy(0);
+		gPad->SetLogy(1);
 		gStyle->SetOptStat(0);
-		h_Mee__unlikeSame__w_PhiV_Cut->GetXaxis()->SetRangeUser(0, 0.3);
+		h_Mee__unlikeSame__w_PhiV_Cut->GetXaxis()->SetRangeUser(0, 1);
 		h_Mee__unlikeSame__w_PhiV_Cut->SetMaximum(ymax);
-		h_Mee__unlikeSame__w_PhiV_Cut->SetMinimum(ymin);
+		h_Mee__unlikeSame__w_PhiV_Cut->SetMinimum(1e-10);
 		h_Mee__unlikeSame__w_PhiV_Cut->SetTitle("M_{ee} distributions;M_{ee} (GeV/c^{2});counts / N_{ev}");
 		h_Mee__unlikeSame__w_PhiV_Cut->DrawClone("PE");
 		h_Mee_Background->DrawClone("PE same");
@@ -740,7 +746,7 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 			h_Mee__CorrLS->SetTitle("PSAC correction;M_{ee} (GeV/c^{2});#LT UM #GT / #LT LM #GT");
 			h_Mee__CorrLS->SetMaximum(1.05);
 			h_Mee__CorrLS->SetMinimum(0.95);
-			h_Mee__CorrLS->GetXaxis()->SetRangeUser(0, 0.3);
+			h_Mee__CorrLS->GetXaxis()->SetRangeUser(0, 1);
 			h_Mee__CorrLS->SetMarkerStyle(20);
 			h_Mee__CorrLS->SetMarkerSize(0.6);
 			h_Mee__CorrLS->SetLineColor(kMagenta);
@@ -772,7 +778,7 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 			}
 			h_Signal_Sigma->SetBinError(i, 0);
 		}
-		h_Signal_Sigma->GetXaxis()->SetRangeUser(0, 0.3);
+		h_Signal_Sigma->GetXaxis()->SetRangeUser(0, 1);
 		h_Signal_Sigma->SetMaximum(100);
 		h_Signal_Sigma->SetMinimum(0);
 		h_Signal_Sigma->SetMarkerStyle(20);
@@ -799,7 +805,7 @@ void ElectronDistribution(TString inFilename = "roots/group4/12_20260729_iTPC44_
 				}
 				h_Corrected_Sigma->SetBinError(i, 0);
 			}
-			h_Corrected_Sigma->GetXaxis()->SetRangeUser(0, 0.3);
+			h_Corrected_Sigma->GetXaxis()->SetRangeUser(0, 1);
 			h_Corrected_Sigma->SetMaximum(100);
 			h_Corrected_Sigma->SetMinimum(0);
 			h_Corrected_Sigma->SetMarkerStyle(23);
