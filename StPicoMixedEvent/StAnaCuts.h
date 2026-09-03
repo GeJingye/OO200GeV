@@ -227,8 +227,8 @@ namespace anaCuts
 	Float_t const NHitsDedx_highPt = 30;//30
 	Float_t const Dca_highPt = 1;//1
 	// low pT
-	Float_t const NHitsFit_lowPt = 20;//20
-	Float_t const NHitsDedx_lowPt = 14;//14
+	Float_t const NHitsFit_lowPt = 30;//20
+	Float_t const NHitsDedx_lowPt = 20;//14
 	Float_t const Dca_lowPt = 3;//3
 	// border
 	Float_t const Pt_b = 0.15;

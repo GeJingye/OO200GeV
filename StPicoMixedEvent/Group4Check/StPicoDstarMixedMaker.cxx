@@ -263,6 +263,7 @@ void StPicoDstarMixedMaker::initHists()
 	h_Qinv__unlikeMixed = new TH1F("h_Qinv__unlikeMixed", "#Delta p of e^{+}e^{-} in mixed event;q (GeV/c^{2});counts", 1000, 0, 1);
 
 	h_DeltaPt__unlikeSame = new TH1F("h_DeltaPt__unlikeSame", "#Delta p_{T} distribution of e^{+}e^{-};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
+	h_Pt__unlikeSame = new TH1F("h_Pt__unlikeSame", "p_{T} distribution of e^{+}e^{-};p_{T} (GeV/c);counts", 500, 0, 5);
 	h_SumEta__unlikeSame = new TH1F("h_SumEta__unlikeSame", "Sum #eta distribution of e^{+}e^{-};#eta;counts", 500, -2.5, 2.5);
 	h_DeltaEta__unlikeSame = new TH1F("h_DeltaEta__unlikeSame", "#Delta #eta distribution of e^{+}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__unlikeSame = new TH1F("h_DeltaPhi__unlikeSame", "#Delta #phi distribution of e^{+}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
@@ -730,7 +731,7 @@ Int_t StPicoDstarMixedMaker::Make()
 			// 1. Extract High Purity E samples. 2. Remove photonic, curling, and clone electrons
 			if(1){
 				Bool_t rmPhotonicE = kTRUE;
-				Bool_t rmCurlingE = kTRUE;//kFALSE;kTRUE
+				Bool_t rmCurlingE = kFALSE;//kFALSE;kTRUE
 				Bool_t rmCloneE = kFALSE;
 				// +- Pure electron; Photonic electron; Curling electron
 				for (x = 0; x < num_positron; x++)
@@ -926,13 +927,16 @@ Int_t StPicoDstarMixedMaker::Make()
 							!electroninfo[y].isPhotonicE && !electroninfo[y].isCurlingE && !electroninfo[y].isCloneE) // 排除photonicE, loopers, clones
 						{
 							eepair = particle1_4V - particle2_4V;
+							Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
+							if (fabs(deltaPhi) > 2.9) continue; // 排除curling electron pairs
+							
 							h_Qinv__unlikeSame->Fill(sqrt(-eepair.M2()));
 							
 							eepair = particle1_4V + particle2_4V;
-							h_DeltaPt__unlikeSame->Fill(particle1_4V.Pt() - particle2_4V.Pt());
+							h_Pt__unlikeSame->Fill(eepair.Perp());
 							h_SumEta__unlikeSame->Fill(particle1_4V.Eta() + particle2_4V.Eta());
+							h_DeltaPt__unlikeSame->Fill(particle1_4V.Pt() - particle2_4V.Pt());
 							h_DeltaEta__unlikeSame->Fill(particle1_4V.Eta() - particle2_4V.Eta());
-							Float_t deltaPhi = std::remainder(particle1_4V.Phi() - particle2_4V.Phi(), 2 * M_PI);
 							h_DeltaPhi__unlikeSame->Fill(deltaPhi);
 							h_DeltaR__unlikeSame->Fill(sqrt(pow(particle1_4V.Eta() - particle2_4V.Eta(), 2) + pow(deltaPhi, 2)));
 
@@ -1360,6 +1364,7 @@ Int_t StPicoDstarMixedMaker::Finish()
 	// pair
 	h_Qinv__unlikeSame->Write();
 	h_DeltaPt__unlikeSame->Write();
+	h_Pt__unlikeSame->Write();
 	h_SumEta__unlikeSame->Write();
 	h_DeltaEta__unlikeSame->Write();
 	h_DeltaPhi__unlikeSame->Write();
