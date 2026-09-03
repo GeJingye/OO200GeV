@@ -268,6 +268,12 @@ void StPicoDstarMixedMaker::initHists()
 	h_DeltaEta__unlikeSame = new TH1F("h_DeltaEta__unlikeSame", "#Delta #eta distribution of e^{+}e^{-};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__unlikeSame = new TH1F("h_DeltaPhi__unlikeSame", "#Delta #phi distribution of e^{+}e^{-};#Delta #phi;counts", 640, -3.2, 3.2);
 	h_DeltaR__unlikeSame = new TH1F("h_DeltaR__unlikeSame", "#Delta R distribution of e^{+}e^{-};#Delta R;counts", 4000, 0, 4);
+	// e+e- pairs in 0.15 < Mee < 0.3 GeV/c^{2}
+	h_Pt__0p15_Mee_0p3 = new TH1F("h_Pt__0p15_Mee_0p3", "p_{T} distribution of e^{+}e^{-} (0.15<M_{ee}<0.3);p_{T} (GeV/c);counts", 500, 0, 5);
+	h_SumEta__0p15_Mee_0p3 = new TH1F("h_SumEta__0p15_Mee_0p3", "Sum #eta distribution of e^{+}e^{-} (0.15<M_{ee}<0.3);#eta;counts", 500, -2.5, 2.5);
+	h_DeltaPt__0p15_Mee_0p3 = new TH1F("h_DeltaPt__0p15_Mee_0p3", "#Delta p_{T} distribution of e^{+}e^{-} (0.15<M_{ee}<0.3);#Delta p_{T} (GeV/c);counts", 200, -0.2, 0.2);
+	h_DeltaEta__0p15_Mee_0p3 = new TH1F("h_DeltaEta__0p15_Mee_0p3", "#Delta #eta distribution of e^{+}e^{-} (0.15<M_{ee}<0.3);#Delta #eta;counts", 500, -2.5, 2.5);
+	h_DeltaPhi__0p15_Mee_0p3 = new TH1F("h_DeltaPhi__0p15_Mee_0p3", "#Delta #phi distribution of e^{+}e^{-} (0.15<M_{ee}<0.3);#Delta #phi;counts", 640, -3.2, 3.2);
 	h_DeltaPt__likepp = new TH1F("h_DeltaPt__likepp", "#Delta p_{T} distribution of e^{+}e^{+};#Delta p_{T} (GeV/c);counts", 200,  -0.2, 0.2);
 	h_DeltaEta__likepp = new TH1F("h_DeltaEta__likepp", "#Delta #eta distribution of e^{+}e^{+};#Delta #eta;counts", 500, -2.5, 2.5);
 	h_DeltaPhi__likepp = new TH1F("h_DeltaPhi__likepp", "#Delta #phi distribution of e^{+}e^{+};#Delta #phi;counts", 640, -3.2, 3.2);
@@ -954,6 +960,13 @@ Int_t StPicoDstarMixedMaker::Make()
 									isElectronFilled[y]=kTRUE;
 								}
 							}
+							if(eepair.M()>0.15 && eepair.M()<0.3){
+								h_Pt__0p15_Mee_0p3->Fill(eepair.Perp());
+								h_SumEta__0p15_Mee_0p3->Fill(particle1_4V.Eta() + particle2_4V.Eta());
+								h_DeltaPt__0p15_Mee_0p3->Fill(particle1_4V.Pt() - particle2_4V.Pt());
+								h_DeltaEta__0p15_Mee_0p3->Fill(particle1_4V.Eta() - particle2_4V.Eta());
+								h_DeltaPhi__0p15_Mee_0p3->Fill(deltaPhi);
+							}
 							h_Rapidity__unlikeSame->Fill(eepair.Rapidity());
 							if (fabs(eepair.Rapidity()) <= 1) // 为什么需要在中心快度区？
 							{
@@ -1369,6 +1382,11 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_DeltaEta__unlikeSame->Write();
 	h_DeltaPhi__unlikeSame->Write();
 	h_DeltaR__unlikeSame->Write();
+	h_Pt__0p15_Mee_0p3->Write();
+	h_SumEta__0p15_Mee_0p3->Write();
+	h_DeltaPt__0p15_Mee_0p3->Write();
+	h_DeltaEta__0p15_Mee_0p3->Write();
+	h_DeltaPhi__0p15_Mee_0p3->Write();
 	h_Phi__unlike_deltaPhi_3p0->Write();
 	h_Eta__unlike_deltaPhi_3p0->Write();
 	h_Mee__unlike_deltaPhi_3p0->Write();

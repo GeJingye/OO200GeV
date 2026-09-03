@@ -2,7 +2,7 @@
 #include "someFunction.h"
 #include "./StPicoMixedEvent/StAnaCuts.h"
 // 16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut;
-void DrawNSigmaEPiKP(TString inFilename = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_t number = 61) //
+void DrawNSigmaEPiKP(TString inFilename = "roots/group4/13_20260729_iTPC44_etagap0p2_no_no.root", Int_t number = 13) //
 {
 	// 从root文件中导入待拟合的直方图
 	TFile *inFile = new TFile(inFilename);
@@ -384,7 +384,7 @@ void DrawNSigmaEPiKP(TString inFilename = "roots/61_20260703_OO_iTPC1p2_PureE.ro
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
 
-		c_temp->SaveAs(Form("roots/%d_PhiV_Check.png", number));
+		c_temp->SaveAs(Form("roots/group4/%d_PhiV_Check.png", number));
 	}
 
 	TString Tag = "P24iy";

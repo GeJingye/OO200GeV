@@ -564,8 +564,8 @@ void ElectronDistribution(TString inFilename = "roots/group4/21_20260903_iTPC44_
 
 		//计算h_Ratio=h_Mee__likemm/h_Mee__likepp
 		TH1F* h_Mee_Ratio = (TH1F *)h_Mee__likemm->Clone("h_Mee_Ratio");if (h_Mee_Ratio->GetSumw2N() == 0) h_Mee_Ratio->Sumw2("kTRUE");h_Mee_Ratio->Divide(h_Mee__likepp);
-		Float_t ymax = 0.45e-3; // 100000 / Nevents
-		Float_t ymin = -0.2e-3; // -40000 / Nevents
+		Float_t ymax = 0.1e-3; // 100000 / Nevents
+		Float_t ymin = -0.02e-3; // -40000 / Nevents
 
 		// Calculate integral of h_Mee_Signal from 0 to 0.15
 		Int_t binLow = h_Mee_Signal->GetXaxis()->FindBin(0.0 + 1e-6);
