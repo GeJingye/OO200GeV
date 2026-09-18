@@ -1,7 +1,7 @@
 //---------------------从OO.root中提取直方图，并进行设置更改和元素添加----------------------
 #include "someFunction.h"//16_20260116_TOFElectron_newPhiVcut_P24ia;17_20260116_TOFElectron_newPhiVcut_P24iy;
 //23_20260118_iTPC_withLowP_newPhiVcut;24_20260117_iTPC_rmLowEta0p1_newPhiVcut;25_20260119_iTPC_rmLowP_newPhiVcut
-void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_t number = 61)//26_20260204_TOF_corrEtaPhi_reW_P24ia;27_20260304_TOF_corrEtaPhi_P24iy;28_20260301_group3_P24iy;;
+void CalMee(TString inFileName = "roots/20260910_iTPC11_P24ia_SameWithZihanNoVPDcut.root", Int_t number = 65)//26_20260204_TOF_corrEtaPhi_reW_P24ia;27_20260304_TOF_corrEtaPhi_P24iy;28_20260301_group3_P24iy;;
 {
 	//vector<Double_t> Mee__newEdges = {0.25,0.27,0.28,0.29,0.30,0.31,0.32,0.33,0.34,0.35,0.36,0.37, 0.38,0.39, 0.40,0.41,0.42,0.6};//pion mass
 	//vector<Double_t> Mee__newEdges = {0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25, 0.26, 0.27, 0.28, 0.29, 0.3};
@@ -473,7 +473,7 @@ void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_
 		c1->SaveAs(Form("roots/%d_QA_Mee_pT.png", number));
 	}
 	
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -519,7 +519,7 @@ void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_
 		c_Pt->SaveAs(Form("roots/%d_RawSignal_lowPtBins_Cen_0_80.png", number));
 		delete c_Pt;
 	}
-	if (1)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
+	if (0)// c_pt different pt bin的US,LS,UM,US-LS,US-UM的分布
 	{
 		h_Mee_Pt_Cen__unlikeSame_Rebin->SetLineColor(1);		h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerColor(1); h_Mee_Pt_Cen__unlikeSame_Rebin->SetMarkerSize(0.1);
 		h_Mee_Pt_Cen__LikeSame_Rebin->SetLineColor(2);			h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerStyle(kOpenSquare);		h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerColor(2); h_Mee_Pt_Cen__LikeSame_Rebin->SetMarkerSize(0.1);
@@ -612,7 +612,7 @@ void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_
 		delete c_Pt;
 	}
 
-	if (0)// 信号1/2/3，背景1/2/3，信号-背景1/2/3
+	if (1)// 信号1/2/3，背景1/2/3，信号-背景1/2/3
 	{
 		//设置直方图格式
 		h_Mee__unlikeSame_Rebin->SetLineColor(1);		h_Mee__unlikeSame_Rebin->SetMarkerStyle(kOpenCircle);	h_Mee__unlikeSame_Rebin->SetMarkerColor(1); h_Mee__unlikeSame_Rebin->SetMarkerSize(0.5);
@@ -646,9 +646,9 @@ void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_
 		gPad->SetLeftMargin(0.12);
 		gPad->SetRightMargin(0.12);
 		gStyle->SetOptStat(0);
-		h_Mee__unlikeSame_Rebin->SetMaximum(1e7);
-		h_Mee__unlikeSame_Rebin->SetMinimum(1e6);
-		h_Mee__unlikeSame_Rebin->GetXaxis()->SetRangeUser(0,0.5);
+		h_Mee__unlikeSame_Rebin->SetMaximum(1e8);
+		h_Mee__unlikeSame_Rebin->SetMinimum(1e1);
+		//h_Mee__unlikeSame_Rebin->GetXaxis()->SetRangeUser(0,0.5);
 		h_Mee__unlikeSame_Rebin->DrawClone("PE");
 		h_Mee__rmLS_Rebin->DrawClone("same PE");
 		h_Mee__rmLS_PSACcorr_Rebin->DrawClone("same PE");
@@ -922,21 +922,21 @@ void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_
 		// //h_Mee__LikeSame_Ro_Rebin->SetLineColor(6);		h_Mee__LikeSame_Ro_Rebin->SetMarkerStyle(kOpenCross);	h_Mee__LikeSame_Ro_Rebin->SetMarkerColor(6);
 		// h_Mee__BKGRatio2_Rebin->SetLineColor(8);			h_Mee__BKGRatio2_Rebin->SetMarkerStyle(kOpenDiamond);	h_Mee__BKGRatio2_Rebin->SetMarkerColor(8);
 		// // 背景比
-		// TCanvas* c_BR = new TCanvas("c_BR", "c_BR", 800, 800);
-		// c_BR->Divide(1, 2);
-		// // 创建画板
-		// TVirtualPad* pad1 = c_BR->cd(1);
-		// pad1->SetPad(0.0, 0.25, 1.0, 1.0);
-		// pad1->SetBottomMargin(0);
-		// pad1->SetLogy(1);
-		// TVirtualPad* pad2 = c_BR->cd(2);
-		// pad2->SetPad(0.0, 0.0, 1.0, 0.25);
-		// pad2->SetTopMargin(0);
-		// pad2->SetBottomMargin(0.25);
-		// pad2->SetLogy(0);
-		// pad1->cd();
-		// pad1->Clear();
-		// gStyle->SetOptStat(0);
+		TCanvas* c_BR = new TCanvas("c_BR", "c_BR", 800, 800);
+		c_BR->Divide(1, 2);
+		// 创建画板
+		TVirtualPad* pad1 = c_BR->cd(1);
+		pad1->SetPad(0.0, 0.25, 1.0, 1.0);
+		pad1->SetBottomMargin(0);
+		pad1->SetLogy(1);
+		TVirtualPad* pad2 = c_BR->cd(2);
+		pad2->SetPad(0.0, 0.0, 1.0, 0.25);
+		pad2->SetTopMargin(0);
+		pad2->SetBottomMargin(0.25);
+		pad2->SetLogy(0);
+		pad1->cd();
+		pad1->Clear();
+		gStyle->SetOptStat(0);
 		
 		// h_Mee__unlikeMixed_Rebin->DrawClone("PE");
 		// h_Mee__LikeSame_PSACcorr_Rebin->DrawClone("PE same");
@@ -957,9 +957,9 @@ void CalMee(TString inFileName = "roots/61_20260703_OO_iTPC1p2_PureE.root", Int_
 		// pt->SetTextSize(0.032);
 		// pt->SetTextAlign(12);
 
-		// pad2->cd();
-		// pad2->Clear();
-		// gStyle->SetOptStat(0);
+		pad2->cd();
+		pad2->Clear();
+		gStyle->SetOptStat(0);
 		// h_Mee__BKGRatio_Rebin->SetTitle(";M_{ee} (GeV/c^{2});BKR");
 		// h_Mee__BKGRatio_Rebin->GetXaxis()->SetLabelSize(0.1);
 		// h_Mee__BKGRatio_Rebin->GetYaxis()->SetLabelSize(0.1);

@@ -144,6 +144,7 @@ class StPicoDstarMixedMaker : public StMaker
     TH2F* h_VpdVz_Vz;
     TH1F* h_VpdVzmVz;
     TH2F* h_nTofMat_RefMul;
+    TH2F* h_nTofMat_RefMul_gE;
     TH1F* h_RefMult;
 
     // track level QA

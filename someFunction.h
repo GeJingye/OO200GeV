@@ -143,7 +143,7 @@ void SetHistXRangeZero(H5* h, Double_t x_low, Double_t x_up)
 }
 //计算信号显著性
 template <typename H6>
-std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N, H6* h_B, Float_t x_low, Float_t x_up)
+std::tuple<Float_t, Float_t, Float_t, Float_t, Float_t, Float_t> CalSignificance(H6* h_N, H6* h_B, Float_t x_low, Float_t x_up)//tuple(signif, signiferr, N, Nerr, B, Berr)
 {
 	// 空指针检查
     if (!h_N || !h_B) {
@@ -316,7 +316,7 @@ void Draw_Mee_Ptslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 	//legend->AddEntry(h_Mee_PtBin__unlikeMixed_Rebin, "\t UM", "lp");
 	legend->AddEntry(h_Mee_PtBin__unlikeSame_Rebin, "\t US", "lp");
 	legend->AddEntry(h_Mee_PtBin__LikeSame_Rebin, "\t LS", "lp");
-	legend->AddEntry(h_Mee_PtBin__rmLS_Rebin, "\t US - LS", "lp");
+	legend->AddEntry(h_Mee_PtBin__rmLS_Rebin, "\t US - LS (PSACcorr)", "lp");
 	//legend->AddEntry(h_Mee_PtBin__rmUM_Rebin, "\t US - UM", "lp");
 	legend->SetMargin(0.20);
 	gStyle->SetLegendTextSize(0.032);
@@ -448,6 +448,78 @@ void Draw_Pt_Meeslice(TH3F* h_Mee_Pt_Cen__unlikeSame_Rebin,TH3F* h_Mee_Pt_Cen__L
 
 	//delete h_Mee_Pt_Cen__rmCombined;
 }
+void Draw_1DMee(TH1F* h_Mee_PtBin__unlikeSame_Rebin,TH1F* h_Mee_PtBin__LikeSame_Rebin,TH1F* h_Mee_PtBin__unlikeMixed_Rebin,TH1F* h_Mee_PtBin__rmLS_Rebin,TH1F* h_Mee_PtBin__rmUM_Rebin,Bool_t isLSSM = kTRUE,Bool_t isPositiveHist = kTRUE)
+{
+	TH1F* h_background = isLSSM ? h_Mee_PtBin__LikeSame_Rebin : h_Mee_PtBin__unlikeMixed_Rebin;
+	TH1F* h_signal = isLSSM ? h_Mee_PtBin__rmLS_Rebin : h_Mee_PtBin__rmUM_Rebin;
+
+	if (!isPositiveHist) {
+		TH1F* h_signal_clone = (TH1F*)h_signal->Clone("h_Mee_PtBin__signal_clone");
+		for (Int_t i = 1; i <= h_signal->GetNbinsX(); i++) {
+			Double_t cont = h_signal->GetBinContent(i);
+			h_signal_clone->SetBinContent(i, -cont);
+        }
+		h_signal_clone->SetTitle("Raw signal of e^{+}e^{-};M_{ee} (GeV/c^{2})^{-1};-dN/dM_{ee} (GeV/c^{2})^{-1}");
+		h_signal_clone->SetMaximum(1e8);
+		h_signal_clone->SetMinimum(1e0);
+		h_signal_clone->DrawClone("");
+		return;
+    }
+
+	h_Mee_PtBin__unlikeSame_Rebin->SetTitle("Raw signal of e^{+}e^{-};M_{ee} (GeV/c^{2})^{-1};dN/dM_{ee} (GeV/c^{2})^{-1}");
+	h_Mee_PtBin__unlikeSame_Rebin->SetMaximum(1e8);
+	h_Mee_PtBin__unlikeSame_Rebin->SetMinimum(1e0);
+	h_Mee_PtBin__unlikeSame_Rebin->DrawClone("");
+	h_background->DrawClone("same");
+	h_signal->DrawClone("same");
+
+	auto legend = new TLegend(0.73, 0.58, 0.98, 0.78);
+	legend->SetFillColor(0); legend->SetBorderSize(0); legend->SetFillStyle(0); legend->SetTextFont(42);
+	legend->AddEntry(h_Mee_PtBin__unlikeSame_Rebin, "\t US", "lp");
+	legend->AddEntry(h_background, isLSSM ? "\t LSSE" : "\t USME", "lp");
+	legend->AddEntry(h_signal, "\t Signal", "lp");
+	legend->SetMargin(0.20);
+	gStyle->SetLegendTextSize(0.032);
+	legend->DrawClone("same");
+
+	Float_t x_low_LS = 0.4, x_up_LS = 2.8;
+	auto[signif_LS, signif_err2_LS, N_LS, N_error2_LS, B_LS, B_error2_LS]	   = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_background, x_low_LS, x_up_LS);
+	Float_t x_low_LS1 = 0.4, x_up_LS1 = 0.76;
+	auto[signif_LS1, signif_err2_LS2, N_LS1, N_error2_LS1, B_LS1, B_error2_LS1] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_background, x_low_LS1, x_up_LS1);
+	Float_t x_low_LS2 = 0.76, x_up_LS2 = 1.2;
+	auto[signif_LS2, signif_err2_LS3, N_LS2, N_error2_LS2, B_LS2, B_error2_LS2] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_background, x_low_LS2, x_up_LS2);
+	Float_t x_low_LS3 = 1.2, x_up_LS3 = 2.8;
+	auto[signif_LS3, signif_err2_LS4, N_LS3, N_error2_LS3, B_LS3, B_error2_LS3] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_background, x_low_LS3, x_up_LS3);
+	// Float_t x_low_LS4 = 1.1, x_up_LS4 = 1.2;
+	// auto[signif_LS4, signif_err2_LS5, N_LS4, N_error2_LS4, B_LS4, B_error2_LS4] = CalSignificance(h_Mee_PtBin__unlikeSame_Rebin, h_Mee_PtBin__LikeSame_Rebin, x_low_LS4, x_up_LS4);
+
+	TPaveText *pt = new TPaveText(0.2, 0.75, 0.4, 0.85, "NDC NB");
+	pt->SetFillColorAlpha(0, 0);   //
+	pt->SetFillStyle(0);
+	pt->SetBorderSize(0);
+	pt->SetTextFont(42);
+	pt->SetTextSize(0.04);
+	pt->SetTextAlign(12);
+	pt->AddText("0<p_{T}^{ee}<5,Cen:0~80%%");
+	//pt->DrawClone("same");
+
+	TPaveText *pt2 = new TPaveText(0.2, 0.7, 0.4, 0.9, "NDC NB");
+	pt2->SetFillColorAlpha(0, 0);   //
+	pt2->SetFillStyle(0);
+	pt2->SetBorderSize(0);
+	pt2->SetTextFont(42);
+	pt2->SetTextSize(0.04);
+	pt2->SetTextAlign(12);
+	//pt2->AddText("Au+Au@200GeV");
+	//pt2->AddText("Cen:0~80%");
+	//pt2->AddText("Acc:p_{T}^{e}>0.2,|#eta|<1.0, |y_{ee}|<1.0");
+	//pt2->AddText(Form("Mass, significance, S, S/B:"));
+	//pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.3f", x_low_LS, x_up_LS, signif_LS, N_LS-B_LS, (N_LS-B_LS)/B_LS));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.0f%-6.3f", x_low_LS1, x_up_LS1, signif_LS1, N_LS1-B_LS1,B_LS1, (N_LS1-B_LS1)/B_LS1));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.0f%-6.3f", x_low_LS2, x_up_LS2, signif_LS2, N_LS2-B_LS2,B_LS2, (N_LS2-B_LS2)/B_LS2));
+	pt2->AddText(Form("[%.2f,%.2f]:%-6.2f%-6.0f%-6.0f%-6.3f", x_low_LS3, x_up_LS3, signif_LS3, N_LS3-B_LS3,B_LS3, (N_LS3-B_LS3)/B_LS3));
+	pt2->DrawClone("same");
+}
 
 // Recalibrate.C
 TH2F* MeanOfH3D_binCount(TH3F* h3, const char* outputName = "h2_zmean_binCount")
@@ -456,7 +528,7 @@ TH2F* MeanOfH3D_binCount(TH3F* h3, const char* outputName = "h2_zmean_binCount")
 	int nBinsY = h3->GetNbinsY();
 	int nBinsZ = h3->GetNbinsZ();
 
-	TH2F *h2_zmean = new TH2F("outputName", "Mean nsigmaE value;X(Pt,eta,phi);Cen",
+	TH2F *h2_zmean = new TH2F(outputName, "Mean nsigmaE value;X(Pt,eta,phi);Cen",
 		nBinsX, h3->GetXaxis()->GetXmin(), h3->GetXaxis()->GetXmax(),
 		nBinsY, h3->GetYaxis()->GetXmin(), h3->GetYaxis()->GetXmax());
 
@@ -725,3 +797,57 @@ TH3F* ScaleHistogramWithStatError(const TH3F* h_in, double x) {
 
     return h_out;
 }
+
+// 返回值：拟合所用的 TF1 指针（内部 new，调用者负责管理）
+// 输入：hRatio —— 要做拟合的 ratio 直方图
+TF1* FitBKGRatio(TH1F *hRatio, Double_t fitLow = 1.0, Double_t fitUp = 4.0)
+{
+    if (!hRatio) {
+        std::cerr << "FitBKGRatio: null histogram pointer!" << std::endl;
+        return nullptr;
+    }
+
+    // 拟合函数：a + exp((x-b)/c)
+	TF1 *fBKGRatio = new TF1("f_BKGRatio", "[0]+exp((x-[1])/[2])", 0, 4);
+    fBKGRatio->SetParNames("a", "b", "c");
+    fBKGRatio->SetParameters(1.0, 1.0, 1.0);
+
+    // 参数范围
+    fBKGRatio->SetParLimits(0, 0.9, 1.1);
+    fBKGRatio->SetParLimits(1, 1e-6, 100.0);
+    fBKGRatio->SetParLimits(2, 1e-6, 100.0);
+
+    fBKGRatio->SetLineColor(kRed);
+    fBKGRatio->SetLineWidth(2);
+
+    // 执行拟合
+	Int_t fitStatus = hRatio->Fit(fBKGRatio, "Q0", "", fitLow, fitUp);
+
+    // 打印状态与参数
+    std::cout << "Background ratio fit status: " << fitStatus << std::endl;
+    std::cout << "Background ratio fit parameters: "
+              << "a = " << fBKGRatio->GetParameter(0)
+              << " +/- "    << fBKGRatio->GetParError(0)
+              << ", b = "   << fBKGRatio->GetParameter(1)
+              << " +/- "    << fBKGRatio->GetParError(1)
+              << ", c = "   << fBKGRatio->GetParameter(2)
+              << " +/- "    << fBKGRatio->GetParError(2)
+              << std::endl;
+
+    return fBKGRatio;
+}
+
+// 用拟合得到的背景比修正 mixed-event 背景，并重新计算 US-UM 信号
+TH1F* applyBackgroundRatio(TH1F* h_input, const char* name, TF1* fBKGRatio,	Double_t corrLow = 1.0, Double_t corrUp = 4.0)
+{
+	if (!h_input || !fBKGRatio) return (TH1F*)nullptr;
+	TH1F* h_corrected = (TH1F*)h_input->Clone(name);
+	for (Int_t bin = 1; bin <= h_corrected->GetNbinsX(); ++bin) {
+		Double_t binCenter = h_corrected->GetBinCenter(bin);
+		if (binCenter < corrLow || binCenter > corrUp) continue;
+		Double_t correction = fBKGRatio->Eval(binCenter);
+		h_corrected->SetBinContent(bin, h_corrected->GetBinContent(bin) * correction);
+		h_corrected->SetBinError(bin, h_corrected->GetBinError(bin) * TMath::Abs(correction));
+	}
+	return h_corrected;
+};

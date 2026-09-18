@@ -1,0 +1,5 @@
+Executable        = script_$1_$2/$baseName.csh
+Output             = $logDir/$baseName.out
+Error                = $logDir/$baseName.err
+Log                  = $logDir/$baseName.log
+Queue

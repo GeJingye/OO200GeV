@@ -144,6 +144,7 @@ void StPicoDstarMixedMaker::initHists()
 	}
 	h_RefMult = new TH1F("h_RefMult", "h_RefMult", 250, 0, 250);													   // 参考多重数
 	h_nTofMat_RefMul = new TH2F("h_nTofMat_RefMul", "RefMul VS nTofmatch;RefMul;nTofMatch", 250, 0, 250, 250, 0, 250); // 与TOF匹配的径迹数vs参考多重数关系
+	h_nTofMat_RefMul_gE = new TH2F("h_nTofMat_RefMul_gE", "RefMul VS nTofmatch;RefMul;nTofMatch", 250, 0, 250, 250, 0, 250); // 与TOF匹配的径迹数vs参考多重数关系
 	h_RefMult6 = new TH1F("h_RefMult6", "h_RefMult6", 250, 0, 250);													   // 监控事件多重数分布->计算中心度
 	h_TotnMIP = new TH1F("h_TotnMIP", "h_TotnMIP", 1000, 0, 1000);													   // 最小电离粒子（MIP）总数
 	h_passEvtcut = new TH1F("h_passEvtcut", "pass event cut", 9, -1.5, 7.5);
@@ -320,12 +321,12 @@ Int_t StPicoDstarMixedMaker::Make()
 		h_Vx_Vy->Fill(mVx, mVy);
 		h_Vr->Fill(mVr);
 
-		if (fabs(mVpdVz + 999.0) > 1e-2 && fabs(mVpdVz) < 1000.0) // STAR约定：当 VPD 无法重建顶点时，会把 mVpdVz 设为 -999 cm 作为占位标志。
-		{
+		//if (fabs(mVpdVz + 999.0) > 1e-2 && fabs(mVpdVz) < 1000.0) // STAR约定：当 VPD 无法重建顶点时，会把 mVpdVz 设为 -999 cm 作为占位标志。
+		//{
 			h_VpdVz->Fill(mVpdVz);
 			h_VpdVz_Vz->Fill(mVz, mVpdVz);
 			h_VpdVzmVz->Fill(mVpdVz - mVz);
-		}
+		//}
 
 		// 获取多重数
 		Int_t Refmult = picoEvent->refMult();		 // 给出的是在线/原始 TPC 多重数（reference multiplicity），未经任何修正
@@ -347,7 +348,7 @@ Int_t StPicoDstarMixedMaker::Make()
 		Bool_t vzcut = mVz < anaCuts::Vz_up && mVz > anaCuts::Vz_low;
 		Bool_t vrcut = mVr < anaCuts::Vr;
 		Bool_t verrcut = !(fabs(mVx) < anaCuts::Verr && fabs(mVy) < anaCuts::Verr && fabs(mVz) < anaCuts::Verr); // Vx,Vy,Vz<1.0e-5 cm, why? too small that better than resolution.
-		Bool_t vzvpdvzcut = fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
+		Bool_t vzvpdvzcut = kTRUE;//fabs(mVz - mVpdVz) < anaCuts::vzVpdVz;
 		Bool_t notPileUp = !mRefMultCorrUtil->isPileUpEvent(mRefmult6, picoEvent->nBTOFMatch(), mVz, mTotnMIP);
 		Bool_t cen0280cut = mCen16 > -1;
 
@@ -366,6 +367,7 @@ Int_t StPicoDstarMixedMaker::Make()
 
 		if (isGoodEvent(picoEvent) && notPileUp)
 		{
+			h_nTofMat_RefMul_gE->Fill(Refmult, picoEvent->nBTOFMatch());
 			mBfield = picoEvent->bField(); // 获取磁场
 			h_cen->Fill(mCen16);		   // 填充中心度
 			h_cen__reWeight->Fill(mCen16, reWeight);
@@ -853,8 +855,6 @@ Int_t StPicoDstarMixedMaker::Make()
 			{
 				for (y = x + 1; y < num_electron; y++) // 从x+1开始，避免自组合和重复组合
 				{
-					if (!electroninfo[x].isPhotonicE && !electroninfo[y].isPhotonicE)
-					{
 						particle1_4V.SetPx(electroninfo[x].p1);
 						particle1_4V.SetPy(electroninfo[x].p2);
 						particle1_4V.SetPz(electroninfo[x].p3);
@@ -874,7 +874,6 @@ Int_t StPicoDstarMixedMaker::Make()
 						if (fabs(eepair.Rapidity()) <= 1) // 判断重建的粒子是否在中心快度区，为什么需要在中心快度区？
 							h_Mee_Pt_Cen__likemm->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 						}
-					}
 				}
 			} // end: for(x=0;x<num_electron;x++)
 			// ++ combine
@@ -882,8 +881,6 @@ Int_t StPicoDstarMixedMaker::Make()
 			{
 				for (y = x + 1; y < num_positron; y++)
 				{
-					if (!positroninfo[x].isPhotonicE && !positroninfo[y].isPhotonicE)
-					{
 						particle1_4V.SetPx(positroninfo[x].p1);
 						particle1_4V.SetPy(positroninfo[x].p2);
 						particle1_4V.SetPz(positroninfo[x].p3);
@@ -903,7 +900,6 @@ Int_t StPicoDstarMixedMaker::Make()
 						if (fabs(eepair.Rapidity()) <= 1)
 							h_Mee_Pt_Cen__likepp->Fill(eepair.M(), eepair.Perp(), mCen16, reWeight);
 						}
-					}
 				}
 			} // end: for(x=0;x<num_positron;x++)
 			}
@@ -1086,6 +1082,7 @@ Int_t StPicoDstarMixedMaker::Finish()
 	h_VpdVzmVz->Write();
 	h_Vx_Vy->Write();
 	h_nTofMat_RefMul->Write();
+	h_nTofMat_RefMul_gE->Write();
 	h_RefMult->Write();
 	h_pDca_Pt_Eta->Write();
 	// track level QA
@@ -1203,8 +1200,8 @@ Bool_t StPicoDstarMixedMaker::isGoodEvent(StPicoEvent const *const picoEvent) co
 	return pVtx.z() < anaCuts::Vz_up &&
 		   pVtx.z() > anaCuts::Vz_low &&
 		   !((fabs(pVtx.x())<anaCuts::Verr && fabs(pVtx.y())<anaCuts::Verr && fabs(pVtx.y())<anaCuts::Verr)) &&
-		   sqrt(pVtx.x() * pVtx.x() + pVtx.y() * pVtx.y()) < anaCuts::Vr &&
-		   fabs(pVtx.z() - picoEvent->vzVpd()) < anaCuts::vzVpdVz;
+		   sqrt(pVtx.x() * pVtx.x() + pVtx.y() * pVtx.y()) < anaCuts::Vr;
+		   //fabs(pVtx.z() - picoEvent->vzVpd()) < anaCuts::vzVpdVz;
 }
 
 Bool_t StPicoDstarMixedMaker::isGoodTrack(StPicoTrack const *trk, StPicoEvent const *const picoEvent) const
